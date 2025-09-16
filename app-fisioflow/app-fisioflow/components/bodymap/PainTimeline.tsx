@@ -140,7 +140,7 @@ export default function PainTimeline({
           minPain: Math.min(...intensities),
           totalPoints: points.length,
           regions,
-          assessmentType: points[0].assessment_type,
+          assessmentType: 'progress',
           improvements
         } as TimelineData
       })
