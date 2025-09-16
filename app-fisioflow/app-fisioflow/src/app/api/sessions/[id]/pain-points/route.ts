@@ -163,7 +163,7 @@ export async function POST(
         user_id: currentUser.id,
         additional_data: {
           reason: 'no_lgpd_consent',
-          patient_id: session.patient_id
+          patient_id: session.id
         }
       })
 
@@ -232,7 +232,7 @@ export async function POST(
     // 8. Preparar dados para inserção
     const painPointsToInsert = painPointsData.map((painPointData) => ({
       org_id: currentUser.org_id,
-      patient_id: session.patient_id,
+      patient_id: session.id,
       session_id: sessionId,
       body_region: painPointData.body_region,
       x_coordinate: painPointData.x_coordinate,
@@ -314,7 +314,7 @@ export async function POST(
         record_id: painPoint.id,
         user_id: currentUser.id,
         additional_data: {
-          patient_id: session.patient_id,
+          patient_id: session.id,
           session_id: sessionId,
           body_region: painPoint.body_region,
           pain_intensity: painPoint.pain_intensity,
@@ -327,7 +327,7 @@ export async function POST(
     // 12. Log de acesso aos dados do paciente (LGPD)
     await supabase
       .rpc('log_patient_data_access', {
-        patient_id: session.patient_id,
+        patient_id: session.id,
         access_type: 'pain_points_create',
         accessed_fields: [
           'body_region',
