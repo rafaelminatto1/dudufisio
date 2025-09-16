@@ -103,3 +103,4 @@ console.log('4. Inicie o servidor: npm run dev');
 console.log('5. Acesse http://localhost:3000');
 
 console.log('\n✨ Configuração do Supabase concluída!');
+
