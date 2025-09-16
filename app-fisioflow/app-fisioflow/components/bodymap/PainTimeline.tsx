@@ -117,7 +117,7 @@ export default function PainTimeline({
 
     // Agrupar pontos por data
     const groupedByDate = painPoints.reduce((acc, point) => {
-      const date = point.assessment_date.split('T')[0] // Extrair apenas a data
+      const date = point.created_at ? point.created_at.split('T')[0] : new Date().toISOString().split('T')[0] // Extrair apenas a data
       if (!acc[date]) {
         acc[date] = []
       }
