@@ -221,7 +221,7 @@ export default function PainTimeline({
         currentPain: current,
         initialPain: initial,
         changePercentage: Math.abs(changePercentage),
-        lastUpdate: regionPoints[regionPoints.length - 1].assessment_date
+        lastUpdate: regionPoints[regionPoints.length - 1].created_at || ''
       } as RegionTrendData
     })
   }, [painPoints])
