@@ -121,6 +121,7 @@ export default function PatientDetailsPage() {
           org_id: 'org_123',
           name: 'João Silva Santos',
           cpf: '123.456.789-00',
+          rg: '123456789',
           date_of_birth: '1985-03-15',
           gender: 'masculino',
           phone: '(31) 99876-5432',
@@ -133,54 +134,62 @@ export default function PatientDetailsPage() {
           state: 'MG',
           postal_code: '30130-000',
           photo_url: null,
-          insurance_provider: 'Unimed',
-          insurance_number: '123456789',
+          health_insurance: 'Unimed',
+          health_insurance_number: '123456789',
           medical_history: 'Histórico de dores nas costas, sem cirurgias prévias',
-          medications: 'Nenhuma medicação contínua',
+          current_medications: 'Nenhuma medicação contínua',
           allergies: 'Alergia a dipirona',
           consent_lgpd: true,
-          consent_photos: true,
-          consent_treatment: true,
-          occupation: 'Engenheiro',
+          consent_date: '2024-01-15T10:00:00Z',
+          consent_ip_address: '127.0.0.1',
+          observations: 'Paciente com histórico de dores nas costas',
           status: 'active',
           created_at: '2024-01-15T10:00:00Z',
           updated_at: '2024-09-15T14:30:00Z',
           created_by: 'user_123',
-          user_id: 'user_123'
+          updated_by: 'user_123'
         }
 
         const mockPainPoints: PainPoint[] = [
           {
             id: 'pain_1',
+            org_id: 'org_123',
             patient_id: patientId,
             session_id: 'session_1',
-            body_part: 'Lombar',
             body_region: 'Lombar',
-            pain_level: 7,
+            x_coordinate: 50,
+            y_coordinate: 60,
             pain_intensity: 7,
             pain_type: 'cronica',
             pain_description: 'Dor constante na região lombar, piora ao sentar por longos períodos',
-            coordinates_x: 50,
-            coordinates_y: 45,
-            x_coordinate: 50,
-            y_coordinate: 45,
-            created_at: '2024-09-10T09:00:00Z'
+            assessment_date: '2024-09-15T14:30:00Z',
+            assessment_type: 'initial',
+            clinical_notes: 'Paciente relata dor há 3 meses',
+            improvement_notes: null,
+            created_at: '2024-09-15T14:30:00Z',
+            updated_at: '2024-09-15T14:30:00Z',
+            created_by: 'user_123',
+            updated_by: 'user_123'
           },
           {
             id: 'pain_2',
+            org_id: 'org_123',
             patient_id: patientId,
             session_id: 'session_2',
-            body_part: 'Ombro Direito',
             body_region: 'Ombro Direito',
-            pain_level: 4,
+            x_coordinate: 75,
+            y_coordinate: 25,
             pain_intensity: 4,
             pain_type: 'rigidez',
             pain_description: 'Rigidez matinal no ombro direito',
-            coordinates_x: 75,
-            coordinates_y: 25,
-            x_coordinate: 75,
-            y_coordinate: 25,
-            created_at: '2024-09-12T14:00:00Z'
+            assessment_date: '2024-09-12T14:00:00Z',
+            assessment_type: 'progress',
+            clinical_notes: 'Rigidez matinal',
+            improvement_notes: null,
+            created_at: '2024-09-12T14:00:00Z',
+            updated_at: '2024-09-12T14:00:00Z',
+            created_by: 'user_123',
+            updated_by: 'user_123'
           }
         ]
 
@@ -251,19 +260,23 @@ export default function PatientDetailsPage() {
         // Criar novo ponto
         const newPainPoint: PainPoint = {
           id: `pain_${Date.now()}`,
+          org_id: 'org_123',
           patient_id: patientId,
           session_id: 'temp-session',
-          body_part: data.body_region,
           body_region: data.body_region,
-          pain_level: data.pain_intensity,
+          x_coordinate: data.x_coordinate,
+          y_coordinate: data.y_coordinate,
           pain_intensity: data.pain_intensity,
           pain_type: data.pain_type,
           pain_description: data.pain_description,
-          coordinates_x: data.x_coordinate,
-          coordinates_y: data.y_coordinate,
-          x_coordinate: data.x_coordinate,
-          y_coordinate: data.y_coordinate,
-          created_at: new Date().toISOString()
+          assessment_date: new Date().toISOString(),
+          assessment_type: 'initial',
+          clinical_notes: null,
+          improvement_notes: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          created_by: 'user_123',
+          updated_by: 'user_123'
         }
 
         setPainPoints([...painPoints, newPainPoint])
@@ -464,12 +477,12 @@ export default function PatientDetailsPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {patient.insurance_provider && (
+                {patient.health_insurance && (
                   <div>
                     <p className="text-sm font-medium text-gray-500">Plano de Saúde</p>
-                    <p className="font-medium">{patient.insurance_provider}</p>
-                    {patient.insurance_number && (
-                      <p className="text-xs text-gray-600">#{patient.insurance_number}</p>
+                    <p className="font-medium">{patient.health_insurance}</p>
+                    {patient.health_insurance_number && (
+                      <p className="text-xs text-gray-600">#{patient.health_insurance_number}</p>
                     )}
                   </div>
                 )}
@@ -481,10 +494,10 @@ export default function PatientDetailsPage() {
                   </div>
                 )}
 
-                {patient.medications && (
+                {patient.current_medications && (
                   <div>
                     <p className="text-sm font-medium text-gray-500">Medicações Atuais</p>
-                    <p className="text-sm">{patient.medications}</p>
+                    <p className="text-sm">{patient.current_medications}</p>
                   </div>
                 )}
 

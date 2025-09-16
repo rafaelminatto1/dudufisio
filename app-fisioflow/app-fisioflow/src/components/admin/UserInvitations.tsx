@@ -34,7 +34,7 @@ export default function UserInvitations() {
 
   const loadInvitations = async () => {
     try {
-      const data = await getPendingInvitations()
+      const data = await getPendingInvitations('org_123')
       setInvitations(data)
     } catch (error) {
       console.error('Erro ao carregar convites:', error)
@@ -182,24 +182,19 @@ export default function UserInvitations() {
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
                         <h3 className="font-semibold text-gray-900">
-                          {invitation.name}
+                          {invitation.email}
                         </h3>
                         {getRoleBadge(invitation.role)}
-                        {getStatusBadge(invitation.status, invitation.expires_at)}
+                        {getStatusBadge(invitation.status, invitation.expiresAt)}
                       </div>
 
                       <div className="text-sm text-gray-600 space-y-1">
                         <p><strong>Email:</strong> {invitation.email}</p>
-                        <p><strong>Convidado por:</strong> {invitation.invited_by_name}</p>
-                        <p><strong>Data:</strong> {formatDate(invitation.created_at)}</p>
-                        <p><strong>Expira em:</strong> {formatDate(invitation.expires_at)}</p>
+                        <p><strong>Convidado por:</strong> {invitation.invitedBy}</p>
+                        <p><strong>Data:</strong> {formatDate(invitation.createdAt)}</p>
+                        <p><strong>Expira em:</strong> {formatDate(invitation.expiresAt)}</p>
                       </div>
 
-                      {invitation.message && (
-                        <div className="mt-2 p-2 bg-blue-50 border-l-4 border-blue-200 rounded">
-                          <p className="text-sm text-blue-800">{invitation.message}</p>
-                        </div>
-                      )}
                     </div>
 
                     <div className="flex flex-col space-y-2">
@@ -244,9 +239,9 @@ function InviteUserForm({ onSuccess, onCancel }: {
 }) {
   const [formData, setFormData] = useState<InviteUserData>({
     email: '',
-    name: '',
     role: 'estagiario',
-    message: ''
+    orgId: 'org_123',
+    invitedBy: 'user_123'
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -297,19 +292,6 @@ function InviteUserForm({ onSuccess, onCancel }: {
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Nome Completo *
-              </label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={handleInputChange('name')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Nome do profissional"
-                required
-              />
-            </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -342,18 +324,6 @@ function InviteUserForm({ onSuccess, onCancel }: {
             </select>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Mensagem Personalizada (opcional)
-            </label>
-            <textarea
-              value={formData.message || ''}
-              onChange={handleInputChange('message')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Adicione uma mensagem de boas-vindas..."
-              rows={3}
-            />
-          </div>
 
           <div className="flex space-x-3 pt-4">
             <Button

@@ -1,0 +1,239 @@
+{
+  "meta": {
+    "project": "Sistema FisioFlow - Gestão Completa de Clínicas de Fisioterapia",
+    "date": "2025-09-13",
+    "prepared_by": "Software Development Manager"
+  },
+  "product_overview": "FisioFlow é uma plataforma digital abrangente para gestão de clínicas de fisioterapia, oferecendo funcionalidades robustas para atendimento de pacientes, agendamento de consultas, mapeamento corporal interativo, prescrição de exercícios e geração de relatórios clínicos, tudo em conformidade com a LGPD e regulamentações médicas brasileiras.",
+  "core_goals": [
+    "Digitalizar e otimizar a gestão de clínicas de fisioterapia para maior eficiência e organização.",
+    "Melhorar a experiência do paciente com acompanhamento detalhado e prescrição personalizada.",
+    "Garantir conformidade plena com LGPD e normas regulatórias do Conselho Federal de Medicina (CFM).",
+    "Fornecer dashboards personalizados de acordo com o papel do usuário para facilitar o acesso às funcionalidades.",
+    "Implementar um sistema seguro de autenticação e controle de acesso baseado em papéis (RBAC)."
+  ],
+  "key_features": [
+    "Sistema de autenticação completo com suporte a múltiplos métodos (email/senha, Google OAuth, Magic Link) e controle de acesso baseado em papéis (Admin, Fisioterapeuta, Estagiário, Paciente).",
+    "Gestão de pacientes com CRUD, validação de CPF, upload seguro de fotos, histórico médico eletrônico e conformidade com LGPD.",
+    "Sistema interativo de mapeamento corporal em SVG para registro de pontos de dor com escala graduada e timeline de evolução.",
+    "Agendamento de consultas com calendário integrado, prevenção de conflitos, lista de espera e notificações automáticas.",
+    "Documentação detalhada das sessões de fisioterapia incluindo níveis de dor, procedimentos e prescrição de exercícios.",
+    "Biblioteca completa de exercícios categorizada por região corporal e tipo, com vídeos demonstrativos e níveis de dificuldade.",
+    "Prescrição personalizada de exercícios com acompanhamento pelo portal do paciente e relatório de aderência.",
+    "Dashboards específicos para cada papel de usuário com indicadores chave de desempenho e métricas analíticas.",
+    "Relatórios clínicos e financeiros personalizáveis com exportação em PDF e formatos profissionais.",
+    "Sistema robusto de segurança de dados, criptografia, trilhas de auditoria e backup automatizado.",
+    "Componentes UI acessíveis e otimizados para o mercado brasileiro usando Radix UI e Tailwind CSS."
+  ],
+  "user_flow_summary": [
+    "Usuário realiza login via email, Google OAuth ou Magic Link e é direcionado ao dashboard correspondente ao seu papel.",
+    "Administrador gerencia convites, permissões e visualiza relatórios gerais do sistema.",
+    "Fisioterapeuta acessa lista de pacientes, cria/edita prontuários, registra pontos de dor no mapa corporal e documenta sessões.",
+    "Estagiário acessa funcionalidades limitadas para documentação e acompanhamento sob supervisão.",
+    "Paciente acessa portal para visualizar planos de tratamento, exercícios prescritos e fornece feedback sobre a execução.",
+    "Usuário agenda consultas via calendário, evita conflitos e recebe lembretes automáticos.",
+    "Fisioterapeuta prescreve exercícios personalizados e acompanha evolução por meio de relatórios e timeline de dor.",
+    "Sistema gera relatórios clinicos e financeiros para administração e tomada de decisão."
+  ],
+  "validation_criteria": [
+    "Autenticação de usuários funcionando com todos os métodos suportados e controle de acesso RBAC validado.",
+    "Criação, edição, busca e exclusão lógica de prontuários com validação de CPF e upload seguro de fotos.",
+    "Interação com o mapa corporal SVG, registro de pontos de dor com escala correta e timeline exibida.",
+    "Agendamento funcionando sem conflitos, envio de notificações e suporte a lista de espera.",
+    "Registro completo das sessões com níveis de dor, exercícios prescritos e opções de agendamento de retorno.",
+    "Funcionalidades da biblioteca de exercícios acessíveis com busca, filtros e criação de novos exercícios.",
+    "Dashboards exibindo dados corretos conforme o papel do usuário.",
+    "Relatórios gerados e exportados corretamente em formato PDF com informações precisas.",
+    "Sistema em conformidade com LGPD e criptografia dos dados sensíveis implementada.",
+    "Testes unitários, integração e end-to-end com cobertura abrangente e sem falhas críticas."
+  ],
+  "code_summary": {
+    "tech_stack": [
+      "TypeScript",
+      "Next.js 15.5.3",
+      "React 19.1.0",
+      "Tailwind CSS",
+      "Supabase",
+      "PostgreSQL",
+      "Zod",
+      "React Hook Form",
+      "Radix UI",
+      "Lucide React",
+      "Playwright",
+      "Jest"
+    ],
+    "features": [
+      {
+        "name": "Authentication System",
+        "description": "Sistema completo de autenticação com múltiplos métodos (email/senha, Google OAuth, Magic Link) e controle de acesso baseado em papéis (RBAC)",
+        "files": [
+          "src/lib/auth/auth.ts",
+          "src/lib/auth/client-actions.ts",
+          "src/lib/auth/middleware.ts",
+          "src/lib/auth/rbac.ts",
+          "src/lib/auth/server.ts",
+          "src/lib/auth/types.ts",
+          "src/app/(auth)/login/page.tsx",
+          "src/app/(auth)/register/page.tsx",
+          "src/app/auth/callback/route.ts"
+        ]
+      },
+      {
+        "name": "Dashboard System",
+        "description": "Sistema de dashboards específicos por papel de usuário (Admin, Fisioterapeuta, Estagiário, Paciente) com roteamento dinâmico",
+        "files": [
+          "src/app/dashboard/page.tsx",
+          "src/app/dashboard/layout.tsx",
+          "src/app/dashboard/admin/page.tsx",
+          "src/app/dashboard/fisioterapeuta/page.tsx",
+          "src/app/dashboard/estagiario/page.tsx",
+          "src/app/dashboard/paciente/page.tsx"
+        ]
+      },
+      {
+        "name": "Patient Management",
+        "description": "Sistema completo de gestão de pacientes com CRUD, validação de CPF, fotos, histórico médico e compliance LGPD",
+        "files": [
+          "src/app/patients/[id]/page.tsx",
+          "src/lib/validation/patient-schemas.ts",
+          "src/lib/lgpd/server.ts"
+        ]
+      },
+      {
+        "name": "Body Mapping System",
+        "description": "Sistema interativo de mapeamento corporal para rastreamento de dor com escala 0-10 e timeline de evolução",
+        "files": [
+          "src/components/bodymap/BodyMapSVG.tsx",
+          "src/components/bodymap/PainPointModal.tsx",
+          "src/components/bodymap/PainTimeline.tsx",
+          "components/bodymap/BodyMapSVG.tsx",
+          "components/bodymap/PainPointModal.tsx",
+          "components/bodymap/PainTimeline.tsx"
+        ]
+      },
+      {
+        "name": "Appointment Scheduling",
+        "description": "Sistema de agendamento com prevenção de conflitos, calendário integrado e lembretes automáticos",
+        "files": [
+          "src/app/api/sessions/[id]/pain-points/route.ts"
+        ]
+      },
+      {
+        "name": "UI Component Library",
+        "description": "Biblioteca completa de componentes UI acessíveis baseados em Radix UI e Tailwind CSS, otimizados para o mercado brasileiro",
+        "files": [
+          "src/components/ui/accessible-components.tsx",
+          "src/components/ui/alert.tsx",
+          "src/components/ui/avatar.tsx",
+          "src/components/ui/badge.tsx",
+          "src/components/ui/brazilian-forms.tsx",
+          "src/components/ui/button.tsx",
+          "src/components/ui/calendar.tsx",
+          "src/components/ui/card.tsx",
+          "src/components/ui/currency-input.tsx",
+          "src/components/ui/dialog.tsx",
+          "src/components/ui/dropdown-menu.tsx",
+          "src/components/ui/form.tsx",
+          "src/components/ui/input.tsx",
+          "src/components/ui/label.tsx",
+          "src/components/ui/loading.tsx",
+          "src/components/ui/mobile-layout.tsx",
+          "src/components/ui/popover.tsx",
+          "src/components/ui/responsive.tsx",
+          "src/components/ui/select.tsx",
+          "src/components/ui/separator.tsx",
+          "src/components/ui/sheet.tsx",
+          "src/components/ui/skeleton.tsx",
+          "src/components/ui/slider.tsx",
+          "src/components/ui/sonner.tsx",
+          "src/components/ui/table.tsx",
+          "src/components/ui/tabs.tsx",
+          "src/components/ui/textarea.tsx",
+          "src/components/ui/toast.tsx",
+          "src/components/ui/tooltip.tsx"
+        ]
+      },
+      {
+        "name": "Admin Features",
+        "description": "Funcionalidades administrativas incluindo convites de usuários e gestão de permissões",
+        "files": [
+          "src/components/admin/UserInvitations.tsx",
+          "src/lib/auth/invitations.ts.disabled"
+        ]
+      },
+      {
+        "name": "Database Integration",
+        "description": "Integração completa com Supabase incluindo RLS (Row Level Security), tipos TypeScript e migrações",
+        "files": [
+          "src/lib/supabase/client.ts",
+          "src/lib/supabase/server.ts",
+          "src/lib/supabase/middleware.ts",
+          "src/lib/supabase/database.types.ts",
+          "lib/db/rls-enforcer.ts",
+          "supabase/migrations/20250914_001_core_entities.sql",
+          "supabase/migrations/20250914_002_patients.sql",
+          "supabase/migrations/20250914_003_appointments_sessions.sql",
+          "supabase/migrations/20250914_004_body_mapping.sql",
+          "supabase/migrations/20250914_005_rls_policies.sql",
+          "supabase/migrations/20250914_006_storage_buckets.sql"
+        ]
+      },
+      {
+        "name": "Validation System",
+        "description": "Sistema de validação robusto usando Zod para formulários e dados brasileiros",
+        "files": [
+          "src/lib/validation/patient-schemas.ts",
+          "src/lib/validation/appointment-schemas.ts"
+        ]
+      },
+      {
+        "name": "Brazilian Formatting",
+        "description": "Utilitários específicos para formatação brasileira incluindo moeda, CPF e outros formatos",
+        "files": [
+          "src/lib/utils/brazilian-currency.ts",
+          "src/lib/utils/brazilian-formatting.ts",
+          "src/lib/accessibility/portuguese-labels.ts"
+        ]
+      },
+      {
+        "name": "Error Handling",
+        "description": "Sistema centralizado de tratamento de erros e auditoria",
+        "files": [
+          "src/lib/errors/error-handler.ts",
+          "src/lib/audit/audit-logger.ts",
+          "src/lib/audit/server.ts"
+        ]
+      },
+      {
+        "name": "Testing Infrastructure",
+        "description": "Infraestrutura completa de testes incluindo unitários, integração, contrato e E2E",
+        "files": [
+          "tests/contract/appointments-create.test.ts",
+          "tests/contract/appointments-list.test.ts",
+          "tests/contract/auth-login.test.ts",
+          "tests/contract/auth-profile.test.ts",
+          "tests/contract/pain-points-create.test.ts",
+          "tests/contract/pain-timeline.test.ts",
+          "tests/contract/patients-create.test.ts",
+          "tests/contract/patients-get.test.ts",
+          "tests/contract/patients-list.test.ts",
+          "tests/contract/patients-update.test.ts",
+          "tests/integration/admin-workflow.test.ts",
+          "tests/integration/appointment-scheduling.test.ts",
+          "tests/integration/body-mapping.test.ts",
+          "tests/integration/patient-management.test.ts",
+          "tests/integration/rbac-enforcement.test.ts",
+          "jest.config.js",
+          "playwright.config.ts"
+        ]
+      },
+      {
+        "name": "Landing Page",
+        "description": "Página inicial moderna com apresentação das funcionalidades e call-to-actions",
+        "files": [
+          "src/app/page.tsx"
+        ]
+      }
+    ]
+  }
+}

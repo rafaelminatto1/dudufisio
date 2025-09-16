@@ -1,0 +1,570 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Markdown Preview</title>
+      <style>
+        body {
+          font-family: sans-serif;
+          padding: 40px;
+          line-height: 1.6;
+          background: #fdfdfd;
+          color: #333;
+        }
+        pre {
+          background: #f4f4f4;
+          padding: 10px;
+          border-radius: 5px;
+          overflow-x: auto;
+        }
+        code {
+          font-family: monospace;
+          background: #eee;
+          padding: 2px 4px;
+        }
+        table {
+          border-collapse: collapse;
+          width: 100%;
+          margin-top: 20px;
+        }
+        th, td {
+          border: 1px solid #ccc;
+          padding: 8px 12px;
+          text-align: left;
+        }
+        th {
+          background-color: #f2f2f2;
+          font-weight: bold;
+        }
+      </style>
+    </head>
+    <body>
+      <h1>TestSprite AI Testing Report(MCP)</h1>
+<hr>
+<h2>1️⃣ Document Metadata</h2>
+<ul>
+<li><strong>Project Name:</strong> activity</li>
+<li><strong>Version:</strong> 1.0.0</li>
+<li><strong>Date:</strong> 2025-09-16</li>
+<li><strong>Prepared by:</strong> TestSprite AI Team</li>
+</ul>
+<hr>
+<h2>2️⃣ Requirement Validation Summary</h2>
+<h3>Requirement: User Authentication</h3>
+<ul>
+<li><strong>Description:</strong> Sistema completo de autenticação com múltiplos métodos (email/senha, Google OAuth, Magic Link) e controle de acesso baseado em papéis.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC001</li>
+<li><strong>Test Name:</strong> Login Success with Email and Password</li>
+<li><strong>Test Code:</strong> <a href="./TC001_Login_Success_with_Email_and_Password.py">TC001_Login_Success_with_Email_and_Password.py</a></li>
+<li><strong>Test Error:</strong> Login functionality test failed due to unexpected authentication errors with both email/password and Google login methods. User cannot access the dashboard. Recommend investigation and fix of authentication backend or integration issues.</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/dbc7ef8c-5acc-4e1f-85fe-e80c82ab9589</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Test failed due to server-side 500 Internal Server Error during login attempts, causing authentication failures and preventing dashboard access.</li>
+</ul>
+<hr>
+<h4>Test 2</h4>
+<ul>
+<li><strong>Test ID:</strong> TC002</li>
+<li><strong>Test Name:</strong> Login Failure with Incorrect Credentials</li>
+<li><strong>Test Code:</strong> <a href="./TC002_Login_Failure_with_Incorrect_Credentials.py">TC002_Login_Failure_with_Incorrect_Credentials.py</a></li>
+<li><strong>Test Error:</strong> N/A</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/0378e4bd-783b-44f9-bd32-ed1138648635</li>
+<li><strong>Status:</strong> ✅ Passed</li>
+<li><strong>Severity:</strong> Low</li>
+<li><strong>Analysis / Findings:</strong> Test passed, confirming login correctly fails on invalid credentials with proper error messaging, ensuring secure authentication.</li>
+</ul>
+<hr>
+<h4>Test 3</h4>
+<ul>
+<li><strong>Test ID:</strong> TC003</li>
+<li><strong>Test Name:</strong> Login with Google OAuth</li>
+<li><strong>Test Code:</strong> <a href="./TC003_Login_with_Google_OAuth.py">TC003_Login_with_Google_OAuth.py</a></li>
+<li><strong>Test Error:</strong> Testing stopped due to runtime error caused by invalid environment variables on the dashboard page. Unable to proceed with Google OAuth login testing or verify user redirection to dashboards.</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/64292f6b-4c17-4f7b-9302-89e3d8956643</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Test failed due to server 500 Internal Server Errors triggered by invalid environment variables on loading the dashboard, blocking Google OAuth login testing and user redirection verification.</li>
+</ul>
+<hr>
+<h4>Test 4</h4>
+<ul>
+<li><strong>Test ID:</strong> TC004</li>
+<li><strong>Test Name:</strong> Login with Magic Link Functionality</li>
+<li><strong>Test Code:</strong> <a href="./TC004_Login_with_Magic_Link_Functionality.py">TC004_Login_with_Magic_Link_Functionality.py</a></li>
+<li><strong>Test Error:</strong> The login flow via Magic Link cannot be fully tested because the system returns an unexpected authentication error when requesting the Magic Link. The issue prevents proceeding further.</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/ce3fe781-ed0f-4346-99ce-5e90425ebb58</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Test failed because Magic Link authentication returned 500 Internal Server Error, preventing Magic Link request and login flow continuation.</li>
+</ul>
+<hr>
+<h3>Requirement: Role-Based Access Control</h3>
+<ul>
+<li><strong>Description:</strong> Sistema de dashboards específicos por papel de usuário (Admin, Fisioterapeuta, Estagiário, Paciente) com roteamento dinâmico.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC005</li>
+<li><strong>Test Name:</strong> Role-Based Access Control Enforcement</li>
+<li><strong>Test Code:</strong> <a href="./TC005_Role_Based_Access_Control_Enforcement.py">TC005_Role_Based_Access_Control_Enforcement.py</a></li>
+<li><strong>Test Error:</strong> Testing cannot proceed because the application dashboard is inaccessible due to invalid environment variables causing a runtime error. Please fix the environment configuration to enable further testing of role-based access controls.</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/a8ac718e-5c14-49fc-abcc-39664a33c887</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Test execution blocked due to 500 Internal Server Error on dashboard page caused by invalid environment variable configuration, preventing assessment of role-based UI access controls.</li>
+</ul>
+<hr>
+<h3>Requirement: Patient Management</h3>
+<ul>
+<li><strong>Description:</strong> Sistema completo de gestão de pacientes com CRUD, validação de CPF, fotos, histórico médico e compliance LGPD.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC006</li>
+<li><strong>Test Name:</strong> Patient Record Creation with Valid CPF and Photo Upload</li>
+<li><strong>Test Code:</strong> <a href="./TC006_Patient_Record_Creation_with_Valid_CPF_and_Photo_Upload.py">TC006_Patient_Record_Creation_with_Valid_CPF_and_Photo_Upload.py</a></li>
+<li><strong>Test Error:</strong> Stopped testing due to inability to access login page. The 'Fazer Login' button is unresponsive and does not navigate to the login page, blocking the workflow for patient record creation and LGPD compliance verification.</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/99318362-1074-4ca9-bd95-0724a74c1b0f</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Test failed because the 'Fazer Login' button is unresponsive, blocking navigation to login page and subsequent patient record creation and LGPD compliance checks.</li>
+</ul>
+<hr>
+<h4>Test 2</h4>
+<ul>
+<li><strong>Test ID:</strong> TC007</li>
+<li><strong>Test Name:</strong> Patient Record Creation with Invalid CPF Format</li>
+<li><strong>Test Code:</strong> <a href="./TC007_Patient_Record_Creation_with_Invalid_CPF_Format.py">TC007_Patient_Record_Creation_with_Invalid_CPF_Format.py</a></li>
+<li><strong>Test Error:</strong> Testing stopped due to critical runtime error caused by invalid environment variables on the dashboard page. Unable to access patient record creation to verify CPF validation. Please fix environment configuration to continue testing.</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/08f7c39c-e0c6-450c-966f-a46142d70727</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Test blocked by 500 Internal Server Errors due to invalid environment variables on dashboard, preventing access to patient record creation for CPF validation.</li>
+</ul>
+<hr>
+<h4>Test 3</h4>
+<ul>
+<li><strong>Test ID:</strong> TC008</li>
+<li><strong>Test Name:</strong> Edit Existing Patient Record and Update Photo</li>
+<li><strong>Test Code:</strong> <a href="./TC008_Edit_Existing_Patient_Record_and_Update_Photo.py">TC008_Edit_Existing_Patient_Record_and_Update_Photo.py</a></li>
+<li><strong>Test Error:</strong> Testing stopped due to critical navigation issue: 'Fazer Login' button does not lead to login page, preventing authentication and further test execution.</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/2ad2a9e2-5207-4319-a917-aa6c1d5ab089</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Critical navigation issue with unresponsive 'Fazer Login' button prevented login and further testing of patient record editing and photo updates.</li>
+</ul>
+<hr>
+<h3>Requirement: Body Mapping System</h3>
+<ul>
+<li><strong>Description:</strong> Sistema interativo de mapeamento corporal para rastreamento de dor com escala 0-10 e timeline de evolução.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC009</li>
+<li><strong>Test Name:</strong> Body Mapping Interactive Pain Point Registration</li>
+<li><strong>Test Code:</strong> <a href="./TC009_Body_Mapping_Interactive_Pain_Point_Registration.py">TC009_Body_Mapping_Interactive_Pain_Point_Registration.py</a></li>
+<li><strong>Test Error:</strong> Unable to proceed with testing body mapping interface due to persistent login failures. All login methods (email/password, Google, email link) resulted in errors preventing access. Cannot verify adding, editing, or removing pain points without authentication. Recommend resolving authentication issues before retesting.</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/994b69b6-0f1a-42fa-9ef9-5b1738cfc336</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Test could not proceed because login failures prevented authentication, blocking access to the body mapping interface to test pain point interactions.</li>
+</ul>
+<hr>
+<h3>Requirement: Appointment Scheduling</h3>
+<ul>
+<li><strong>Description:</strong> Sistema de agendamento com prevenção de conflitos, calendário integrado e lembretes automáticos.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC010</li>
+<li><strong>Test Name:</strong> Create Appointment with Conflict Prevention</li>
+<li><strong>Test Code:</strong> <a href="./TC010_Create_Appointment_with_Conflict_Prevention.py">TC010_Create_Appointment_with_Conflict_Prevention.py</a></li>
+<li><strong>Test Error:</strong> Testing cannot proceed due to critical authentication issues: login failures and broken password reset functionality. Reported these issues for resolution. Task stopped.</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/7ec733d0-cfb1-4867-9d04-5b5295259f15</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Testing stopped due to authentication failures and broken password reset functionality, blocking access to appointment scheduling and conflict prevention flows.</li>
+</ul>
+<hr>
+<h4>Test 2</h4>
+<ul>
+<li><strong>Test ID:</strong> TC011</li>
+<li><strong>Test Name:</strong> Appointment Waiting List and Notification Delivery</li>
+<li><strong>Test Code:</strong> <a href="./TC011_Appointment_Waiting_List_and_Notification_Delivery.py">TC011_Appointment_Waiting_List_and_Notification_Delivery.py</a></li>
+<li><strong>Test Error:</strong> Testing stopped due to unresponsive 'Fazer Login' button preventing access to login page and booking system. Cannot verify waiting list functionality without login.</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/68e53a50-91a6-4c85-aa6d-8a72f7a7b55d</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Test stopped because unresponsive 'Fazer Login' button blocked navigation to login page, preventing verification of appointment waiting list and notification functionality.</li>
+</ul>
+<hr>
+<h3>Requirement: Session Documentation</h3>
+<ul>
+<li><strong>Description:</strong> Documentação de evolução, prescrição de exercícios e relatórios para pacientes.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC012</li>
+<li><strong>Test Name:</strong> Document Physiotherapy Session with Pain Level and Exercise Prescription</li>
+<li><strong>Test Code:</strong> <a href="./TC012_Document_Physiotherapy_Session_with_Pain_Level_and_Exercise_Prescription.py">TC012_Document_Physiotherapy_Session_with_Pain_Level_and_Exercise_Prescription.py</a></li>
+<li><strong>Test Error:</strong> Testing cannot proceed due to critical runtime error 'Invalid environment variables' on the dashboard page. Please fix the environment configuration to enable further testing of session documentation features.</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/829ef14e-ee49-43b3-98d0-14adfd9fa68b</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Critical runtime errors caused by invalid environment variables on the dashboard page blocked access, preventing testing of physiotherapy session documentation features.</li>
+</ul>
+<hr>
+<h3>Requirement: Exercise Library</h3>
+<ul>
+<li><strong>Description:</strong> Biblioteca de exercícios com vídeos demonstrativos e planos personalizados.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC013</li>
+<li><strong>Test Name:</strong> Exercise Library Search and Filtering</li>
+<li><strong>Test Code:</strong> <a href="./TC013_Exercise_Library_Search_and_Filtering.py">TC013_Exercise_Library_Search_and_Filtering.py</a></li>
+<li><strong>Test Error:</strong> Testing stopped due to critical runtime error 'Invalid environment variables' blocking access to the exercise library and main system. Please fix environment configuration to continue testing.</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/4d431519-0210-49d1-8478-7925f5d3042e</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Server 500 Internal Server Errors related to invalid environment variables blocked access to exercise library, halting testing of exercise search and filtering capabilities.</li>
+</ul>
+<hr>
+<h3>Requirement: Patient Portal</h3>
+<ul>
+<li><strong>Description:</strong> Portal do paciente para visualização de exercícios prescritos e feedback de aderência.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC014</li>
+<li><strong>Test Name:</strong> Patient Portal Access to Prescribed Exercises and Adherence Reporting</li>
+<li><strong>Test Code:</strong> <a href="./TC014_Patient_Portal_Access_to_Prescribed_Exercises_and_Adherence_Reporting.py">TC014_Patient_Portal_Access_to_Prescribed_Exercises_and_Adherence_Reporting.py</a></li>
+<li><strong>Test Error:</strong> The critical issue with the 'Fazer Login' button being unresponsive has been reported. Due to this, it is not possible to proceed with logging in as Paciente, accessing prescribed exercises, or submitting feedback. The task is now complete with this issue documented.</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/322ad6b8-ca64-4631-8a13-664af9bd7d4e</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Unresponsive 'Fazer Login' button prevented login as patient, blocking access to prescribed exercises and feedback submission in the patient portal.</li>
+</ul>
+<hr>
+<h3>Requirement: Dashboard Metrics</h3>
+<ul>
+<li><strong>Description:</strong> Dashboards com métricas e KPIs específicos por papel de usuário.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC015</li>
+<li><strong>Test Name:</strong> Dashboards Display Correct Metrics by User Role</li>
+<li><strong>Test Code:</strong> <a href="./TC015_Dashboards_Display_Correct_Metrics_by_User_Role.py">TC015_Dashboards_Display_Correct_Metrics_by_User_Role.py</a></li>
+<li><strong>Test Error:</strong> All login attempts for the user roles Admin, Fisioterapeuta, Estagiário, and Paciente failed due to an unexpected authentication error. As a result, it was not possible to access the dashboards to verify the key performance indicators and metrics for each role. The issue appears to be with the authentication system or credentials. Further testing cannot proceed until this is resolved.</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/64aeb5b2-0f0d-4fb2-a9f4-f32e7e98f2da</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> All login attempts failed due to authentication backend errors, preventing access to dashboards and verification of role-based metrics display.</li>
+</ul>
+<hr>
+<h3>Requirement: Reporting System</h3>
+<ul>
+<li><strong>Description:</strong> Geração e exportação de relatórios clínicos e financeiros personalizados.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC016</li>
+<li><strong>Test Name:</strong> Generate and Export Customized Clinical and Financial Reports</li>
+<li><strong>Test Code:</strong> <a href="./TC016_Generate_and_Export_Customized_Clinical_and_Financial_Reports.py">TC016_Generate_and_Export_Customized_Clinical_and_Financial_Reports.py</a></li>
+<li><strong>Test Error:</strong> Testing stopped due to inability to login as admin or authorized user. Authentication failures and broken password reset link prevent access to reporting section. Cannot verify report generation, filtering, or export functionalities. Please resolve login issues to enable further testing.</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/34e1d0fc-23fd-4a15-990a-0eefa3370631</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Authentication failures including broken password reset page prevented login as admin, blocking testing of report generation, filtering, and export functions.</li>
+</ul>
+<hr>
+<h3>Requirement: Security and Compliance</h3>
+<ul>
+<li><strong>Description:</strong> Segurança de dados e compliance com LGPD.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC017</li>
+<li><strong>Test Name:</strong> Data Security and Encryption Compliance</li>
+<li><strong>Test Code:</strong> <a href="./TC017_Data_Security_and_Encryption_Compliance.py">TC017_Data_Security_and_Encryption_Compliance.py</a></li>
+<li><strong>Test Error:</strong> Reported the issue that the login page is inaccessible via the 'Fazer Login' button, preventing further testing of encryption and audit logs. Stopping the task as system access is required for verification.</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/6ce664f5-5c8c-45f4-911e-8502e7296267</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Login page inaccessible due to 'Fazer Login' button issues blocked system access, preventing verification of data encryption and audit log compliance.</li>
+</ul>
+<hr>
+<h3>Requirement: UI Accessibility</h3>
+<ul>
+<li><strong>Description:</strong> Componentes UI acessíveis baseados em Radix UI e Tailwind CSS, otimizados para o mercado brasileiro.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC018</li>
+<li><strong>Test Name:</strong> UI Accessibility and Brazilian Market Compliance</li>
+<li><strong>Test Code:</strong> <a href="./TC018_UI_Accessibility_and_Brazilian_Market_Compliance.py">TC018_UI_Accessibility_and_Brazilian_Market_Compliance.py</a></li>
+<li><strong>Test Error:</strong> The 'Entrar' button on the homepage is unresponsive and does not navigate or change the page state. This blocks further accessibility testing and user interaction. Reporting this as a critical issue and stopping further actions.</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/8df5f117-01bc-45db-a974-9fef0fba89ec</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> 'Entrar' button on homepage is unresponsive, preventing navigation and user interaction necessary to test UI accessibility and localization standards.</li>
+</ul>
+<hr>
+<h3>Requirement: Error Handling</h3>
+<ul>
+<li><strong>Description:</strong> Tratamento de erros e feedback do usuário em falhas de API.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC019</li>
+<li><strong>Test Name:</strong> Error Handling and User Feedback on API Failures</li>
+<li><strong>Test Code:</strong> <a href="./TC019_Error_Handling_and_User_Feedback_on_API_Failures.py">TC019_Error_Handling_and_User_Feedback_on_API_Failures.py</a></li>
+<li><strong>Test Error:</strong> Stopped testing due to authentication failure blocking access to the system. Cannot proceed with API failure simulation and error handling verification without successful login.</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/504f010b-d1d8-42b1-aa01-0a22250e7951</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Authentication failure blocked system access, stopping API failure simulation tests and validation of error handling and user feedback.</li>
+</ul>
+<hr>
+<h3>Requirement: End-to-End Workflow</h3>
+<ul>
+<li><strong>Description:</strong> Fluxo completo desde agendamento até geração de relatórios.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC020</li>
+<li><strong>Test Name:</strong> End-to-End Workflow: Scheduling, Session Documentation and Reporting</li>
+<li><strong>Test Code:</strong> <a href="./TC020_End_to_End_Workflow_Scheduling_Session_Documentation_and_Reporting.py">TC020_End_to_End_Workflow_Scheduling_Session_Documentation_and_Reporting.py</a></li>
+<li><strong>Test Error:</strong> Testing stopped due to critical authentication failures and missing password reset page. Unable to proceed with appointment scheduling, session documentation, pain mapping, exercise prescription, and report generation. Please fix authentication issues and password reset flow to enable further testing.</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/6a433318-04c1-4906-bf08-bdee06894e66/20593579-bf71-4425-871a-1396270fef3e</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Critical authentication failures and missing password reset page prevented testing of end-to-end workflows including scheduling, session documentation, pain mapping, and reporting.</li>
+</ul>
+<hr>
+<h2>3️⃣ Coverage &amp; Matching Metrics</h2>
+<ul>
+<li><strong>95% of product requirements tested</strong></li>
+<li><strong>5% of tests passed</strong></li>
+<li><strong>Key gaps / risks:</strong></li>
+</ul>
+<blockquote>
+<p>95% of product requirements had at least one test generated.
+5% of tests passed fully (1 out of 20 tests).
+<strong>Critical Risks:</strong></p>
+<ul>
+<li>Sistema de autenticação completamente quebrado (500 Internal Server Errors)</li>
+<li>Variáveis de ambiente inválidas causando falhas no dashboard</li>
+<li>Botões de navegação não responsivos ('Fazer Login', 'Entrar')</li>
+<li>Página de reset de senha não encontrada (404)</li>
+<li>Falhas em cascata impedindo teste de funcionalidades principais</li>
+</ul>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Total Tests</th>
+<th>✅ Passed</th>
+<th>⚠️ Partial</th>
+<th>❌ Failed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>User Authentication</td>
+<td>4</td>
+<td>1</td>
+<td>0</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Role-Based Access Control</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Patient Management</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Body Mapping System</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Appointment Scheduling</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Session Documentation</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Exercise Library</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Patient Portal</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Dashboard Metrics</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Reporting System</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Security and Compliance</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>UI Accessibility</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Error Handling</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>End-to-End Workflow</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>4️⃣ Critical Issues Summary</h2>
+<h3>🔴 <strong>CRITICAL - Must Fix Before Production</strong></h3>
+<ol>
+<li>
+<p><strong>Authentication System Completely Broken</strong></p>
+<ul>
+<li>500 Internal Server Errors em todas as tentativas de login</li>
+<li>Google OAuth, Magic Link e login tradicional falhando</li>
+<li>Bloqueia acesso a 95% das funcionalidades</li>
+</ul>
+</li>
+<li>
+<p><strong>Environment Variables Configuration</strong></p>
+<ul>
+<li>Variáveis de ambiente inválidas causando falhas no dashboard</li>
+<li>Erro crítico impedindo carregamento de páginas principais</li>
+</ul>
+</li>
+<li>
+<p><strong>Navigation Issues</strong></p>
+<ul>
+<li>Botões 'Fazer Login' e 'Entrar' não responsivos</li>
+<li>Navegação quebrada impedindo acesso ao sistema</li>
+</ul>
+</li>
+<li>
+<p><strong>Missing Password Reset Page</strong></p>
+<ul>
+<li>Página de reset de senha retornando 404</li>
+<li>Funcionalidade essencial não implementada</li>
+</ul>
+</li>
+</ol>
+<h3>🟡 <strong>HIGH PRIORITY - Fix After Critical Issues</strong></h3>
+<ol>
+<li>
+<p><strong>Dashboard Access</strong></p>
+<ul>
+<li>Impossível testar dashboards por papel de usuário</li>
+<li>Métricas e KPIs não podem ser validados</li>
+</ul>
+</li>
+<li>
+<p><strong>Patient Management</strong></p>
+<ul>
+<li>CRUD de pacientes não pode ser testado</li>
+<li>Validação de CPF não verificada</li>
+</ul>
+</li>
+<li>
+<p><strong>Body Mapping System</strong></p>
+<ul>
+<li>Sistema de mapeamento corporal inacessível</li>
+<li>Funcionalidade principal não testada</li>
+</ul>
+</li>
+</ol>
+<h3>📋 <strong>Recommendations</strong></h3>
+<ol>
+<li>
+<p><strong>Immediate Actions:</strong></p>
+<ul>
+<li>Corrigir configuração de variáveis de ambiente</li>
+<li>Resolver erros 500 no sistema de autenticação</li>
+<li>Implementar página de reset de senha</li>
+<li>Corrigir navegação dos botões de login</li>
+</ul>
+</li>
+<li>
+<p><strong>After Critical Fixes:</strong></p>
+<ul>
+<li>Re-executar todos os testes</li>
+<li>Validar funcionalidades de gestão de pacientes</li>
+<li>Testar sistema de mapeamento corporal</li>
+<li>Verificar dashboards por papel de usuário</li>
+</ul>
+</li>
+<li>
+<p><strong>Long-term Improvements:</strong></p>
+<ul>
+<li>Implementar testes automatizados</li>
+<li>Adicionar validação de ambiente em tempo de build</li>
+<li>Melhorar tratamento de erros e feedback ao usuário</li>
+</ul>
+</li>
+</ol>
+
+    </body>
+    </html>
+  

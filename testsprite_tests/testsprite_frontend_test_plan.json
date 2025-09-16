@@ -1,0 +1,542 @@
+[
+  {
+    "id": "TC001",
+    "title": "Login Success with Email and Password",
+    "description": "Verify that a user can successfully log in using valid email and password credentials and is redirected to the appropriate dashboard based on their role.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the login page."
+      },
+      {
+        "type": "action",
+        "description": "Enter valid email and password for a registered user."
+      },
+      {
+        "type": "action",
+        "description": "Click the login button."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user is authenticated and redirected to their role-specific dashboard."
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Login Failure with Incorrect Credentials",
+    "description": "Verify login fails when incorrect email and/or password are provided, displaying an appropriate error message.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the login page."
+      },
+      {
+        "type": "action",
+        "description": "Enter invalid email and/or password."
+      },
+      {
+        "type": "action",
+        "description": "Click the login button."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify login is rejected and an error message is displayed to the user."
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Login with Google OAuth",
+    "description": "Ensure users can log in successfully via the Google OAuth method and are sent to the correct dashboard per their role.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the login page."
+      },
+      {
+        "type": "action",
+        "description": "Click on 'Login with Google' button."
+      },
+      {
+        "type": "action",
+        "description": "Complete Google OAuth consent and login flow."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user is authenticated and redirected to the correct dashboard."
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Login with Magic Link Functionality",
+    "description": "Validate login flow via Magic Link sent to user email works properly and redirects to role-based dashboard.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the login page."
+      },
+      {
+        "type": "action",
+        "description": "Request Magic Link by entering registered email."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify Magic Link is sent to the user's email."
+      },
+      {
+        "type": "action",
+        "description": "Click the Magic Link from email."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user is logged in and redirected properly."
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Role-Based Access Control Enforcement",
+    "description": "Verify that users can only access application features and UI elements allowed for their assigned roles (Admin, Fisioterapeuta, Estagiário, Paciente).",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as each type of user role."
+      },
+      {
+        "type": "assertion",
+        "description": "Check accessible menu items, UI features and API endpoints are appropriate for that role."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to access unauthorized pages or functionalities."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access is denied and error or redirect occurs."
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Patient Record Creation with Valid CPF and Photo Upload",
+    "description": "Verify that new patient records can be created with mandatory fields including valid CPF format, secure photo upload, and compliance with LGPD.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as Admin or Fisioterapeuta."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to patient management and initiate new patient creation."
+      },
+      {
+        "type": "action",
+        "description": "Enter valid patient data including a correctly formatted CPF."
+      },
+      {
+        "type": "action",
+        "description": "Upload a secure photo file for the patient."
+      },
+      {
+        "type": "action",
+        "description": "Submit the new patient form."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the patient record is created and visible in the list with correct details and stored securely."
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Patient Record Creation with Invalid CPF Format",
+    "description": "Verify that patient record creation is prevented if the CPF does not meet Brazilian validation rules and appropriate error is shown.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Attempt to create a patient record with an invalid CPF format."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify error message is displayed preventing submission."
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Edit Existing Patient Record and Update Photo",
+    "description": "Ensure patient records can be edited by authorized users including updating photo, and changes are saved correctly.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as Admin or Fisioterapeuta."
+      },
+      {
+        "type": "action",
+        "description": "Open an existing patient record for editing."
+      },
+      {
+        "type": "action",
+        "description": "Change patient details and replace photo with a new secure file."
+      },
+      {
+        "type": "action",
+        "description": "Save the changes."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify updates are persisted and displayed correctly."
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Body Mapping Interactive Pain Point Registration",
+    "description": "Verify users can interact with the SVG body map to add, edit, and remove pain points with correct severity on a scale from 0 to 10, and timeline updates accordingly.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as Fisioterapeuta."
+      },
+      {
+        "type": "action",
+        "description": "Access an individual patient's body mapping interface."
+      },
+      {
+        "type": "action",
+        "description": "Click on body regions to add pain points and set severity."
+      },
+      {
+        "type": "action",
+        "description": "Edit and remove existing pain points."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify pain points are visually displayed with correct severity scale and the timeline of pain evolution reflects these changes."
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Create Appointment with Conflict Prevention",
+    "description": "Verify the appointment system prevents scheduling conflicts by validating the availability of both patient and professional before confirming booking.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as Fisioterapeuta."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to schedule a consultation overlapping an existing appointment for a patient or physiotherapist."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm system blocks the conflict and shows an appropriate message."
+      },
+      {
+        "type": "action",
+        "description": "Schedule an appointment in an available slot."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify appointment is created successfully and listed in calendar."
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Appointment Waiting List and Notification Delivery",
+    "description": "Verify that when all slots are taken, users can join a waiting list and receive notifications when a slot becomes available.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Fill all slots for a target date."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to book additional appointment and join the waiting list."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user is added to waiting list."
+      },
+      {
+        "type": "action",
+        "description": "Cancel an existing appointment making a slot available."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify waiting list user receives notification and can book the freed slot."
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Document Physiotherapy Session with Pain Level and Exercise Prescription",
+    "description": "Verify that during session documentation users can record pain levels, procedures performed, prescribe exercises and schedule return visits properly.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as Fisioterapeuta."
+      },
+      {
+        "type": "action",
+        "description": "Open an existing patient session or create a new one."
+      },
+      {
+        "type": "action",
+        "description": "Input pain level using the defined scale."
+      },
+      {
+        "type": "action",
+        "description": "Document procedures performed during the session."
+      },
+      {
+        "type": "action",
+        "description": "Select and prescribe exercises from the library."
+      },
+      {
+        "type": "action",
+        "description": "Schedule a return appointment if necessary."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all data is saved and reflected in patient treatment records."
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Exercise Library Search and Filtering",
+    "description": "Verify the exercise library supports categorization by body region and exercise type, enables search, and filtering by difficulty levels.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Access exercise library."
+      },
+      {
+        "type": "action",
+        "description": "Search exercises by keyword."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify search results match query and display correct exercise metadata."
+      },
+      {
+        "type": "action",
+        "description": "Filter exercises by body region and type."
+      },
+      {
+        "type": "action",
+        "description": "Apply difficulty level filter."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify filtering works correctly and displays corresponding exercises."
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Patient Portal Access to Prescribed Exercises and Adherence Reporting",
+    "description": "Ensure patients can view exercises prescribed to them and provide feedback on exercise adherence via the portal with accurate reporting.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as Paciente."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to prescribed exercises section."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify list of prescribed exercises is accurate and includes video demos and instructions."
+      },
+      {
+        "type": "action",
+        "description": "Submit adherence feedback for completed exercises."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify feedback is saved and reflected in adherence reports available to Fisioterapeuta."
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Dashboards Display Correct Metrics by User Role",
+    "description": "Verify that dashboards render accurate key performance indicators and metrics tailored for Admin, Fisioterapeuta, Estagiário, and Paciente roles.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as each user role."
+      },
+      {
+        "type": "assertion",
+        "description": "Check dashboard displays relevant metrics and data corresponding to that role's scope and permissions."
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Generate and Export Customized Clinical and Financial Reports",
+    "description": "Verify reports are generated with accurate data, can be customized by filters, and exported correctly into PDF and other professional formats.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Access reporting section as Admin or authorized user."
+      },
+      {
+        "type": "action",
+        "description": "Configure report filters and parameters."
+      },
+      {
+        "type": "action",
+        "description": "Generate clinical and financial reports."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify data accuracy in generated reports."
+      },
+      {
+        "type": "action",
+        "description": "Export report in PDF format."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the export file is valid, complete, and professional in appearance."
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "Data Security and Encryption Compliance",
+    "description": "Verify sensitive data including patient information is encrypted at rest and in transit complying with LGPD standards and audit logs are consistently generated.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Review database records to confirm encryption of sensitive fields."
+      },
+      {
+        "type": "action",
+        "description": "Transmit sensitive data and monitor encryption during network transit."
+      },
+      {
+        "type": "action",
+        "description": "Trigger data access and modification actions."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify audit logs capture all critical data access and changes with time stamps and user identifiers."
+      }
+    ]
+  },
+  {
+    "id": "TC018",
+    "title": "UI Accessibility and Brazilian Market Compliance",
+    "description": "Ensure UI components based on Radix UI and Tailwind CSS are accessible (keyboard navigation, ARIA attributes) and formatted per Brazilian localization standards.",
+    "category": "ui",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Inspect UI components for keyboard navigability."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify components have correct ARIA labels and roles."
+      },
+      {
+        "type": "assertion",
+        "description": "Check input fields for CPF, currency, date use Brazilian formatting and validations."
+      }
+    ]
+  },
+  {
+    "id": "TC019",
+    "title": "Error Handling and User Feedback on API Failures",
+    "description": "Simulate API failures and verify the system handles errors gracefully with user-friendly messages and logs errors appropriately.",
+    "category": "error handling",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Trigger failure scenarios such as server errors or network interruptions when saving patient data or appointments."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify error notifications are displayed clearly to the user."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify error details are logged in the audit system for troubleshooting."
+      }
+    ]
+  },
+  {
+    "id": "TC020",
+    "title": "End-to-End Workflow: Scheduling, Session Documentation and Reporting",
+    "description": "Test complete workflow from appointment scheduling, patient session documentation, updating pain mapping, prescribing exercises, to generating final reports.",
+    "category": "integration",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Schedule an appointment for a patient."
+      },
+      {
+        "type": "action",
+        "description": "Perform session documentation including pain points and exercise prescription."
+      },
+      {
+        "type": "action",
+        "description": "Update patient's pain timeline and verify historical records."
+      },
+      {
+        "type": "action",
+        "description": "Generate clinical report including new session details."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure all stages reflect correct and consistent data throughout the system."
+      }
+    ]
+  }
+]
