@@ -358,7 +358,7 @@ export const switchOrganization = async (orgId: string): Promise<{ error: AuthEr
 
   try {
     // Atualizar cookies ou session storage com organização ativa
-    const cookieStore = await cookies()
+    const cookieStore = cookies()
     cookieStore.set('current-org', orgId, {
       secure: true,
       httpOnly: true,

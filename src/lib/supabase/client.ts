@@ -46,7 +46,7 @@ export const createClient = () =>
  */
 export const createServerClient = () => {
   return createServerComponentClient<Database>({
-    cookies: () => cookies(),
+    cookies: async () => await cookies(),
   })
 }
 
@@ -56,7 +56,7 @@ export const createServerClient = () => {
  */
 export const createRouteClient = () => {
   return createRouteHandlerClient<Database>({
-    cookies: () => cookies(),
+    cookies: async () => await cookies(),
   })
 }
 

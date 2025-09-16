@@ -6,11 +6,12 @@
 import { createRouteClient } from '@/lib/supabase/client'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { env } from '@/lib/env'
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get('code')
-  const origin = requestUrl.origin
+  const origin = env.NEXT_PUBLIC_APP_URL
   const redirectTo = requestUrl.searchParams.get('redirect_to') || '/dashboard'
 
   if (code) {
