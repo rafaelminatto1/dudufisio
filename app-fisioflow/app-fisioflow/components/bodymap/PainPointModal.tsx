@@ -172,10 +172,10 @@ export default function PainPointModal({
           pain_intensity: painPoint.pain_intensity,
           pain_type: painPoint.pain_type as any,
           pain_description: painPoint.pain_description || '',
-          clinical_notes: painPoint.clinical_notes || '',
+          clinical_notes: '',
           assessment_date: painPoint.created_at ? parseISO(painPoint.created_at) : new Date(),
           assessment_type: 'progress' as any,
-          improvement_notes: painPoint.improvement_notes || '',
+          improvement_notes: '',
         })
       } else {
         // Novo ponto de dor
