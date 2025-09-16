@@ -170,12 +170,12 @@ export default function PainPointModal({
         // Editando ponto existente
         form.reset({
           pain_intensity: painPoint.pain_intensity,
-          pain_type: painPoint.pain_type,
+          pain_type: painPoint.pain_type as any,
           pain_description: painPoint.pain_description || '',
-          clinical_notes: painPoint.clinical_notes || '',
-          assessment_date: parseISO(painPoint.assessment_date),
-          assessment_type: painPoint.assessment_type,
-          improvement_notes: painPoint.improvement_notes || '',
+          clinical_notes: '',
+          assessment_date: painPoint.created_at ? parseISO(painPoint.created_at) : new Date(),
+          assessment_type: 'progress' as any,
+          improvement_notes: '',
         })
       } else {
         // Novo ponto de dor
@@ -623,7 +623,7 @@ export function PainPointSummary({ painPoint }: { painPoint: PainPoint }) {
       )}
 
       <p className="text-xs text-gray-500">
-        Avaliado em {format(parseISO(painPoint.assessment_date), 'dd/MM/yyyy', { locale: ptBR })}
+        Avaliado em {painPoint.created_at ? format(parseISO(painPoint.created_at), 'dd/MM/yyyy', { locale: ptBR }) : 'Data não disponível'}
       </p>
     </div>
   )

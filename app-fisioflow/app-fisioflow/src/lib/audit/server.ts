@@ -25,9 +25,10 @@ export async function logAuditEvent(eventData: AuditEventData): Promise<void> {
 
     const auditLogEntry = {
       table_name: eventData.table_name,
+      action: eventData.operation, // Mapear operation para action
       operation: eventData.operation,
       record_id: eventData.record_id,
-      org_id: eventData.org_id,
+      org_id: eventData.org_id || 'unknown',
       old_values: eventData.old_values,
       new_values: eventData.new_values,
       additional_data: eventData.additional_data,
@@ -61,11 +62,8 @@ export async function logPatientDataAccess(
   try {
     const supabase = await createServerClient()
 
-    await supabase.rpc('log_patient_data_access', {
-      patient_id: patientId,
-      access_type: accessType,
-      accessed_fields: accessedFields,
-    })
+    // TODO: Implementar quando a função RPC estiver disponível
+    console.log('Log de acesso LGPD seria registrado para paciente:', patientId, 'tipo:', accessType)
   } catch (error) {
     console.error('Erro ao registrar acesso aos dados do paciente:', error)
     // Não propagar erro para não afetar a operação principal

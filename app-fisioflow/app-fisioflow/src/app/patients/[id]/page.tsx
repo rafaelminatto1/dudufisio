@@ -121,7 +121,6 @@ export default function PatientDetailsPage() {
           org_id: 'org_123',
           name: 'João Silva Santos',
           cpf: '123.456.789-00',
-          rg: 'MG-12.345.678',
           date_of_birth: '1985-03-15',
           gender: 'masculino',
           phone: '(31) 99876-5432',
@@ -134,62 +133,54 @@ export default function PatientDetailsPage() {
           state: 'MG',
           postal_code: '30130-000',
           photo_url: null,
-          health_insurance: 'Unimed',
-          health_insurance_number: '123456789',
+          insurance_provider: 'Unimed',
+          insurance_number: '123456789',
           medical_history: 'Histórico de dores nas costas, sem cirurgias prévias',
-          current_medications: 'Nenhuma medicação contínua',
+          medications: 'Nenhuma medicação contínua',
           allergies: 'Alergia a dipirona',
-          observations: 'Paciente colaborativo, pratica exercícios regularmente',
           consent_lgpd: true,
-          consent_date: '2024-01-15T10:00:00Z',
-          consent_ip_address: '192.168.1.1',
+          consent_photos: true,
+          consent_treatment: true,
+          occupation: 'Engenheiro',
           status: 'active',
           created_at: '2024-01-15T10:00:00Z',
           updated_at: '2024-09-15T14:30:00Z',
           created_by: 'user_123',
-          updated_by: 'user_123'
+          user_id: 'user_123'
         }
 
         const mockPainPoints: PainPoint[] = [
           {
             id: 'pain_1',
-            org_id: 'org_123',
             patient_id: patientId,
             session_id: 'session_1',
+            body_part: 'Lombar',
             body_region: 'Lombar',
-            x_coordinate: 50,
-            y_coordinate: 45,
+            pain_level: 7,
             pain_intensity: 7,
             pain_type: 'cronica',
             pain_description: 'Dor constante na região lombar, piora ao sentar por longos períodos',
-            assessment_date: '2024-09-10T09:00:00Z',
-            assessment_type: 'progress',
-            clinical_notes: 'Limitação de movimento, teste de Lasègue negativo',
-            improvement_notes: 'Redução de 20% na intensidade comparado à avaliação anterior',
-            created_at: '2024-09-10T09:00:00Z',
-            updated_at: '2024-09-10T09:00:00Z',
-            created_by: 'user_123',
-            updated_by: 'user_123'
+            coordinates_x: 50,
+            coordinates_y: 45,
+            x_coordinate: 50,
+            y_coordinate: 45,
+            created_at: '2024-09-10T09:00:00Z'
           },
           {
             id: 'pain_2',
-            org_id: 'org_123',
             patient_id: patientId,
             session_id: 'session_2',
+            body_part: 'Ombro Direito',
             body_region: 'Ombro Direito',
-            x_coordinate: 75,
-            y_coordinate: 25,
+            pain_level: 4,
             pain_intensity: 4,
             pain_type: 'rigidez',
             pain_description: 'Rigidez matinal no ombro direito',
-            assessment_date: '2024-09-12T14:00:00Z',
-            assessment_type: 'progress',
-            clinical_notes: 'ROM limitado em abdução, força mantida',
-            improvement_notes: 'Melhoria significativa após exercícios de mobilização',
-            created_at: '2024-09-12T14:00:00Z',
-            updated_at: '2024-09-12T14:00:00Z',
-            created_by: 'user_123',
-            updated_by: 'user_123'
+            coordinates_x: 75,
+            coordinates_y: 25,
+            x_coordinate: 75,
+            y_coordinate: 25,
+            created_at: '2024-09-12T14:00:00Z'
           }
         ]
 
@@ -197,7 +188,7 @@ export default function PatientDetailsPage() {
         setPainPoints(mockPainPoints)
         setCurrentUserRole('fisioterapeuta') // Simular role do usuário
         setCanEditPatient(true)
-        setLgpdConsent(mockPatient.consent_lgpd)
+        setLgpdConsent(mockPatient.consent_lgpd || false)
 
       } catch (error) {
         console.error('Erro ao carregar dados do paciente:', error)
@@ -260,23 +251,19 @@ export default function PatientDetailsPage() {
         // Criar novo ponto
         const newPainPoint: PainPoint = {
           id: `pain_${Date.now()}`,
-          org_id: patient?.org_id || '',
           patient_id: patientId,
-          session_id: null,
+          session_id: 'temp-session',
+          body_part: data.body_region,
           body_region: data.body_region,
-          x_coordinate: data.x_coordinate,
-          y_coordinate: data.y_coordinate,
+          pain_level: data.pain_intensity,
           pain_intensity: data.pain_intensity,
           pain_type: data.pain_type,
           pain_description: data.pain_description,
-          assessment_date: data.assessment_date.toISOString(),
-          assessment_type: data.assessment_type,
-          clinical_notes: data.clinical_notes,
-          improvement_notes: data.improvement_notes,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          created_by: 'current_user_id',
-          updated_by: 'current_user_id'
+          coordinates_x: data.x_coordinate,
+          coordinates_y: data.y_coordinate,
+          x_coordinate: data.x_coordinate,
+          y_coordinate: data.y_coordinate,
+          created_at: new Date().toISOString()
         }
 
         setPainPoints([...painPoints, newPainPoint])
@@ -366,7 +353,7 @@ export default function PatientDetailsPage() {
               </span>
               <span className="flex items-center">
                 <Calendar className="h-4 w-4 mr-1" />
-                {format(parseISO(patient.date_of_birth), 'dd/MM/yyyy', { locale: ptBR })}
+                {patient.date_of_birth ? format(parseISO(patient.date_of_birth), 'dd/MM/yyyy', { locale: ptBR }) : 'Não informado'}
               </span>
               <Badge
                 variant={patient.status === 'active' ? 'default' : 'secondary'}
@@ -430,10 +417,6 @@ export default function PatientDetailsPage() {
                     <p className="text-sm font-medium text-gray-500">CPF</p>
                     <p>{patient.cpf}</p>
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">RG</p>
-                    <p>{patient.rg || 'Não informado'}</p>
-                  </div>
                 </div>
 
                 <Separator />
@@ -481,12 +464,12 @@ export default function PatientDetailsPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {patient.health_insurance && (
+                {patient.insurance_provider && (
                   <div>
                     <p className="text-sm font-medium text-gray-500">Plano de Saúde</p>
-                    <p className="font-medium">{patient.health_insurance}</p>
-                    {patient.health_insurance_number && (
-                      <p className="text-xs text-gray-600">#{patient.health_insurance_number}</p>
+                    <p className="font-medium">{patient.insurance_provider}</p>
+                    {patient.insurance_number && (
+                      <p className="text-xs text-gray-600">#{patient.insurance_number}</p>
                     )}
                   </div>
                 )}
@@ -498,10 +481,10 @@ export default function PatientDetailsPage() {
                   </div>
                 )}
 
-                {patient.current_medications && (
+                {patient.medications && (
                   <div>
                     <p className="text-sm font-medium text-gray-500">Medicações Atuais</p>
-                    <p className="text-sm">{patient.current_medications}</p>
+                    <p className="text-sm">{patient.medications}</p>
                   </div>
                 )}
 
@@ -515,20 +498,6 @@ export default function PatientDetailsPage() {
             </Card>
           </div>
 
-          {/* Observações */}
-          {patient.observations && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <FileText className="h-5 w-5" />
-                  <span>Observações Gerais</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>{patient.observations}</p>
-              </CardContent>
-            </Card>
-          )}
         </TabsContent>
 
         {/* Tab: Mapeamento Corporal */}
@@ -637,7 +606,7 @@ export default function PatientDetailsPage() {
                   </CardHeader>
                   <CardContent className="space-y-3">
                     {painPoints
-                      .sort((a, b) => b.assessment_date.localeCompare(a.assessment_date))
+                      .sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''))
                       .slice(0, 3)
                       .map((painPoint) => (
                         <div
@@ -658,7 +627,7 @@ export default function PatientDetailsPage() {
                             </Badge>
                           </div>
                           <p className="text-xs text-gray-500">
-                            {format(parseISO(painPoint.assessment_date), 'dd/MM/yyyy', { locale: ptBR })}
+                            {painPoint.created_at ? format(parseISO(painPoint.created_at), 'dd/MM/yyyy', { locale: ptBR }) : 'Data não disponível'}
                           </p>
                         </div>
                       ))}

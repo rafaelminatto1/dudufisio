@@ -8,7 +8,7 @@ import { createServerClient, createRouteClient } from '@/lib/supabase/client'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { cache } from 'react'
-import type { Org, UserRole } from '@/lib/supabase/database.types'
+import type { UserRole } from '@/lib/supabase/database.types'
 import type { Database } from '@/lib/supabase/database.types'
 import type { AuthUser, SignInCredentials, SignUpData, PasswordResetData, AuthError } from './types'
 
@@ -46,7 +46,7 @@ export const getCurrentUser = cache(async (): Promise<AuthUser | null> => {
 
     // Determinar organização atual (primeira ativa)
     const currentMembership = memberships?.[0] as any
-    const currentOrg = currentMembership?.orgs as Org
+    const currentOrg = currentMembership?.orgs as any
     const currentRole = currentMembership?.role as UserRole
 
     return {

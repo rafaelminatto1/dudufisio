@@ -623,3 +623,8 @@ export type PainPoint = {
 
 export type PainType = 'sharp' | 'dull' | 'burning' | 'tingling' | 'cramping' | 'other'
 export type AssessmentType = 'initial' | 'progress' | 'discharge' | 'reassessment'
+
+// Additional types for compatibility
+export type Patient = Database['public']['Tables']['patients']['Row']
+export type Session = any
+export type Appointment = Database['public']['Tables']['appointments']['Row']

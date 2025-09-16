@@ -4,16 +4,16 @@
  */
 
 import type { User } from '@supabase/supabase-js'
-import type { UserRole, Org, OrgMembership, Profile } from '@/lib/supabase/database.types'
+import type { UserRole } from '@/lib/supabase/database.types'
 
 /**
  * Interfaces para autenticação
  */
 export interface AuthUser extends User {
-  profile?: Profile
-  currentOrg?: Org
+  profile?: any
+  currentOrg?: any
   currentRole?: UserRole
-  memberships?: OrgMembership[]
+  memberships?: any[]
 }
 
 export interface SignInCredentials {

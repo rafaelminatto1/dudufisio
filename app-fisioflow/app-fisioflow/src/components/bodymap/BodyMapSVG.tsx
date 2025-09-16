@@ -344,8 +344,8 @@ export default function BodyMapSVG({
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <circle
-                        cx={(painPoint.x_coordinate / 100) * 800}
-                        cy={(painPoint.y_coordinate / 100) * 800}
+                        cx={((painPoint.x_coordinate || 0) / 100) * 800}
+                        cy={((painPoint.y_coordinate || 0) / 100) * 800}
                         r="8"
                         fill={getPainPointIntensityColor(painPoint.pain_intensity)}
                         stroke="white"
@@ -369,7 +369,7 @@ export default function BodyMapSVG({
                           </p>
                         )}
                         <p className="text-xs text-gray-500">
-                          {new Date(painPoint.assessment_date).toLocaleDateString('pt-BR')}
+                          {painPoint.created_at ? new Date(painPoint.created_at).toLocaleDateString('pt-BR') : 'Data não disponível'}
                         </p>
                       </div>
                     </TooltipContent>
@@ -378,8 +378,8 @@ export default function BodyMapSVG({
                   {/* Pulsar para dor intensa */}
                   {painPoint.pain_intensity >= 8 && (
                     <circle
-                      cx={(painPoint.x_coordinate / 100) * 800}
-                      cy={(painPoint.y_coordinate / 100) * 800}
+                      cx={((painPoint.x_coordinate || 0) / 100) * 800}
+                      cy={((painPoint.y_coordinate || 0) / 100) * 800}
                       r="12"
                       fill="none"
                       stroke={getPainPointIntensityColor(painPoint.pain_intensity)}

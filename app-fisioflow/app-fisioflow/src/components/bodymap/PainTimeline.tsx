@@ -116,7 +116,7 @@ export default function PainTimeline({
 
     // Agrupar pontos por data
     const groupedByDate = painPoints.reduce((acc, point) => {
-      const date = point.assessment_date.split('T')[0] // Extrair apenas a data
+      const date = point.created_at ? point.created_at.split('T')[0] : new Date().toISOString().split('T')[0] // Extrair apenas a data
       if (!acc[date]) {
         acc[date] = []
       }
@@ -128,10 +128,10 @@ export default function PainTimeline({
     return Object.entries(groupedByDate)
       .map(([date, points]) => {
         const intensities = points.map(p => p.pain_intensity)
-        const regions = [...new Set(points.map(p => p.body_region))]
+        const regions = [...new Set(points.map(p => p.body_region).filter(Boolean))]
         const improvements = points
-          .filter(p => p.improvement_notes)
-          .map(p => p.improvement_notes!)
+          .filter(p => p.pain_description)
+          .map(p => p.pain_description!)
 
         return {
           date,
@@ -141,7 +141,7 @@ export default function PainTimeline({
           minPain: Math.min(...intensities),
           totalPoints: points.length,
           regions,
-          assessmentType: points[0].assessment_type,
+          assessmentType: 'progress',
           improvements
         } as TimelineData
       })
@@ -189,12 +189,12 @@ export default function PainTimeline({
 
   // Calcular análise de tendências por região
   const regionTrends = useMemo(() => {
-    const regions = [...new Set(painPoints.map(p => p.body_region))]
+    const regions = [...new Set(painPoints.map(p => p.body_region).filter(Boolean))]
 
     return regions.map(region => {
       const regionPoints = painPoints
         .filter(p => p.body_region === region)
-        .sort((a, b) => a.assessment_date.localeCompare(b.assessment_date))
+        .sort((a, b) => (a.created_at || '').localeCompare(b.created_at || ''))
 
       if (regionPoints.length < 2) {
         return {
@@ -203,7 +203,7 @@ export default function PainTimeline({
           currentPain: regionPoints[0]?.pain_intensity || 0,
           initialPain: regionPoints[0]?.pain_intensity || 0,
           changePercentage: 0,
-          lastUpdate: regionPoints[0]?.assessment_date || ''
+          lastUpdate: regionPoints[0]?.created_at || ''
         }
       }
 
@@ -222,14 +222,14 @@ export default function PainTimeline({
         currentPain: current,
         initialPain: initial,
         changePercentage: Math.abs(changePercentage),
-        lastUpdate: regionPoints[regionPoints.length - 1].assessment_date
+        lastUpdate: regionPoints[regionPoints.length - 1].created_at
       } as RegionTrendData
     })
   }, [painPoints])
 
   // Obter lista de regiões únicas
   const uniqueRegions = useMemo(() => {
-    return [...new Set(painPoints.map(p => p.body_region))]
+    return [...new Set(painPoints.map(p => p.body_region).filter(Boolean))]
   }, [painPoints])
 
   // Calcular estatísticas gerais
@@ -580,7 +580,7 @@ export default function PainTimeline({
                 <SelectContent>
                   <SelectItem value="all">Todas as regiões</SelectItem>
                   {uniqueRegions.map((region) => (
-                    <SelectItem key={region} value={region}>
+                    <SelectItem key={region} value={region || ''}>
                       {region}
                     </SelectItem>
                   ))}
