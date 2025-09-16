@@ -20,8 +20,28 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { inviteUser, getPendingInvitations, cancelInvitation, resendInvitation, type InviteUserData, type PendingInvitation } from '@/lib/auth/invitations'
+// import { inviteUser, getPendingInvitations, cancelInvitation, resendInvitation, type InviteUserData, type PendingInvitation } from '@/lib/auth/invitations'
 import type { UserRole } from '@/lib/supabase/database.types'
+
+// Temporary disabled - will be implemented after database setup
+type InviteUserData = {
+  email: string
+  name: string
+  role: UserRole
+  message?: string
+}
+
+type PendingInvitation = {
+  id: string
+  email: string
+  name: string
+  role: UserRole
+  status: string
+  expires_at: string
+  created_at: string
+  invited_by_name: string
+  message?: string
+}
 
 export default function UserInvitations() {
   const [invitations, setInvitations] = useState<PendingInvitation[]>([])
@@ -34,8 +54,9 @@ export default function UserInvitations() {
 
   const loadInvitations = async () => {
     try {
-      const data = await getPendingInvitations()
-      setInvitations(data)
+      // Temporarily disabled - will be implemented after database setup
+      // const data = await getPendingInvitations()
+      setInvitations([])
     } catch (error) {
       console.error('Erro ao carregar convites:', error)
     } finally {
@@ -54,7 +75,7 @@ export default function UserInvitations() {
       case 'pending':
         return <Badge variant="default"><Clock className="w-3 h-3 mr-1" />Pendente</Badge>
       case 'accepted':
-        return <Badge variant="success"><CheckCircle className="w-3 h-3 mr-1" />Aceito</Badge>
+        return <Badge variant="default"><CheckCircle className="w-3 h-3 mr-1" />Aceito</Badge>
       case 'cancelled':
         return <Badge variant="secondary"><XCircle className="w-3 h-3 mr-1" />Cancelado</Badge>
       case 'error':
@@ -80,8 +101,10 @@ export default function UserInvitations() {
     if (!confirm('Tem certeza que deseja cancelar este convite?')) return
 
     try {
-      await cancelInvitation(invitationId)
+      // Temporarily disabled - will be implemented after database setup
+      // await cancelInvitation(invitationId)
       await loadInvitations()
+      alert('Funcionalidade temporariamente indisponível')
     } catch (error: any) {
       alert(`Erro ao cancelar convite: ${error.message}`)
     }
@@ -89,9 +112,10 @@ export default function UserInvitations() {
 
   const handleResend = async (invitationId: string) => {
     try {
-      await resendInvitation(invitationId)
+      // Temporarily disabled - will be implemented after database setup
+      // await resendInvitation(invitationId)
       await loadInvitations()
-      alert('Convite reenviado com sucesso!')
+      alert('Funcionalidade temporariamente indisponível')
     } catch (error: any) {
       alert(`Erro ao reenviar convite: ${error.message}`)
     }
@@ -257,13 +281,15 @@ function InviteUserForm({ onSuccess, onCancel }: {
     setError(null)
 
     try {
-      const result = await inviteUser(formData)
+      // Temporarily disabled - will be implemented after database setup
+      // const result = await inviteUser(formData)
+      setError('Funcionalidade temporariamente indisponível - aguarde configuração do banco de dados')
 
-      if (result.success) {
-        onSuccess()
-      } else {
-        setError(result.error || 'Erro ao enviar convite')
-      }
+      // if (result.success) {
+      //   onSuccess()
+      // } else {
+      //   setError(result.error || 'Erro ao enviar convite')
+      // }
     } catch (error: any) {
       setError(error.message || 'Erro interno do servidor')
     } finally {
