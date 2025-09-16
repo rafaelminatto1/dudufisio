@@ -623,7 +623,7 @@ export function PainPointSummary({ painPoint }: { painPoint: PainPoint }) {
       )}
 
       <p className="text-xs text-gray-500">
-        Avaliado em {format(parseISO(painPoint.assessment_date), 'dd/MM/yyyy', { locale: ptBR })}
+        Avaliado em {painPoint.created_at ? format(parseISO(painPoint.created_at), 'dd/MM/yyyy', { locale: ptBR }) : 'Data não disponível'}
       </p>
     </div>
   )
