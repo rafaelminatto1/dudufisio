@@ -378,8 +378,8 @@ export default function BodyMapSVG({
                   {/* Pulsar para dor intensa */}
                   {painPoint.pain_intensity >= 8 && (
                     <circle
-                      cx={(painPoint.x_coordinate / 100) * 800}
-                      cy={(painPoint.y_coordinate / 100) * 800}
+                      cx={((painPoint.x_coordinate || 0) / 100) * 800}
+                      cy={((painPoint.y_coordinate || 0) / 100) * 800}
                       r="12"
                       fill="none"
                       stroke={getPainPointIntensityColor(painPoint.pain_intensity)}
