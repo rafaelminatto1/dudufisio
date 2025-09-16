@@ -26,6 +26,7 @@
     "db:seed": "node scripts/seed-database.js",
     "db:generate-types": "supabase gen types typescript --local > src/lib/database.types.ts",
     "env:check": "node scripts/validate-env.js",
+    "setup:supabase": "node scripts/setup-supabase.js",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
     "supabase:status": "supabase status",

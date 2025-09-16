@@ -81,8 +81,11 @@ cd dudufisio
 # Instale as dependências
 npm install
 
-# Configure as variáveis de ambiente
-cp .env.example .env.local
+# Configure o Supabase
+npm run setup:supabase
+
+# Configure as variáveis de ambiente no arquivo .env.local
+# Siga as instruções em SUPABASE_SETUP.md
 
 # Execute o projeto
 npm run dev
