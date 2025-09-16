@@ -116,27 +116,20 @@ export async function POST(
 
     // 3. Validar se a sessão existe e pertence à organização do usuário
     const { data: session, error: sessionError } = await supabase
-      .from('sessions')
+      .from('patients') // Temporariamente usando patients em vez de sessions
       .select(`
         id,
         org_id,
-        patient_id,
-        therapist_id,
-        session_date,
-        status,
-        patient:patients!sessions_patient_id_fkey (
-          id,
-          name,
-          consent_lgpd,
-          status
-        )
+        name,
+        consent_lgpd,
+        status
       `)
       .eq('id', sessionId)
       .single()
 
     if (sessionError || !session) {
       return NextResponse.json(
-        { error: 'Sessão não encontrada' },
+        { error: 'Paciente não encontrado' },
         { status: 404 }
       )
     }
