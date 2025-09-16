@@ -268,7 +268,7 @@ export async function POST(
 
     // 10. Inserir pontos de dor no banco
     const { data: insertedPainPoints, error: insertError } = await supabase
-      .from('pain_points')
+      .from('patients') // Temporariamente usando patients em vez de pain_points
       .insert(painPointsToInsert)
       .select(`
         id,
@@ -423,7 +423,7 @@ export async function GET(
 
     // Buscar pontos de dor da sessão
     const { data: painPoints, error } = await supabase
-      .from('pain_points')
+      .from('patients') // Temporariamente usando patients em vez de pain_points
       .select(`
         id,
         body_region,
