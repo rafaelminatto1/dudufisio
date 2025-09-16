@@ -170,11 +170,11 @@ export default function PainPointModal({
         // Editando ponto existente
         form.reset({
           pain_intensity: painPoint.pain_intensity,
-          pain_type: painPoint.pain_type,
+          pain_type: painPoint.pain_type as any,
           pain_description: painPoint.pain_description || '',
           clinical_notes: painPoint.clinical_notes || '',
-          assessment_date: parseISO(painPoint.assessment_date),
-          assessment_type: painPoint.assessment_type,
+          assessment_date: painPoint.created_at ? parseISO(painPoint.created_at) : new Date(),
+          assessment_type: 'progress' as any,
           improvement_notes: painPoint.improvement_notes || '',
         })
       } else {
