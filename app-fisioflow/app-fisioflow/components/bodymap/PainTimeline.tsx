@@ -228,7 +228,7 @@ export default function PainTimeline({
 
   // Obter lista de regiões únicas
   const uniqueRegions = useMemo(() => {
-    return [...new Set(painPoints.map(p => p.body_region))]
+    return [...new Set(painPoints.map(p => p.body_region).filter(Boolean))]
   }, [painPoints])
 
   // Calcular estatísticas gerais
