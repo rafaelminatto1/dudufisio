@@ -369,7 +369,7 @@ export default function BodyMapSVG({
                           </p>
                         )}
                         <p className="text-xs text-gray-500">
-                          {new Date(painPoint.assessment_date).toLocaleDateString('pt-BR')}
+                          {painPoint.created_at ? new Date(painPoint.created_at).toLocaleDateString('pt-BR') : 'Data não disponível'}
                         </p>
                       </div>
                     </TooltipContent>
