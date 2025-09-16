@@ -174,7 +174,7 @@ export async function POST(
     }
 
     // 6. Verificar se o paciente está ativo
-    if (session.patient?.status !== 'active') {
+    if (session.status !== 'active') {
       return NextResponse.json(
         { error: 'Não é possível registrar dor para paciente inativo' },
         { status: 400 }
