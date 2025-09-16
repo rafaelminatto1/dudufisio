@@ -130,9 +130,7 @@ export default function PainTimeline({
       .map(([date, points]) => {
         const intensities = points.map(p => p.pain_intensity)
         const regions = [...new Set(points.map(p => p.body_region))]
-        const improvements = points
-          .filter(p => p.improvement_notes)
-          .map(p => p.improvement_notes!)
+        const improvements: string[] = []
 
         return {
           date,
