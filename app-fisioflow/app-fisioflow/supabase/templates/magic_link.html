@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso ao FisioFlow</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8fafc;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo {
+            width: 64px;
+            height: 64px;
+            background: #2563eb;
+            border-radius: 12px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        h1 {
+            color: #1e293b;
+            margin: 0 0 10px;
+        }
+        .subtitle {
+            color: #64748b;
+            font-size: 16px;
+        }
+        .content {
+            margin: 30px 0;
+        }
+        .highlight {
+            background: #ecfdf5;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #10b981;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .button {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .button:hover {
+            background: #059669;
+        }
+        .security-note {
+            background: #fef3c7;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #f59e0b;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 14px;
+            color: #64748b;
+            text-align: center;
+        }
+        .expire-info {
+            color: #dc2626;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🔐</div>
+            <h1>Acesso Rápido ao FisioFlow</h1>
+            <p class="subtitle">Link seguro de autenticação</p>
+        </div>
+
+        <div class="content">
+            <p>Olá,</p>
+
+            <p>Você solicitou acesso ao <strong>FisioFlow</strong> usando seu email. Clique no botão abaixo para entrar de forma segura, sem precisar digitar sua senha:</p>
+
+            <div class="highlight">
+                <p style="margin: 0 0 20px;"><strong>🚀 Acesso instantâneo</strong></p>
+                <a href="{{ .ConfirmationURL }}" class="button">Entrar no FisioFlow</a>
+            </div>
+
+            <div class="security-note">
+                <p><strong>🔒 Informações de segurança:</strong></p>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li>Este link é único e seguro</li>
+                    <li class="expire-info">Expira em 1 hora</li>
+                    <li>Válido apenas para este email: {{ .Email }}</li>
+                    <li>Não compartilhe este link</li>
+                </ul>
+            </div>
+
+            <p><strong>💡 Dica:</strong> Você também pode entrar usando:</p>
+            <ul>
+                <li>✅ Sua conta Google (mais rápido)</li>
+                <li>✅ Email e senha tradicional</li>
+                <li>✅ Novo link mágico (se este expirar)</li>
+            </ul>
+
+            <p>Se você não solicitou este acesso, ignore este email. Sua conta permanecerá segura.</p>
+        </div>
+
+        <div class="footer">
+            <p><strong>🏥 FisioFlow - Sistema de Gestão Fisioterapêutica</strong></p>
+            <p><strong>🔒 Conformidade LGPD • Certificado para dados de saúde</strong></p>
+            <p>© {{ date "2006" }} FisioFlow. Todos os direitos reservados.</p>
+            <p style="font-size: 12px; margin-top: 20px;">
+                <a href="{{ .SiteURL }}/privacy" style="color: #64748b;">Política de Privacidade</a> |
+                <a href="{{ .SiteURL }}/terms" style="color: #64748b;">Termos de Uso</a> |
+                <a href="{{ .SiteURL }}/help" style="color: #64748b;">Ajuda</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
