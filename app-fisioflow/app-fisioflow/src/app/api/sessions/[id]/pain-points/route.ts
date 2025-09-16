@@ -155,7 +155,7 @@ export async function POST(
     }
 
     // 5. Verificar conformidade LGPD
-    if (!session.patient?.consent_lgpd) {
+    if (!session.consent_lgpd) {
       await logAuditEvent({
         table_name: 'pain_points',
         operation: 'CREATE_DENIED',
