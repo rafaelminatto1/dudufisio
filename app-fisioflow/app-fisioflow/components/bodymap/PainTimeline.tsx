@@ -202,7 +202,7 @@ export default function PainTimeline({
           currentPain: regionPoints[0]?.pain_intensity || 0,
           initialPain: regionPoints[0]?.pain_intensity || 0,
           changePercentage: 0,
-          lastUpdate: regionPoints[0]?.assessment_date || ''
+          lastUpdate: regionPoints[0]?.created_at || ''
         }
       }
 
