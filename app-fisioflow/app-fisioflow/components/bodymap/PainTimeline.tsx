@@ -193,7 +193,7 @@ export default function PainTimeline({
     return regions.map(region => {
       const regionPoints = painPoints
         .filter(p => p.body_region === region)
-        .sort((a, b) => a.assessment_date.localeCompare(b.assessment_date))
+        .sort((a, b) => (a.created_at || '').localeCompare(b.created_at || ''))
 
       if (regionPoints.length < 2) {
         return {
