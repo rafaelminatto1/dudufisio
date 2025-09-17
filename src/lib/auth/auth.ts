@@ -4,7 +4,8 @@
  * Includes LGPD compliance and multi-role authentication
  */
 
-import { createServerClient, createRouteClient } from '@/lib/supabase/client'
+import { createServerClient } from '@/lib/supabase/server'
+import { createClient } from '@/lib/supabase/client'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { cache } from 'react'
@@ -17,7 +18,7 @@ import type { AuthUser, SignInCredentials, SignUpData, PasswordResetData, AuthEr
  * Usado em Server Components e Route Handlers
  */
 export const getCurrentUser = cache(async (): Promise<AuthUser | null> => {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
 
   try {
     const { data: { user }, error } = await supabase.auth.getUser()
@@ -108,7 +109,7 @@ export const requireRole = async (
 export const signIn = async (
   credentials: SignInCredentials
 ): Promise<{ user: AuthUser | null; error: AuthError | null }> => {
-  const supabase = createRouteClient()
+  const supabase = createClient()
 
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -156,7 +157,7 @@ export const signIn = async (
 export const signUp = async (
   data: SignUpData
 ): Promise<{ user: AuthUser | null; error: AuthError | null }> => {
-  const supabase = createRouteClient()
+  const supabase = createClient()
 
   // Validações
   if (data.password !== data.confirmPassword) {
@@ -238,7 +239,7 @@ export const signUp = async (
  * Fazer logout
  */
 export const signOut = async (): Promise<{ error: AuthError | null }> => {
-  const supabase = createRouteClient()
+  const supabase = createClient()
 
   try {
     const { error } = await supabase.auth.signOut()
@@ -269,7 +270,7 @@ export const signOut = async (): Promise<{ error: AuthError | null }> => {
 export const resetPassword = async (
   data: PasswordResetData
 ): Promise<{ error: AuthError | null }> => {
-  const supabase = createRouteClient()
+  const supabase = createClient()
 
   try {
     const { error } = await supabase.auth.resetPasswordForEmail(data.email, {
@@ -302,7 +303,7 @@ export const resetPassword = async (
 export const updatePassword = async (
   newPassword: string
 ): Promise<{ error: AuthError | null }> => {
-  const supabase = createRouteClient()
+  const supabase = createClient()
 
   try {
     const { error } = await supabase.auth.updateUser({
@@ -333,7 +334,7 @@ export const updatePassword = async (
  * Trocar organização ativa
  */
 export const switchOrganization = async (orgId: string): Promise<{ error: AuthError | null }> => {
-  const supabase = createRouteClient()
+  const supabase = createClient()
   const user = await getCurrentUser()
 
   if (!user) {
@@ -381,7 +382,7 @@ export const switchOrganization = async (orgId: string): Promise<{ error: AuthEr
  * Verificar consentimento LGPD
  */
 export const checkLgpdConsent = async (patientId: string): Promise<boolean> => {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
 
   try {
     const { data } = await (supabase as any).rpc('check_lgpd_consent', {
@@ -403,7 +404,7 @@ export const logPatientDataAccess = async (
   accessType: string,
   accessedFields?: string[]
 ): Promise<void> => {
-  const supabase = createRouteClient()
+  const supabase = createClient()
 
   try {
     await (supabase as any).rpc('log_patient_data_access', {

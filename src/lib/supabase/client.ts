@@ -5,12 +5,12 @@
  */
 
 import { createBrowserClient } from '@supabase/ssr'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { env } from '@/lib/env'
 import type { Database } from './database.types'
+
+// Configurações do ambiente - usando diretamente as variáveis do .env.local
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
 /**
  * Cliente Supabase para componentes do navegador
@@ -18,8 +18,8 @@ import type { Database } from './database.types'
  */
 export const createClient = () =>
   createBrowserClient<Database>(
-    env.NEXT_PUBLIC_SUPABASE_URL,
-    env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       auth: {
         persistSession: true,
@@ -40,25 +40,6 @@ export const createClient = () =>
     }
   )
 
-/**
- * Cliente Supabase para componentes do servidor
- * Usado em Server Components
- */
-export const createServerClient = () => {
-  return createServerComponentClient<Database>({
-    cookies: async () => await cookies(),
-  })
-}
-
-/**
- * Cliente Supabase para Route Handlers
- * Usado em API Routes
- */
-export const createRouteClient = () => {
-  return createRouteHandlerClient<Database>({
-    cookies: async () => await cookies(),
-  })
-}
 
 /**
  * Cliente Supabase com service role
@@ -66,8 +47,8 @@ export const createRouteClient = () => {
  */
 export const createServiceClient = () =>
   createBrowserClient<Database>(
-    env.NEXT_PUBLIC_SUPABASE_URL,
-    env.SUPABASE_SERVICE_ROLE_KEY,
+    supabaseUrl,
+    supabaseServiceKey,
     {
       auth: {
         persistSession: false,
@@ -98,8 +79,6 @@ export const getSupabaseClient = () => {
  * Tipos e interfaces para o cliente Supabase
  */
 export type SupabaseClient = ReturnType<typeof createClient>
-export type SupabaseServerClient = ReturnType<typeof createServerClient>
-export type SupabaseRouteClient = ReturnType<typeof createRouteClient>
 export type SupabaseServiceClient = ReturnType<typeof createServiceClient>
 
 /**
