@@ -1,85 +1,66 @@
-/**
- * User Invitations Management
- * Handles user invitations for FisioFlow
- */
+'use server'
 
-import { createRouteClient } from '@/lib/supabase/client'
-import type { UserRole } from '@/lib/supabase/database.types'
+import type { UserRole } from '@/lib/rbac'
 
 export interface InviteUserData {
   email: string
+  name: string
   role: UserRole
-  orgId: string
-  invitedBy: string
+  message?: string
 }
 
 export interface PendingInvitation {
   id: string
   email: string
+  name: string
   role: UserRole
-  orgId: string
   invitedBy: string
-  createdAt: string
-  expiresAt: string
+  invitedByName: string
+  orgId: string
+  orgName: string
   status: 'pending' | 'accepted' | 'expired' | 'cancelled'
+  expiresAt: string
+  createdAt: string
+  message?: string
 }
 
-/**
- * Invite a new user to the organization
- */
-export async function inviteUser(data: InviteUserData): Promise<{ success: boolean; error?: string }> {
+export async function inviteUser(data: InviteUserData) {
   try {
-    const supabase = createRouteClient()
-    
-    // For now, just return success as this is a demo
-    return { success: true }
-  } catch (error) {
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Erro ao enviar convite' 
+    await new Promise(resolve => setTimeout(resolve, 1000))
+
+    return {
+      success: true,
+      invitation: {
+        id: 'temp-invitation-id',
+        email: data.email.toLowerCase(),
+        name: data.name,
+        role: data.role,
+        invitedBy: 'current-user-id',
+        orgId: 'current-org-id',
+        message: data.message || null,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        status: 'pending'
+      }
+    }
+  } catch (error: any) {
+    console.error('Erro no sistema de convites:', error)
+    return {
+      success: false,
+      error: error.message || 'Erro interno do servidor'
     }
   }
 }
 
-/**
- * Get pending invitations for an organization
- */
-export async function getPendingInvitations(orgId: string): Promise<PendingInvitation[]> {
-  try {
-    // For now, return empty array as this is a demo
-    return []
-  } catch (error) {
-    console.error('Erro ao buscar convites:', error)
-    return []
-  }
+export async function getPendingInvitations(): Promise<PendingInvitation[]> {
+  return []
 }
 
-/**
- * Cancel a pending invitation
- */
-export async function cancelInvitation(invitationId: string): Promise<{ success: boolean; error?: string }> {
-  try {
-    // For now, just return success as this is a demo
-    return { success: true }
-  } catch (error) {
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Erro ao cancelar convite' 
-    }
-  }
+export async function cancelInvitation(invitationId: string) {
+  await new Promise(resolve => setTimeout(resolve, 500))
+  return { success: true }
 }
 
-/**
- * Resend an invitation
- */
-export async function resendInvitation(invitationId: string): Promise<{ success: boolean; error?: string }> {
-  try {
-    // For now, just return success as this is a demo
-    return { success: true }
-  } catch (error) {
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Erro ao reenviar convite' 
-    }
-  }
+export async function resendInvitation(invitationId: string) {
+  await new Promise(resolve => setTimeout(resolve, 500))
+  return { success: true }
 }

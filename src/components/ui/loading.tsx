@@ -163,8 +163,12 @@ export const LOADING_MESSAGES = {
   }
 } as const
 
+// LoadingSpinner alias for backward compatibility
+const LoadingSpinner = Loading
+
 export {
   Loading,
+  LoadingSpinner,
   LoadingPage,
   LoadingButton,
   LoadingCard,

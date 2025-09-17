@@ -29,7 +29,6 @@ const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
   }, ref) => {
     const [displayValue, setDisplayValue] = React.useState("")
 
-    // Update display value when value prop changes
     React.useEffect(() => {
       if (value !== undefined) {
         setDisplayValue(formatCurrency(value, { showSymbol }))
@@ -39,21 +38,15 @@ const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       let inputValue = e.target.value
 
-      // Remove currency symbol if present
       inputValue = inputValue.replace(/R\$\s?/g, '')
-
-      // Only allow numbers, commas, and dots
       inputValue = inputValue.replace(/[^0-9.,]/g, '')
 
-      // Handle negative values
       if (!allowNegative) {
         inputValue = inputValue.replace(/-/g, '')
       }
 
-      // Parse the numeric value
       let numericValue = parseCurrency(inputValue)
 
-      // Apply min/max constraints
       if (maxValue !== undefined && numericValue > maxValue) {
         numericValue = maxValue
       }
@@ -61,16 +54,13 @@ const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
         numericValue = minValue
       }
 
-      // Format and update display
       const formatted = formatCurrency(numericValue, { showSymbol })
       setDisplayValue(formatted)
 
-      // Call onChange with numeric value
       onChange?.(numericValue)
     }
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-      // Ensure proper formatting on blur
       const numericValue = parseCurrency(displayValue)
       const formatted = formatCurrency(numericValue, { showSymbol })
       setDisplayValue(formatted)
@@ -79,7 +69,6 @@ const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
     }
 
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-      // Remove formatting for easier editing
       const numericValue = parseCurrency(displayValue)
       if (numericValue === 0) {
         setDisplayValue("")

@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { validateSessionMiddleware } from './lib/auth/session-manager'
+import { hasPermission, UserRole } from './lib/rbac'
 
 /**
  * Configurações de segurança para dados de saúde brasileiros
@@ -62,21 +63,31 @@ const SECURITY_CONFIG = {
 }
 
 /**
- * Rotas que requerem autenticação
+ * Rotas que requerem autenticação e suas permissões necessárias
  */
 const protectedRoutes = [
-  '/dashboard',
-  '/patients',
-  '/appointments',
-  '/sessions',
-  '/exercises',
-  '/reports',
-  '/api/patients',
-  '/api/appointments',
-  '/api/sessions',
-  '/api/pain-points',
-  '/api/prescriptions',
-  '/api/audit'
+  { path: '/dashboard', resource: 'dashboard', action: 'read' },
+  { path: '/patients', resource: 'patients', action: 'read' },
+  { path: '/appointments', resource: 'appointments', action: 'read' },
+  { path: '/sessions', resource: 'sessions', action: 'read' },
+  { path: '/exercises', resource: 'exercises', action: 'read' },
+  { path: '/reports', resource: 'reports', action: 'read' },
+  { path: '/users', resource: 'users', action: 'read' },
+  { path: '/settings', resource: 'settings', action: 'read' },
+  { path: '/learning', resource: 'learning', action: 'read' },
+  { path: '/my-appointments', resource: 'own:appointments', action: 'read' },
+  { path: '/my-exercises', resource: 'own:exercises', action: 'read' },
+  { path: '/my-documents', resource: 'own:documents', action: 'read' },
+  // API routes
+  { path: '/api/patients', resource: 'patients', action: 'read' },
+  { path: '/api/appointments', resource: 'appointments', action: 'read' },
+  { path: '/api/sessions', resource: 'sessions', action: 'read' },
+  { path: '/api/pain-points', resource: 'patients', action: 'read' },
+  { path: '/api/prescriptions', resource: 'prescriptions', action: 'read' },
+  { path: '/api/exercises', resource: 'exercises', action: 'read' },
+  { path: '/api/users', resource: 'users', action: 'read' },
+  { path: '/api/audit', resource: 'audit', action: 'read' },
+  { path: '/api/reports', resource: 'reports', action: 'read' }
 ]
 
 /**
@@ -89,7 +100,8 @@ const publicRoutes = [
   '/forgot-password',
   '/reset-password',
   '/api/auth',
-  '/api/health'
+  '/api/health',
+  '/bodymap'
 ]
 
 /**
@@ -124,7 +136,8 @@ async function handleRequest(request: NextRequest): Promise<NextResponse> {
   }
 
   // Verificar se rota requer autenticação
-  if (isProtectedRoute(pathname)) {
+  const protectedRoute = getProtectedRoute(pathname)
+  if (protectedRoute) {
     const sessionResult = await validateSessionMiddleware(request)
 
     if (!sessionResult.sessionData) {
@@ -134,6 +147,23 @@ async function handleRequest(request: NextRequest): Promise<NextResponse> {
       loginUrl.searchParams.set('error', 'session_required')
 
       return NextResponse.redirect(loginUrl)
+    }
+
+    // Verificar permissões RBAC
+    const userRole = sessionResult.sessionData.role as UserRole
+    if (!hasPermission(userRole, protectedRoute.resource, protectedRoute.action)) {
+      // Usuário não tem permissão para acessar esta rota
+      if (pathname.startsWith('/api/')) {
+        return NextResponse.json(
+          { error: 'Insufficient permissions', code: 'FORBIDDEN' },
+          { status: 403 }
+        )
+      } else {
+        // Redirecionar para página de erro ou dashboard
+        const errorUrl = new URL('/dashboard', request.url)
+        errorUrl.searchParams.set('error', 'insufficient_permissions')
+        return NextResponse.redirect(errorUrl)
+      }
     }
 
     // Adicionar dados de sessão aos headers para APIs
@@ -219,10 +249,22 @@ function isPublicRoute(pathname: string): boolean {
 }
 
 /**
- * Verificar se rota requer autenticação
+ * Verificar se rota requer autenticação e retornar configuração de permissão
+ */
+function getProtectedRoute(pathname: string): { path: string; resource: string; action: string } | null {
+  return protectedRoutes.find(route => {
+    if (route.path === '/') {
+      return pathname === '/'
+    }
+    return pathname.startsWith(route.path)
+  }) || null
+}
+
+/**
+ * Verificar se rota requer autenticação (função auxiliar para compatibilidade)
  */
 function isProtectedRoute(pathname: string): boolean {
-  return protectedRoutes.some(route => pathname.startsWith(route))
+  return getProtectedRoute(pathname) !== null
 }
 
 /**

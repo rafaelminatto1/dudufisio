@@ -6,7 +6,7 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import { createRouteClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import type { SignInCredentials, SignUpData, AuthError } from './types'
 
 interface MagicLinkCredentials {
@@ -20,7 +20,7 @@ interface MagicLinkCredentials {
 export async function signInAction(
   credentials: SignInCredentials
 ): Promise<{ success: boolean; error: AuthError | null }> {
-  const supabase = createRouteClient()
+  const supabase = createClient()
 
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -77,7 +77,7 @@ export async function signInAction(
 export async function signUpAction(
   data: SignUpData
 ): Promise<{ success: boolean; error: AuthError | null }> {
-  const supabase = createRouteClient()
+  const supabase = createClient()
 
   // Validações
   if (data.password !== data.confirmPassword) {
@@ -160,7 +160,7 @@ export async function signUpAction(
  * Server Action para fazer logout
  */
 export async function signOutAction(): Promise<void> {
-  const supabase = createRouteClient()
+  const supabase = createClient()
 
   try {
     await supabase.auth.signOut()
@@ -178,7 +178,7 @@ export async function resetPasswordAction(
   email: string,
   redirectTo?: string
 ): Promise<{ success: boolean; error: AuthError | null }> {
-  const supabase = createRouteClient()
+  const supabase = createClient()
 
   try {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -213,7 +213,7 @@ export async function resetPasswordAction(
 export async function signInWithMagicLinkAction(
   credentials: MagicLinkCredentials
 ): Promise<{ success: boolean; error: AuthError | null }> {
-  const supabase = createRouteClient()
+  const supabase = createClient()
 
   try {
     const { error } = await supabase.auth.signInWithOtp({
@@ -252,7 +252,7 @@ export async function signInWithMagicLinkAction(
 export async function signInWithGoogleAction(
   redirectTo?: string
 ): Promise<{ success: boolean; error: AuthError | null; url?: string }> {
-  const supabase = createRouteClient()
+  const supabase = createClient()
 
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({

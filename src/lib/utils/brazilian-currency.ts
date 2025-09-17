@@ -3,7 +3,6 @@
  * Handles Real (R$) currency formatting and financial operations
  */
 
-// Brazilian currency configuration
 export const BRAZILIAN_CURRENCY = {
   code: 'BRL',
   symbol: 'R$',
@@ -14,7 +13,6 @@ export const BRAZILIAN_CURRENCY = {
   decimal: ','
 } as const
 
-// Payment method labels in Portuguese
 export const PAYMENT_METHODS = {
   CASH: 'Dinheiro',
   DEBIT_CARD: 'Cartão de Débito',
@@ -27,7 +25,6 @@ export const PAYMENT_METHODS = {
   CHECK: 'Cheque'
 } as const
 
-// Installment periods in Portuguese
 export const INSTALLMENT_PERIODS = {
   1: 'à vista',
   2: 'em 2x',
@@ -43,9 +40,6 @@ export const INSTALLMENT_PERIODS = {
   12: 'em 12x'
 } as const
 
-/**
- * Format currency value in Brazilian Real format
- */
 export function formatCurrency(
   value: number | string,
   options?: {
@@ -97,39 +91,25 @@ export function formatCurrency(
   }
 }
 
-/**
- * Parse Brazilian currency string to number
- */
 export function parseCurrency(currencyString: string): number {
   if (!currencyString) return 0
 
-  // Remove currency symbol and normalize
   const cleaned = currencyString
     .replace(/R\$\s?/g, '')
-    .replace(/\./g, '') // Remove thousands separator
-    .replace(/,/g, '.') // Convert decimal separator
+    .replace(/\./g, '')
+    .replace(/,/g, '.')
     .trim()
 
   const parsed = parseFloat(cleaned)
   return isNaN(parsed) ? 0 : parsed
 }
 
-/**
- * Format currency input (for form fields)
- */
 export function formatCurrencyInput(value: string): string {
-  // Remove all non-numeric characters except comma and dot
   const cleaned = value.replace(/[^\d,]/g, '')
-
-  // Convert to number for formatting
   const numericValue = parseCurrency(cleaned) / 100
-
   return formatCurrency(numericValue, { showSymbol: false })
 }
 
-/**
- * Format percentage in Brazilian format
- */
 export function formatPercentage(
   value: number,
   precision: number = 2
@@ -140,9 +120,6 @@ export function formatPercentage(
   })}%`
 }
 
-/**
- * Calculate installment value
- */
 export function calculateInstallment(
   totalValue: number,
   installments: number,
@@ -173,9 +150,6 @@ export function calculateInstallment(
   }
 }
 
-/**
- * Format installment display
- */
 export function formatInstallment(
   installmentValue: number,
   installments: number,
@@ -192,9 +166,6 @@ export function formatInstallment(
   return `${installmentText} de ${formattedInstallment}`
 }
 
-/**
- * Format payment method display
- */
 export function formatPaymentMethod(
   method: keyof typeof PAYMENT_METHODS,
   installments?: number,
@@ -210,9 +181,6 @@ export function formatPaymentMethod(
   return methodName
 }
 
-/**
- * Calculate discount or surcharge
- */
 export function calculatePriceAdjustment(
   baseValue: number,
   percentage: number,
@@ -232,9 +200,6 @@ export function calculatePriceAdjustment(
   }
 }
 
-/**
- * Format discount display
- */
 export function formatDiscount(
   originalValue: number,
   discountPercentage: number
@@ -247,9 +212,6 @@ export function formatDiscount(
   return `De ${originalFormatted} por ${finalFormatted} (desconto de ${discountFormatted} - ${formatPercentage(discountPercentage)})`
 }
 
-/**
- * Validate Brazilian currency input
- */
 export function isValidCurrency(value: string | number): boolean {
   if (typeof value === 'number') {
     return !isNaN(value) && isFinite(value) && value >= 0
@@ -259,13 +221,7 @@ export function isValidCurrency(value: string | number): boolean {
   return !isNaN(parsed) && isFinite(parsed) && parsed >= 0
 }
 
-/**
- * Healthcare-specific currency utilities
- */
 export const HEALTHCARE_CURRENCY_UTILS = {
-  /**
-   * Format consultation fee
-   */
   formatConsultationFee: (value: number, paymentMethod?: keyof typeof PAYMENT_METHODS): string => {
     const formatted = formatCurrency(value)
 
@@ -277,9 +233,6 @@ export const HEALTHCARE_CURRENCY_UTILS = {
     return formatted
   },
 
-  /**
-   * Format session package price
-   */
   formatPackagePrice: (
     sessionPrice: number,
     sessionsCount: number,
@@ -295,9 +248,6 @@ export const HEALTHCARE_CURRENCY_UTILS = {
     return `${formatCurrency(totalPrice)} para ${sessionsCount} sessões`
   },
 
-  /**
-   * Format insurance copayment
-   */
   formatCopayment: (consultationFee: number, copaymentValue: number): string => {
     const patientPays = formatCurrency(copaymentValue)
     const insurancePays = formatCurrency(consultationFee - copaymentValue)
@@ -305,9 +255,6 @@ export const HEALTHCARE_CURRENCY_UTILS = {
     return `Paciente: ${patientPays} | Convênio: ${insurancePays}`
   },
 
-  /**
-   * Format outstanding balance
-   */
   formatOutstandingBalance: (totalValue: number, paidValue: number): string => {
     const outstanding = totalValue - paidValue
 
@@ -321,9 +268,6 @@ export const HEALTHCARE_CURRENCY_UTILS = {
     return `Saldo devedor: ${outstandingFormatted} (${formatPercentage(100 - percentagePaid)} restante)`
   },
 
-  /**
-   * Format monthly revenue
-   */
   formatMonthlyRevenue: (revenue: number, previousMonth?: number): string => {
     const formatted = formatCurrency(revenue, { compact: true })
 
@@ -339,9 +283,6 @@ export const HEALTHCARE_CURRENCY_UTILS = {
   }
 } as const
 
-/**
- * Currency input component helper
- */
 export function createCurrencyMask() {
   return {
     mask: (value: string) => {
