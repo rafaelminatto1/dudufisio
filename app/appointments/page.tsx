@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
 import { format, startOfWeek, endOfWeek, addDays, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import {
@@ -35,9 +36,10 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import AppointmentCalendar from '@/components/calendar/AppointmentCalendar'
-import AppointmentBookingModal from '@/components/appointments/AppointmentBookingModal'
-import { Loading } from '@/components/ui/loading'
+import { DraggableCalendar } from '@/components/appointments/DraggableCalendar'
+import { AppointmentBookingModal } from '@/components/appointments/AppointmentBookingModal'
+import { LoadingSpinner } from '@/components/ui/loading-spinner'
+import { useToast } from '@/hooks/use-toast'
 import {
   Calendar,
   Clock,
@@ -74,6 +76,7 @@ const appointmentStatusConfig = {
 }
 
 export default function AppointmentsPage() {
+  const router = useRouter()
   const { toast } = useToast()
   const [loading, setLoading] = useState(true)
   const [view, setView] = useState<AppointmentView>('calendar')
@@ -247,10 +250,8 @@ export default function AppointmentsPage() {
   }
 
   const handleEditAppointment = (appointment: Appointment) => {
-    setSelectedAppointment(appointment)
-    setSelectedDate(undefined)
-    setSelectedTime(undefined)
-    setShowBookingModal(true)
+    // Navigate to appointment details page
+    router.push(`/appointments/${appointment.id}`)
   }
 
   const handleSaveAppointment = async (appointmentData: any) => {
@@ -304,7 +305,7 @@ export default function AppointmentsPage() {
           <h1 className="text-3xl font-bold text-gray-900">Agendamentos</h1>
           <p className="text-gray-600">Gerencie sua agenda e agendamentos de pacientes</p>
         </div>
-        <Button onClick={() => handleNewAppointment()} data-testid="new-appointment-button">
+        <Button onClick={() => router.push('/appointments/new')} data-testid="new-appointment-button">
           <Plus className="h-4 w-4 mr-2" />
           Novo Agendamento
         </Button>
@@ -458,12 +459,41 @@ export default function AppointmentsPage() {
 
       {/* Conteúdo Principal */}
       {view === 'calendar' ? (
-        <AppointmentCalendar
-          appointments={filteredAppointments}
-          patients={patients}
-          currentUserRole={currentUserRole}
+        <DraggableCalendar
           onAppointmentClick={handleEditAppointment}
-          onDateClick={(date) => handleNewAppointment(date)}
+          onTimeSlotClick={(date, time, practitionerId) => {
+            // Open new appointment modal with pre-filled data
+            const appointmentDate = new Date(date)
+            setSelectedDate(appointmentDate)
+            setSelectedTime(time)
+            setShowBookingModal(true)
+          }}
+          onAppointmentDrop={async (appointmentId, newDate, newTime, newPractitionerId) => {
+            try {
+              const response = await fetch(`/api/appointments/${appointmentId}`, {
+                method: 'PATCH',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  appointment_date: newDate,
+                  start_time: newTime,
+                  practitioner_id: newPractitionerId
+                })
+              })
+
+              const result = await response.json()
+
+              if (!response.ok || !result.success) {
+                throw new Error(result.error || 'Erro ao reagendar')
+              }
+
+              // Refresh appointments list
+              loadData()
+            } catch (error: any) {
+              throw error
+            }
+          }}
           onNewAppointment={() => handleNewAppointment()}
         />
       ) : (
@@ -549,10 +579,7 @@ export default function AppointmentsPage() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => {
-                                // Navegar para detalhes do agendamento
-                                window.location.href = `/appointments/${appointment.id}`
-                              }}
+                              onClick={() => router.push(`/appointments/${appointment.id}`)}
                             >
                               <Eye className="h-4 w-4" />
                             </Button>
