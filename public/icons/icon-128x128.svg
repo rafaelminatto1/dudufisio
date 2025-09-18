@@ -1,0 +1,13 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="128" height="128" rx="16" fill="#3b82f6"/>
+  <g transform="translate(32, 32)">
+    <!-- Medical Cross -->
+    <rect x="30.08" y="19.2" width="3.84" height="19.2" fill="white" rx="1.92"/>
+    <rect x="21.76" y="28.16" width="20.48" height="3.84" fill="white" rx="1.92"/>
+
+    <!-- Human silhouette -->
+    <circle cx="32" cy="10.24" r="5.12" fill="white" opacity="0.9"/>
+    <rect x="28.16" y="15.36" width="7.68" height="15.36" rx="3.84" fill="white" opacity="0.9"/>
+  </g>
+  <text x="64" y="108.8" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">FF</text>
+</svg>

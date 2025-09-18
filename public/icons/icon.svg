@@ -1,0 +1,36 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="64" fill="#3b82f6"/>
+
+  <!-- Icon Design - Medical Cross + Body -->
+  <g transform="translate(128, 128)">
+    <!-- Medical Cross -->
+    <rect x="120" y="80" width="16" height="80" fill="white" rx="8"/>
+    <rect x="88" y="112" width="80" height="16" fill="white" rx="8"/>
+
+    <!-- Human Body Silhouette -->
+    <g fill="white" opacity="0.9">
+      <!-- Head -->
+      <circle cx="128" cy="40" r="20"/>
+
+      <!-- Body -->
+      <rect x="112" y="60" width="32" height="60" rx="16"/>
+
+      <!-- Arms -->
+      <rect x="80" y="70" width="24" height="8" rx="4"/>
+      <rect x="152" y="70" width="24" height="8" rx="4"/>
+
+      <!-- Legs -->
+      <rect x="118" y="120" width="8" height="40" rx="4"/>
+      <rect x="130" y="120" width="8" height="40" rx="4"/>
+    </g>
+
+    <!-- Pain Points (dots) -->
+    <circle cx="100" cy="90" r="3" fill="#ef4444"/>
+    <circle cx="156" cy="95" r="3" fill="#f59e0b"/>
+    <circle cx="128" cy="140" r="3" fill="#10b981"/>
+  </g>
+
+  <!-- App Name -->
+  <text x="256" y="420" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="32" font-weight="bold">FisioFlow</text>
+</svg>

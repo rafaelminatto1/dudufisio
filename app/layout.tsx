@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../src/app/globals.css";
+import { PWAManager } from "../src/components/pwa/PWAManager";
+import { OnlineStatus } from "../src/components/pwa/OnlineStatus";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -59,6 +61,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <PWAManager />
+        <OnlineStatus />
         {children}
       </body>
     </html>
