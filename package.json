@@ -30,8 +30,7 @@
     "supabase:stop": "supabase stop",
     "supabase:status": "supabase status",
     "clean": "rm -rf .next out build",
-    "install-playwright": "playwright install",
-    "postinstall": "npm run install-playwright"
+    "install-playwright": "playwright install"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
