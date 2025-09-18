@@ -138,10 +138,10 @@ Implementamos com sucesso **10 melhorias principais** no sistema FisioFlow, tran
 4. **Monitoramento** com Sentry/LogRocket
 
 ### Fase 4 - Expansão
-1. **Integração com convênios** médicos
-2. **API para dispositivos** IoT (balanças, medidores)
+1. 
+2. **API para dispositivos** IoT (balanças, medidores,smartwatch)
 3. **Machine Learning** para predição de resultados
-4. **Expansão multi-tenant** para redes de clínicas
+
 
 ---
 

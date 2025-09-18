@@ -311,9 +311,9 @@ export async function POST(request: NextRequest) {
 
     // 7. Verify practitioner exists and belongs to organization
     const { data: practitioner, error: practitionerError } = await supabase
-      .from('profiles')
-      .select('id, full_name, role')
-      .eq('id', validatedData.practitioner_id)
+      .from('org_memberships')
+      .select('user_id, role, profiles!org_memberships_user_id_fkey(id, name)')
+      .eq('user_id', validatedData.practitioner_id)
       .eq('org_id', currentUser.org_id)
       .single()
 
@@ -338,7 +338,7 @@ export async function POST(request: NextRequest) {
         appointment_type: validatedData.appointment_type,
         status: 'agendado',
         notes: validatedData.notes,
-        reminder_enabled: validatedData.reminder_enabled,
+        reminder_sent: false,
         is_recurring: validatedData.is_recurring,
         recurrence_pattern: validatedData.recurrence_pattern,
         recurrence_count: validatedData.recurrence_count,
@@ -383,7 +383,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 9. Generate reminders if enabled
-    if (validatedData.reminder_enabled) {
+    if (validatedData.reminder_enabled && newAppointment) {
       await supabase
         .rpc('generate_appointment_reminders', {
           p_appointment_id: newAppointment.id
@@ -398,7 +398,7 @@ export async function POST(request: NextRequest) {
       user_id: currentUser.id,
       additional_data: {
         patient_name: patient.name,
-        practitioner_name: practitioner.full_name,
+        practitioner_name: practitioner.profiles.name,
         appointment_date: validatedData.appointment_date,
         appointment_type: validatedData.appointment_type,
         is_recurring: validatedData.is_recurring

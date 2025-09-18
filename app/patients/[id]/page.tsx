@@ -38,6 +38,8 @@ import {
 import BodyMapSVG, { BodyMapSkeleton } from '@/components/bodymap/BodyMapSVG'
 import PainPointModal from '@/components/bodymap/PainPointModal'
 import PainTimeline from '@/components/bodymap/PainTimeline'
+import PatientPhotoUpload from '@/components/patients/PatientPhotoUpload'
+import CreateSessionModal from '@/components/sessions/CreateSessionModal'
 import {
   User,
   Calendar,
@@ -104,6 +106,7 @@ export default function PatientDetailsPage() {
 
   const [lgpdConsent, setLgpdConsent] = useState(true)
   const [activeTab, setActiveTab] = useState('overview')
+  const [showCreateSession, setShowCreateSession] = useState(false)
 
   // Carregar dados do paciente
   useEffect(() => {
@@ -111,49 +114,22 @@ export default function PatientDetailsPage() {
       try {
         setLoading(true)
 
-        // Simular carregamento de dados - em produção seria uma chamada à API
-        // const response = await fetch(`/api/patients/${patientId}`)
-        // const data = await response.json()
+        // Carregar dados do paciente
+        const patientResponse = await fetch(`/api/patients/${patientId}`)
 
-        // Dados simulados para demonstração
-        const mockPatient: Patient = {
-          id: patientId,
-          org_id: 'org_123',
-          name: 'João Silva Santos',
-          cpf: '123.456.789-00',
-          rg: 'MG-12.345.678',
-          date_of_birth: '1985-03-15',
-          gender: 'masculino',
-          phone: '(31) 99876-5432',
-          email: 'joao.santos@email.com',
-          emergency_contact_name: 'Maria Silva Santos',
-          emergency_contact_phone: '(31) 98765-4321',
-          address_line1: 'Rua das Flores, 123',
-          address_line2: 'Apt 45',
-          city: 'Belo Horizonte',
-          state: 'MG',
-          postal_code: '30130-000',
-          photo_url: null,
-          health_insurance: 'Unimed',
-          health_insurance_number: '123456789',
-          medical_history: 'Histórico de dores nas costas, sem cirurgias prévias',
-          current_medications: 'Nenhuma medicação contínua',
-          allergies: 'Alergia a dipirona',
-          observations: 'Paciente colaborativo, pratica exercícios regularmente',
-          consent_lgpd: true,
-          consent_date: '2024-01-15T10:00:00Z',
-          consent_ip_address: '192.168.1.1',
-          status: 'active',
-          created_at: '2024-01-15T10:00:00Z',
-          updated_at: '2024-09-15T14:30:00Z',
-          created_by: 'user_123',
-          updated_by: 'user_123'
+        if (!patientResponse.ok) {
+          const errorData = await patientResponse.json()
+          throw new Error(errorData.error || 'Erro ao carregar paciente')
         }
 
+        const patientResult = await patientResponse.json()
+        const patientData = patientResult.data
+
+        // Carregar pontos de dor (simulado por enquanto - será implementado nas próximas fases)
         const mockPainPoints: PainPoint[] = [
           {
             id: 'pain_1',
-            org_id: 'org_123',
+            org_id: patientData.org_id,
             patient_id: patientId,
             session_id: 'session_1',
             body_region: 'Lombar',
@@ -173,7 +149,7 @@ export default function PatientDetailsPage() {
           },
           {
             id: 'pain_2',
-            org_id: 'org_123',
+            org_id: patientData.org_id,
             patient_id: patientId,
             session_id: 'session_2',
             body_region: 'Ombro Direito',
@@ -193,11 +169,11 @@ export default function PatientDetailsPage() {
           }
         ]
 
-        setPatient(mockPatient)
+        setPatient(patientData)
         setPainPoints(mockPainPoints)
-        setCurrentUserRole('fisioterapeuta') // Simular role do usuário
-        setCanEditPatient(true)
-        setLgpdConsent(mockPatient.consent_lgpd)
+        setCurrentUserRole('fisioterapeuta') // TODO: Obter role do usuário atual
+        setCanEditPatient(true) // TODO: Verificar permissões reais
+        setLgpdConsent(patientData.consent_lgpd)
 
       } catch (error) {
         console.error('Erro ao carregar dados do paciente:', error)
@@ -351,12 +327,15 @@ export default function PatientDetailsPage() {
       {/* Cabeçalho do Paciente */}
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-4">
-          <Avatar className="h-16 w-16">
-            <AvatarImage src={patient.photo_url || undefined} />
-            <AvatarFallback className="text-lg">
-              {patient.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
-            </AvatarFallback>
-          </Avatar>
+          <PatientPhotoUpload
+            patientId={patientId}
+            patientName={patient.name}
+            currentPhotoUrl={patient.photo_url}
+            onPhotoUploaded={(newPhotoUrl) => {
+              setPatient(prev => prev ? { ...prev, photo_url: newPhotoUrl } : prev)
+            }}
+            size="lg"
+          />
           <div>
             <h1 className="text-3xl font-bold text-gray-900">{patient.name}</h1>
             <div className="flex items-center space-x-4 mt-2 text-gray-600">
@@ -386,16 +365,26 @@ export default function PatientDetailsPage() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push(`/patients/${patientId}/edit`)}>
                 <Edit className="h-4 w-4 mr-2" />
                 Editar Paciente
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {
+                toast({
+                  title: 'Em desenvolvimento',
+                  description: 'Funcionalidade de exportação será implementada em breve'
+                })
+              }}>
                 <Download className="h-4 w-4 mr-2" />
                 Exportar Dados
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {
+                toast({
+                  title: 'Em desenvolvimento',
+                  description: 'Funcionalidade de LGPD será implementada em breve'
+                })
+              }}>
                 <Shield className="h-4 w-4 mr-2" />
                 Configurar LGPD
               </DropdownMenuItem>
@@ -681,15 +670,35 @@ export default function PatientDetailsPage() {
         <TabsContent value="sessions">
           <Card>
             <CardHeader>
-              <CardTitle>Histórico de Sessões</CardTitle>
-              <CardDescription>
-                Sessões de fisioterapia realizadas com este paciente
-              </CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Histórico de Sessões</CardTitle>
+                  <CardDescription>
+                    Sessões de fisioterapia realizadas com este paciente
+                  </CardDescription>
+                </div>
+                {canEditPatient && (
+                  <Button onClick={() => setShowCreateSession(true)}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Nova Sessão
+                  </Button>
+                )}
+              </div>
             </CardHeader>
             <CardContent>
               <div className="text-center py-12 text-gray-500">
                 <Clock className="h-12 w-12 mx-auto mb-2 opacity-30" />
                 <p>Nenhuma sessão registrada ainda</p>
+                {canEditPatient && (
+                  <Button
+                    variant="outline"
+                    className="mt-4"
+                    onClick={() => setShowCreateSession(true)}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Criar Primeira Sessão
+                  </Button>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -708,6 +717,23 @@ export default function PatientDetailsPage() {
         painPoint={selectedPainPoint}
         coordinates={newPainPointCoordinates || undefined}
         readonly={!canManagePainPoints}
+      />
+
+      {/* Modal de Nova Sessão */}
+      <CreateSessionModal
+        isOpen={showCreateSession}
+        onClose={() => setShowCreateSession(false)}
+        onSuccess={(session) => {
+          // TODO: Atualizar lista de sessões
+          toast({
+            title: 'Sessão criada',
+            description: `Sessão de ${session.session_type} criada com sucesso`
+          })
+          // Mudar para a aba de sessões
+          setActiveTab('sessions')
+        }}
+        patientId={patientId}
+        patientName={patient.name}
       />
     </div>
   )

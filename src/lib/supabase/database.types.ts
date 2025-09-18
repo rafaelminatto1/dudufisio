@@ -316,15 +316,22 @@ export interface Database {
           id: string
           org_id: string
           patient_id: string
-          therapist_id: string
+          practitioner_id: string
           appointment_date: string
           start_time: string
           end_time: string
           duration_minutes: number
-          type: 'consulta' | 'sessao' | 'avaliacao' | 'retorno'
-          status: 'scheduled' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled' | 'no_show'
+          appointment_type: 'consulta' | 'retorno' | 'avaliacao' | 'fisioterapia' | 'reavaliacao' | 'emergencia'
+          status: 'agendado' | 'confirmado' | 'em_andamento' | 'concluido' | 'cancelado' | 'falta'
           notes: string | null
           reminder_sent: boolean
+          reminder_sent_at: string | null
+          is_recurring: boolean
+          recurrence_pattern: string | null
+          recurrence_count: number | null
+          recurrence_days: number[] | null
+          parent_appointment_id: string | null
+          conflict_resolution: string | null
           created_at: string
           updated_at: string
           created_by: string | null
@@ -334,15 +341,22 @@ export interface Database {
           id?: string
           org_id: string
           patient_id: string
-          therapist_id: string
+          practitioner_id: string
           appointment_date: string
           start_time: string
           end_time: string
           duration_minutes?: number
-          type: 'consulta' | 'sessao' | 'avaliacao' | 'retorno'
-          status?: 'scheduled' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled' | 'no_show'
+          appointment_type: 'consulta' | 'retorno' | 'avaliacao' | 'fisioterapia' | 'reavaliacao' | 'emergencia'
+          status?: 'agendado' | 'confirmado' | 'em_andamento' | 'concluido' | 'cancelado' | 'falta'
           notes?: string | null
           reminder_sent?: boolean
+          reminder_sent_at?: string | null
+          is_recurring?: boolean
+          recurrence_pattern?: string | null
+          recurrence_count?: number | null
+          recurrence_days?: number[] | null
+          parent_appointment_id?: string | null
+          conflict_resolution?: string | null
           created_at?: string
           updated_at?: string
           created_by?: string | null
@@ -357,8 +371,8 @@ export interface Database {
           start_time?: string
           end_time?: string
           duration_minutes?: number
-          type?: 'consulta' | 'sessao' | 'avaliacao' | 'retorno'
-          status?: 'scheduled' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled' | 'no_show'
+          appointment_type?: 'consulta' | 'retorno' | 'avaliacao' | 'fisioterapia' | 'reavaliacao' | 'emergencia'
+          status?: 'agendado' | 'confirmado' | 'em_andamento' | 'concluido' | 'cancelado' | 'falta'
           notes?: string | null
           reminder_sent?: boolean
           created_at?: string
@@ -396,7 +410,7 @@ export interface Database {
           org_id: string
           appointment_id: string | null
           patient_id: string
-          therapist_id: string
+          practitioner_id: string
           session_date: string
           start_time: string
           end_time: string
@@ -422,7 +436,7 @@ export interface Database {
           org_id: string
           appointment_id?: string | null
           patient_id: string
-          therapist_id: string
+          practitioner_id: string
           session_date: string
           start_time: string
           end_time: string
@@ -875,6 +889,26 @@ export interface Database {
         }
         Returns: boolean
       }
+      check_appointment_conflicts: {
+        Args: {
+          p_practitioner_id: string
+          p_appointment_date: string
+          p_start_time: string
+          p_end_time: string
+          p_exclude_appointment_id?: string
+        }
+        Returns: Array<{
+          conflict_id: string
+          conflict_type: string
+          severity: string
+        }>
+      }
+      generate_appointment_reminders: {
+        Args: {
+          p_appointment_id: string
+        }
+        Returns: void
+      }
       get_patient_pain_history: {
         Args: {
           p_patient_id: string
@@ -964,14 +998,14 @@ export interface Database {
     }
     Enums: {
       user_role: 'admin' | 'fisioterapeuta' | 'estagiario' | 'paciente'
-      appointment_status: 'scheduled' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled' | 'no_show'
+      appointment_status: 'agendado' | 'confirmado' | 'em_andamento' | 'concluido' | 'cancelado' | 'falta'
       session_status: 'in_progress' | 'completed' | 'cancelled'
       patient_status: 'active' | 'inactive' | 'discharged'
       org_status: 'active' | 'inactive' | 'suspended'
       membership_status: 'active' | 'inactive' | 'pending'
       subscription_type: 'free' | 'basic' | 'pro' | 'enterprise'
       gender: 'masculino' | 'feminino' | 'outro'
-      appointment_type: 'consulta' | 'sessao' | 'avaliacao' | 'retorno'
+      appointment_type: 'consulta' | 'retorno' | 'avaliacao' | 'fisioterapia' | 'reavaliacao' | 'emergencia'
       session_type: 'individual' | 'group' | 'home_visit' | 'online'
       assessment_type: 'initial' | 'progress' | 'discharge' | 'followup'
       pain_type: 'aguda' | 'cronica' | 'latejante' | 'queimacao' | 'formigamento' | 'dormencia' | 'rigidez' | 'outro'

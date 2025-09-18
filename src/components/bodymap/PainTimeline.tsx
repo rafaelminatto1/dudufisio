@@ -51,6 +51,7 @@ import {
   Activity,
   BarChart3,
   LineChart as LineChartIcon,
+  AreaChart as AreaIcon,
   FileText,
   Filter
 } from 'lucide-react'
@@ -97,7 +98,7 @@ const timeRangeOptions = [
 
 const chartTypeOptions = [
   { value: 'line', label: 'Linha', icon: LineChartIcon },
-  { value: 'area', label: 'Área', icon: Activity },
+  { value: 'area', label: 'Área', icon: AreaIcon },
   { value: 'bar', label: 'Barras', icon: BarChart3 },
 ]
 

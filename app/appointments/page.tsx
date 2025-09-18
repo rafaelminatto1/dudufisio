@@ -98,135 +98,66 @@ export default function AppointmentsPage() {
       try {
         setLoading(true)
 
-        // Dados simulados para demonstração
-        const mockPatients: Patient[] = [
-          {
-            id: 'patient_1',
-            org_id: 'org_123',
-            name: 'João Silva Santos',
-            cpf: '123.456.789-00',
-            rg: '12.345.678-9',
-            date_of_birth: '1985-03-15',
-            gender: 'masculino',
-            phone: '(31) 99876-5432',
-            email: 'joao.santos@email.com',
-            emergency_contact_name: 'Maria Silva',
-            emergency_contact_phone: '(31) 98765-4321',
-            address_line1: 'Rua das Flores, 123',
-            address_line2: 'Apt 45',
-            city: 'Belo Horizonte',
-            state: 'MG',
-            postal_code: '30130-000',
-            medical_history: 'Sem histórico relevante',
-            allergies: null,
-            current_medications: null,
-            consent_lgpd: true,
-            consent_date: '2024-01-15T10:00:00Z',
-            consent_ip_address: '192.168.1.1',
-            status: 'active',
-            observations: null,
-            health_insurance: null,
-            health_insurance_number: null,
-            photo_url: null,
-            created_at: '2024-01-15T10:00:00Z',
-            updated_at: '2024-09-15T14:30:00Z',
-            created_by: 'user_123',
-            updated_by: 'user_123'
-          },
-          {
-            id: 'patient_2',
-            org_id: 'org_123',
-            name: 'Maria Oliveira',
-            cpf: '987.654.321-00',
-            rg: '98.765.432-1',
-            date_of_birth: '1975-08-22',
-            gender: 'feminino',
-            phone: '(31) 98765-4321',
-            email: 'maria.oliveira@email.com',
-            emergency_contact_name: 'Carlos Oliveira',
-            emergency_contact_phone: '(31) 97654-3210',
-            address_line1: 'Av. Principal, 456',
-            address_line2: null,
-            city: 'Belo Horizonte',
-            state: 'MG',
-            postal_code: '30140-000',
-            medical_history: 'Diabetes tipo 2',
-            allergies: null,
-            current_medications: 'Metformina',
-            consent_lgpd: true,
-            consent_date: '2024-02-01T10:00:00Z',
-            consent_ip_address: '192.168.1.2',
-            status: 'active',
-            observations: null,
-            health_insurance: null,
-            health_insurance_number: null,
-            photo_url: null,
-            created_at: '2024-02-01T10:00:00Z',
-            updated_at: '2024-09-15T14:30:00Z',
-            created_by: 'user_123',
-            updated_by: 'user_123'
-          }
-        ]
+        // Carregar pacientes
+        const patientsResponse = await fetch('/api/patients?limit=100')
+        if (patientsResponse.ok) {
+          const patientsResult = await patientsResponse.json()
+          setPatients(patientsResult.data || [])
+        } else {
+          console.error('Erro ao carregar pacientes')
+        }
 
-        const mockAppointments: Appointment[] = [
-          {
-            id: 'apt_1',
-            org_id: 'org_123',
-            patient_id: 'patient_1',
-            therapist_id: 'user_123',
-            appointment_date: format(new Date(), 'yyyy-MM-dd'),
-            start_time: '09:00',
-            end_time: '10:00',
-            duration_minutes: 60,
-            type: 'consulta',
-            status: 'scheduled',
-            notes: 'Primeira consulta - avaliação inicial',
-            reminder_sent: false,
-            created_at: '2024-09-15T08:00:00Z',
-            updated_at: '2024-09-15T08:00:00Z',
-            created_by: 'user_123',
-            updated_by: 'user_123'
-          },
-          {
-            id: 'apt_2',
-            org_id: 'org_123',
-            patient_id: 'patient_2',
-            therapist_id: 'user_123',
-            appointment_date: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
-            start_time: '14:00',
-            end_time: '15:00',
-            duration_minutes: 60,
-            type: 'sessao',
-            status: 'confirmed',
-            notes: 'Sessão de fisioterapia - fortalecimento',
-            reminder_sent: true,
-            created_at: '2024-09-15T08:00:00Z',
-            updated_at: '2024-09-15T08:00:00Z',
-            created_by: 'user_123',
-            updated_by: 'user_123'
-          },
-          {
-            id: 'apt_3',
-            org_id: 'org_123',
-            patient_id: 'patient_1',
-            therapist_id: 'user_123',
-            appointment_date: format(addDays(new Date(), 2), 'yyyy-MM-dd'),
-            start_time: '16:00',
-            end_time: '17:30',
-            duration_minutes: 90,
-            type: 'avaliacao',
-            status: 'scheduled',
-            notes: 'Reavaliação após 2 semanas de tratamento',
-            reminder_sent: false,
-            created_at: '2024-09-15T08:00:00Z',
-            updated_at: '2024-09-15T08:00:00Z',
-            created_by: 'user_123',
-            updated_by: 'user_123'
-          }
-        ]
+        // Carregar agendamentos
+        const appointmentsResponse = await fetch('/api/appointments')
+        if (appointmentsResponse.ok) {
+          const appointmentsResult = await appointmentsResponse.json()
+          setAppointments(appointmentsResult.data || [])
+        } else {
+          // Se a API não existir ainda, usar dados mock
+          console.warn('API de agendamentos não implementada, usando dados simulados')
 
-        setPatients(mockPatients)
-        setAppointments(mockAppointments)
+          const mockAppointments: Appointment[] = [
+            {
+              id: 'apt_1',
+              org_id: 'org_123',
+              patient_id: 'patient_1',
+              therapist_id: 'user_123',
+              appointment_date: format(new Date(), 'yyyy-MM-dd'),
+              start_time: '09:00',
+              end_time: '10:00',
+              duration_minutes: 60,
+              type: 'consulta',
+              status: 'scheduled',
+              notes: 'Primeira consulta - avaliação inicial',
+              reminder_sent: false,
+              created_at: '2024-09-15T08:00:00Z',
+              updated_at: '2024-09-15T08:00:00Z',
+              created_by: 'user_123',
+              updated_by: 'user_123'
+            },
+            {
+              id: 'apt_2',
+              org_id: 'org_123',
+              patient_id: 'patient_2',
+              therapist_id: 'user_123',
+              appointment_date: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
+              start_time: '14:00',
+              end_time: '15:00',
+              duration_minutes: 60,
+              type: 'sessao',
+              status: 'confirmed',
+              notes: 'Sessão de fisioterapia - fortalecimento',
+              reminder_sent: true,
+              created_at: '2024-09-15T08:00:00Z',
+              updated_at: '2024-09-15T08:00:00Z',
+              created_by: 'user_123',
+              updated_by: 'user_123'
+            }
+          ]
+
+          setAppointments(mockAppointments)
+        }
+
         setCurrentUserRole('fisioterapeuta')
 
       } catch (error) {
