@@ -1,9 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton'
+import { LoginForm } from '@/components/auth/LoginForm'
 import { Separator } from '@/components/ui/separator'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 
 export default function LoginPage() {
@@ -40,40 +38,7 @@ export default function LoginPage() {
             </div>
 
             {/* Form de login tradicional */}
-            <form className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="seu@email.com"
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password">Senha</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Sua senha"
-                  required
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <Link
-                  href="/auth/forgot-password"
-                  className="text-sm text-blue-600 hover:text-blue-500"
-                >
-                  Esqueceu a senha?
-                </Link>
-              </div>
-
-              <Button type="submit" className="w-full">
-                Entrar
-              </Button>
-            </form>
+            <LoginForm />
 
             <div className="text-center text-sm">
               <span className="text-gray-600">Não tem uma conta? </span>

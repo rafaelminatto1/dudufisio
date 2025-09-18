@@ -48,6 +48,7 @@ export function GoogleSignInButton({
       }
 
       // O redirecionamento será feito automaticamente pelo Supabase
+      toast.success('Redirecionando para Google...')
       onSuccess?.()
     } catch (error) {
       console.error('Erro inesperado:', error)

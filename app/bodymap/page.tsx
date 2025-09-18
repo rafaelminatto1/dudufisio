@@ -14,6 +14,8 @@ import type { PainPoint } from '@/lib/supabase/database.types'
 const mockPainPoints: PainPoint[] = [
   {
     id: '1',
+    org_id: 'org_123',
+    patient_id: 'patient_1',
     session_id: 'session1',
     body_region: 'shoulder_left',
     x_coordinate: 32,
@@ -26,10 +28,14 @@ const mockPainPoints: PainPoint[] = [
     assessment_type: 'progress',
     improvement_notes: 'Ligeira melhora desde a última sessão',
     created_at: '2025-09-16T10:00:00Z',
-    updated_at: '2025-09-16T10:00:00Z'
+    updated_at: '2025-09-16T10:00:00Z',
+    created_by: 'user_123',
+    updated_by: 'user_123'
   },
   {
     id: '2',
+    org_id: 'org_123',
+    patient_id: 'patient_1',
     session_id: 'session1',
     body_region: 'lower_back',
     x_coordinate: 50,
@@ -42,10 +48,14 @@ const mockPainPoints: PainPoint[] = [
     assessment_type: 'initial',
     improvement_notes: null,
     created_at: '2025-09-16T10:00:00Z',
-    updated_at: '2025-09-16T10:00:00Z'
+    updated_at: '2025-09-16T10:00:00Z',
+    created_by: 'user_123',
+    updated_by: 'user_123'
   },
   {
     id: '3',
+    org_id: 'org_123',
+    patient_id: 'patient_1',
     session_id: 'session1',
     body_region: 'knee_right',
     x_coordinate: 55,
@@ -58,7 +68,9 @@ const mockPainPoints: PainPoint[] = [
     assessment_type: 'progress',
     improvement_notes: 'Melhora significativa na amplitude de movimento',
     created_at: '2025-09-16T10:00:00Z',
-    updated_at: '2025-09-16T10:00:00Z'
+    updated_at: '2025-09-16T10:00:00Z',
+    created_by: 'user_123',
+    updated_by: 'user_123'
   }
 ]
 
@@ -88,7 +100,7 @@ export default function BodyMapTestPage() {
     setIsModalOpen(true)
   }
 
-  const handleSavePainPoint = (data: any) => {
+  const handleSavePainPoint = async (data: any) => {
     if (selectedPainPoint) {
       // Update existing pain point
       setPainPoints(prev =>
@@ -360,7 +372,7 @@ export default function BodyMapTestPage() {
         }}
         onSave={handleSavePainPoint}
         painPoint={selectedPainPoint}
-        coordinates={newPainPointData}
+        coordinates={newPainPointData || undefined}
       />
     </div>
   )

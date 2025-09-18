@@ -25,7 +25,7 @@ export async function GET(request: Request) {
           await supabase.rpc('log_patient_data_access', {
             patient_id: data.user.id,
             access_type: 'oauth_login',
-            accessed_fields: null
+            accessed_fields: undefined
           })
         } catch (auditError) {
           console.error('Erro ao registrar log de auditoria:', auditError)

@@ -3,7 +3,7 @@
  * Manipula o callback de autenticação OAuth (Google) e Magic Links
  */
 
-import { createRouteClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { env } from '@/lib/env'
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   const redirectTo = requestUrl.searchParams.get('redirect_to') || '/dashboard'
 
   if (code) {
-    const supabase = createRouteClient()
+    const supabase = createClient()
 
     try {
       const { error } = await supabase.auth.exchangeCodeForSession(code)

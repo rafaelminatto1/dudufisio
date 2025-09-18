@@ -18,7 +18,6 @@ export const metadata: Metadata = {
   title: "FisioFlow - Sistema de Gestão Fisioterapêutica",
   description: "Sistema completo para gestão de clínicas de fisioterapia com compliance LGPD",
   manifest: "/manifest.json",
-  themeColor: "#3b82f6",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -40,6 +39,10 @@ export const metadata: Metadata = {
   icons: {
     apple: "/icons/icon-192x192.png",
   },
+};
+
+export const viewport = {
+  themeColor: "#3b82f6",
 };
 
 export default function RootLayout({
