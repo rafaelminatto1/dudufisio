@@ -8,6 +8,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { SignInCredentials, SignUpData, AuthError } from './types'
+import { logger } from '@/lib/logging/logger'
 
 interface MagicLinkCredentials {
   email: string
@@ -46,7 +47,7 @@ export async function signInAction(
           access_type: 'login'
         })
       } catch (logError) {
-        console.warn('Erro ao registrar log de acesso:', logError)
+        logger.warn('Erro ao registrar log de acesso OAuth', { userId: data.user.id }, logError as Error)
       }
 
       // Redirect será feito no componente cliente
@@ -139,7 +140,7 @@ export async function signUpAction(
         })
 
       if (profileError) {
-        console.error('Erro ao criar perfil:', profileError)
+        logger.error('Erro ao criar perfil de usuário', { userId: authData.user.id, email: data.email }, profileError)
         // Não retornar erro aqui pois o usuário já foi criado
       }
     }
@@ -165,7 +166,7 @@ export async function signOutAction(): Promise<void> {
   try {
     await supabase.auth.signOut()
   } catch (error) {
-    console.error('Erro durante logout:', error)
+    logger.error('Erro durante logout', {}, error as Error)
   }
 
   redirect('/login')
