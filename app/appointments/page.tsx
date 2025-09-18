@@ -117,7 +117,6 @@ export default function AppointmentsPage() {
             city: 'Belo Horizonte',
             state: 'MG',
             postal_code: '30130-000',
-            occupation: 'Engenheiro',
             marital_status: 'solteiro',
             medical_history: 'Sem histórico relevante',
             allergies: null,
