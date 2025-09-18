@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client-simple'
+import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -19,11 +19,23 @@ export function LoginForm({ onSuccess, onError }: LoginFormProps) {
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [isMounted, setIsMounted] = useState(false)
   const router = useRouter()
-  const supabase = createClient()
+  
+  // Initialize Supabase client only on client side
+  const [supabase, setSupabase] = useState<any>(null)
+  
+  useEffect(() => {
+    setIsMounted(true)
+    setSupabase(createClient())
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    if (!isMounted || !supabase) {
+      return
+    }
     
     if (!email || !password) {
       setError('Por favor, preencha todos os campos')
@@ -66,6 +78,35 @@ export function LoginForm({ onSuccess, onError }: LoginFormProps) {
     }
   }
 
+  // Don't render until mounted to prevent hydration issues
+  if (!isMounted) {
+    return (
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="seu@email.com"
+            disabled
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="password">Senha</Label>
+          <Input
+            id="password"
+            type="password"
+            placeholder="Sua senha"
+            disabled
+          />
+        </div>
+        <Button type="submit" className="w-full" disabled>
+          Carregando...
+        </Button>
+      </div>
+    )
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
@@ -78,6 +119,7 @@ export function LoginForm({ onSuccess, onError }: LoginFormProps) {
         <Label htmlFor="email">Email</Label>
         <Input
           id="email"
+          name="email"
           type="email"
           placeholder="seu@email.com"
           value={email}
@@ -91,6 +133,7 @@ export function LoginForm({ onSuccess, onError }: LoginFormProps) {
         <Label htmlFor="password">Senha</Label>
         <Input
           id="password"
+          name="password"
           type="password"
           placeholder="Sua senha"
           value={password}
@@ -109,7 +152,7 @@ export function LoginForm({ onSuccess, onError }: LoginFormProps) {
         </Link>
       </div>
 
-      <Button type="submit" className="w-full" disabled={isLoading}>
+      <Button type="submit" className="w-full" disabled={isLoading || !supabase}>
         {isLoading ? 'Entrando...' : 'Entrar'}
       </Button>
     </form>

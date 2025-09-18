@@ -34,6 +34,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox'
 import { BrazilianSchemas } from '@/lib/validation/brazilian-validators'
 import { formatCPF, formatPhone, formatCEP } from '@/lib/utils/brazilian-formatting'
+import { useToast } from '@/hooks/use-toast'
 import { Loader2 } from 'lucide-react'
 
 // Patient creation schema
@@ -81,6 +82,7 @@ export function CreatePatientDialog({
   onSubmit
 }: CreatePatientDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { toast } = useToast()
 
   const form = useForm<CreatePatientFormData>({
     resolver: zodResolver(createPatientSchema),

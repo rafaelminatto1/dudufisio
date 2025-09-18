@@ -2,8 +2,8 @@
 
 import { Button } from '@/components/ui/button'
 import { Icons } from '@/components/ui/icons'
-import { createClient } from '@/lib/supabase/client-simple'
-import { useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
 
 interface GoogleSignInButtonProps {
@@ -20,10 +20,16 @@ export function GoogleSignInButton({
   disabled = false
 }: GoogleSignInButtonProps) {
   const [isLoading, setIsLoading] = useState(false)
-  const supabase = createClient()
+  const [isMounted, setIsMounted] = useState(false)
+  const [supabase, setSupabase] = useState<any>(null)
+
+  useEffect(() => {
+    setIsMounted(true)
+    setSupabase(createClient())
+  }, [])
 
   const handleGoogleSignIn = async () => {
-    if (disabled || isLoading) return
+    if (disabled || isLoading || !isMounted || !supabase) return
 
     setIsLoading(true)
 
@@ -60,11 +66,26 @@ export function GoogleSignInButton({
     }
   }
 
+  // Don't render until mounted to prevent hydration issues
+  if (!isMounted) {
+    return (
+      <Button
+        variant="outline"
+        type="button"
+        disabled
+        className={className}
+      >
+        <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+        Carregando...
+      </Button>
+    )
+  }
+
   return (
     <Button
       variant="outline"
       type="button"
-      disabled={disabled || isLoading}
+      disabled={disabled || isLoading || !supabase}
       onClick={handleGoogleSignIn}
       className={className}
     >
