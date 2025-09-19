@@ -33,7 +33,13 @@
     "supabase:stop": "supabase stop",
     "supabase:status": "supabase status",
     "clean": "rm -rf .next out build",
-    "install-playwright": "playwright install"
+    "install-playwright": "playwright install",
+    "clean:logs": "node scripts/clean-console-logs.js",
+    "clean:logs:dry": "node scripts/clean-console-logs.js --dry-run",
+    "security:audit": "npm audit --audit-level=moderate",
+    "security:check": "npm run security:audit && npm run lint && npm run type-check",
+    "pre-commit": "npm run type-check && npm run lint:fix && npm run format",
+    "pre-push": "npm run test && npm run build"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
