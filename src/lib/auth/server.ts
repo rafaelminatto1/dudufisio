@@ -32,18 +32,15 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
       return null
     }
 
-    // Buscar perfil do usuário com membros da organização
+    // Buscar perfil do usuário
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select(`
         id,
         email,
-        name,
-        org_memberships!profiles_id_fkey (
-          role,
-          org_id,
-          status
-        )
+        full_name,
+        role,
+        org_id
       `)
       .eq('id', session.user.id)
       .single()
@@ -52,21 +49,13 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
       return null
     }
 
-    // Encontrar membro ativo da organização
-    const activeMembership = (profile as any)?.org_memberships?.find(
-      (membership: any) => membership.status === 'active'
-    )
-
-    if (!activeMembership) {
-      return null
-    }
-
+    // Retornar dados do perfil
     return {
       id: profile.id,
       email: profile.email,
-      name: profile.name || undefined,
-      role: activeMembership.role as UserRole,
-      org_id: activeMembership.org_id,
+      name: profile.full_name || undefined,
+      role: (profile.role || 'paciente') as UserRole,
+      org_id: profile.org_id || 'default-org-id',
     }
   } catch (error) {
     logger.error('Erro ao obter usuário atual:', error)

@@ -77,7 +77,9 @@ export async function POST(request: NextRequest) {
       .select(`
         id,
         email,
-        name
+        full_name,
+        role,
+        org_id
       `)
       .eq('id', data.user.id)
       .single()
@@ -156,9 +158,9 @@ export async function POST(request: NextRequest) {
         user: {
           id: profile.id,
           email: profile.email,
-          full_name: profile.name || '',
-          role: 'admin', // Default role
-          org_id: null,
+          full_name: profile.full_name || '',
+          role: profile.role || 'admin', // Default role if not set
+          org_id: profile.org_id || null,
           org_name: null
         },
         session: {
