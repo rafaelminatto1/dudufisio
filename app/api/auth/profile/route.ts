@@ -35,6 +35,13 @@ export async function GET() {
       .select(`
         id,
         email,
+        full_name,
+        role,
+        org_id,
+        crefito_number,
+        phone,
+        avatar_url,
+        is_active,
         created_at,
         updated_at
       `)
@@ -50,7 +57,7 @@ export async function GET() {
     }
 
     // 3. Get user permissions based on role (fallback to default)
-    const userRole = (profile as any).role || 'paciente'
+    const userRole = profile.role || 'paciente'
     const permissions = getUserPermissions(userRole)
 
     // 4. Skip organization memberships for now to avoid TypeScript issues
@@ -64,7 +71,7 @@ export async function GET() {
       user_id: currentUser.id,
       additional_data: {
         profile_role: userRole,
-        org_id: (profile as any).org_id || null
+        org_id: profile.org_id || null
       }
     })
 
@@ -75,11 +82,11 @@ export async function GET() {
         user: {
           id: profile.id,
           email: profile.email,
-          name: (profile as any).name || profile.email,
+          name: profile.full_name || profile.email,
           role: userRole,
-          crefito_number: (profile as any).crefito_number || null,
-          phone: (profile as any).phone || null,
-          avatar_url: (profile as any).avatar_url || null,
+          crefito_number: profile.crefito_number || null,
+          phone: profile.phone || null,
+          avatar_url: profile.avatar_url || null,
           created_at: profile.created_at,
           updated_at: profile.updated_at
         },
@@ -129,7 +136,7 @@ export async function PUT(request: NextRequest) {
     }
     
     // Only update fields that exist in the current schema
-    if (body.name !== undefined) updateData.name = body.name
+    if (body.full_name !== undefined) updateData.full_name = body.full_name
     if (body.phone !== undefined) updateData.phone = body.phone
     if (body.crefito_number !== undefined) updateData.crefito_number = body.crefito_number
     if (body.avatar_url !== undefined) updateData.avatar_url = body.avatar_url
@@ -188,7 +195,7 @@ export async function PUT(request: NextRequest) {
  */
 function getUserPermissions(role: string) {
   const permissions = {
-    admin: {
+    admin:: {
       patients: ['read', 'write', 'delete'],
       appointments: ['read', 'write', 'delete'],
       sessions: ['read', 'write', 'delete'],
