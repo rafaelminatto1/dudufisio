@@ -111,7 +111,7 @@ export async function GET(request: NextRequest) {
 
     // 6. Get additional statistics for each practitioner
     const practitionersWithStats = await Promise.all(
-      (practitioners || []).map(async (practitioner) => {
+      (practitioners && Array.isArray(practitioners) ? practitioners : []).map(async (practitioner) => {
         // Get appointment count for last 30 days
         const { count: appointmentCount } = await supabase
           .from('appointments')
