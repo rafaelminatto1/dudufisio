@@ -64,9 +64,8 @@ export async function GET(request: NextRequest) {
       .from('profiles')
       .select(`
         id,
-        full_name,
-        role,
         email,
+        role,
         phone,
         avatar_url,
         crefito_number,
@@ -87,7 +86,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (searchData.search) {
-      query = query.or(`full_name.ilike.%${searchData.search}%,email.ilike.%${searchData.search}%,crefito_number.ilike.%${searchData.search}%`)
+      query = query.or(`email.ilike.%${searchData.search}%,crefito_number.ilike.%${searchData.search}%`)
     }
 
     // Apply sorting
