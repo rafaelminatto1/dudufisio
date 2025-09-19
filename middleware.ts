@@ -5,7 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { validateSessionMiddleware } from './lib/auth/session-manager'
+import { validateSessionMiddleware } from './lib/auth/session-manager-edge'
 import { hasPermission, UserRole } from './lib/rbac'
 
 /**
@@ -17,8 +17,7 @@ const SECURITY_CONFIG = {
     'https://fisioflow.com.br',
     'https://app.fisioflow.com.br',
     'https://fisioflow.vercel.app',
-    'http://localhost:3000',
-    'http://localhost:3001'
+    ...(process.env.NODE_ENV === 'development' ? ['http://localhost:3000', 'http://localhost:3001'] : [])
   ],
 
   // Headers de segurança obrigatórios para saúde

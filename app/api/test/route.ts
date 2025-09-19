@@ -10,7 +10,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * GET /api/test
  * Teste básico da API
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   return NextResponse.json({
     success: true,
     message: 'API está funcionando corretamente',

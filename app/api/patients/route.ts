@@ -11,7 +11,7 @@ import { z } from 'zod'
 import { createServerClient } from '@/src/lib/supabase/server'
 import { getCurrentUser, hasPermission } from '@/src/lib/auth/server'
 import { logAuditEvent } from '@/src/lib/audit/server'
-import { validateLGPDConsent } from '@/src/lib/lgpd/server'
+// import { validateLGPDConsent } from '@/src/lib/lgpd/server'
 import logger from '../../../lib/logger';
 
 // Schema for patient creation

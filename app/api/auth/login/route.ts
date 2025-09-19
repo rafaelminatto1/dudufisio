@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const profile = profiles[0]
+    const profile = profiles[0] as any
 
     if (!profile) {
       logger.error('Perfil do usuário não encontrado')
