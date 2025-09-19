@@ -49,7 +49,7 @@ const createPatientSchema = z.object({
 // Schema for patient search/filters
 const searchPatientsSchema = z.object({
   search: z.string().optional(),
-  status: z.enum(['active', 'inactive', 'archived']).optional(),
+  status: z.enum(['active', 'inactive', 'discharged']).optional(),
   gender: z.enum(['masculino', 'feminino', 'outro']).optional(),
   page: z.coerce.number().min(1).default(1),
   limit: z.coerce.number().min(1).max(100).default(20),

@@ -42,7 +42,7 @@ const updatePatientSchema = z.object({
   observations: z.string().optional(),
   
   // Status
-  status: z.enum(['active', 'inactive', 'archived']).optional(),
+  status: z.enum(['active', 'inactive', 'discharged']).optional(),
   
   // LGPD consent
   consent_lgpd: z.boolean().optional(),
