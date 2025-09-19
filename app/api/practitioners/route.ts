@@ -1,16 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { z } from 'zod'
-
-// Schema for practitioner search parameters
-const searchPractitionersSchema = z.object({
-  role: z.enum(['fisioterapeuta', 'estagiario', 'admin']).optional(),
-  is_active: z.boolean().default(true),
-  search: z.string().optional(),
-  page: z.coerce.number().min(1).default(1),
-  limit: z.coerce.number().min(1).max(100).default(20),
-  sort_by: z.enum(['email', 'created_at', 'last_login_at']).default('email'),
-  sort_order: z.enum(['asc', 'desc']).default('asc')
-})
 
 /**
  * GET /api/practitioners
