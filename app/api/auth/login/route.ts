@@ -72,20 +72,35 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Get user profile with role information
-    const { data: profile, error: profileError } = await supabase
+    const { data: profiles, error: profileError } = await supabase
       .from('profiles')
       .select(`
         id,
         email,
-        name
+        name,
+        org_memberships(
+          role,
+          org_id,
+          status
+        )
       `)
       .eq('id', data.user.id)
-      .single()
+      .eq('org_memberships.status', 'active')
 
-    if (profileError || !profile) {
+    if (profileError || !profiles || profiles.length === 0) {
       logger.error('Erro ao buscar perfil do usuário:', profileError)
       return NextResponse.json(
         { error: 'Erro ao carregar perfil do usuário' },
+        { status: 500 }
+      )
+    }
+
+    const profile = profiles[0]
+
+    if (!profile) {
+      logger.error('Perfil do usuário não encontrado')
+      return NextResponse.json(
+        { error: 'Perfil do usuário não encontrado' },
         { status: 500 }
       )
     }
@@ -157,8 +172,8 @@ export async function POST(request: NextRequest) {
           id: profile.id,
           email: profile.email,
           full_name: profile.name || '',
-          role: 'admin', // Default role
-          org_id: null,
+          role: profile.org_memberships?.[0]?.role || 'admin', // Default role if not set
+          org_id: profile.org_memberships?.[0]?.org_id || null,
           org_name: null
         },
         session: {

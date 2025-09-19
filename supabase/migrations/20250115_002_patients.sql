@@ -1,5 +1,5 @@
 -- Migration: Patients Management for FisioFlow
--- Description: Create patient management tables with Brazilian healthcare compliance
+-- Description: Create patient management tables with LGPD compliance
 -- Date: 2025-01-15
 
 -- Create patients table
@@ -7,23 +7,19 @@ CREATE TABLE IF NOT EXISTS patients (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     org_id UUID REFERENCES orgs(id) ON DELETE CASCADE,
     name VARCHAR(255) NOT NULL,
-    cpf VARCHAR(14) NOT NULL,
+    cpf VARCHAR(14) UNIQUE NOT NULL,
     rg VARCHAR(20),
-    date_of_birth DATE NOT NULL,
-    gender VARCHAR(20) CHECK (gender IN ('masculino', 'feminino', 'outro')),
-    phone VARCHAR(20) NOT NULL,
+    date_of_birth DATE,
+    gender VARCHAR(20) CHECK (gender IN ('masculino', 'feminino', 'outro', 'nao_informado')),
+    phone VARCHAR(20),
     email VARCHAR(255),
     emergency_contact_name VARCHAR(255),
     emergency_contact_phone VARCHAR(20),
-    
-    -- Address information
     address_line1 VARCHAR(255),
     address_line2 VARCHAR(255),
     city VARCHAR(100),
     state VARCHAR(2),
     postal_code VARCHAR(10),
-    
-    -- Health information
     health_insurance VARCHAR(100),
     health_insurance_number VARCHAR(50),
     medical_history TEXT,
@@ -31,8 +27,8 @@ CREATE TABLE IF NOT EXISTS patients (
     allergies TEXT,
     observations TEXT,
     
-    -- LGPD compliance
-    consent_lgpd BOOLEAN DEFAULT false,
+    -- LGPD Compliance fields
+    consent_lgpd BOOLEAN NOT NULL DEFAULT false,
     consent_date TIMESTAMPTZ,
     consent_version VARCHAR(10) DEFAULT '1.0',
     data_retention_until TIMESTAMPTZ,
@@ -69,8 +65,8 @@ CREATE TABLE IF NOT EXISTS patient_documents (
     patient_id UUID REFERENCES patients(id) ON DELETE CASCADE,
     org_id UUID REFERENCES orgs(id) ON DELETE CASCADE,
     document_type VARCHAR(50) NOT NULL CHECK (document_type IN (
-        'rg', 'cpf', 'cnh', 'passport', 'medical_report', 'prescription', 
-        'insurance_card', 'other'
+        'rg', 'cpf', 'cnh', 'passport', 'medical_report', 
+        'prescription', 'insurance_card', 'other'
     )),
     file_path TEXT NOT NULL,
     file_name VARCHAR(255) NOT NULL,
@@ -88,11 +84,11 @@ CREATE TABLE IF NOT EXISTS patient_consent_history (
     org_id UUID REFERENCES orgs(id) ON DELETE CASCADE,
     consent_type VARCHAR(50) NOT NULL CHECK (consent_type IN (
         'data_processing', 'photo_usage', 'research_participation', 
-        'marketing_communications', 'data_sharing'
+        'marketing_communication', 'data_sharing'
     )),
     granted BOOLEAN NOT NULL,
     consent_text TEXT NOT NULL,
-    consent_version VARCHAR(10) NOT NULL,
+    consent_version VARCHAR(10) NOT NULL DEFAULT '1.0',
     granted_at TIMESTAMPTZ DEFAULT NOW(),
     revoked_at TIMESTAMPTZ,
     granted_by UUID REFERENCES profiles(id),
@@ -307,32 +303,6 @@ BEGIN
     RETURN v_log_id;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
-
--- Create trigger to automatically log patient data access
-CREATE OR REPLACE FUNCTION trigger_log_patient_access()
-RETURNS TRIGGER AS $$
-BEGIN
-    -- Log access to patient data
-    PERFORM log_patient_data_access(
-        COALESCE(NEW.id, OLD.id),
-        TG_OP,
-        CASE 
-            WHEN TG_OP = 'INSERT' THEN ARRAY['all']
-            WHEN TG_OP = 'UPDATE' THEN ARRAY['all']
-            WHEN TG_OP = 'DELETE' THEN ARRAY['all']
-            ELSE ARRAY['all']
-        END,
-        'Database operation: ' || TG_OP
-    );
-    
-    RETURN COALESCE(NEW, OLD);
-END;
-$$ LANGUAGE plpgsql;
-
--- Create triggers for patient data access logging
-CREATE TRIGGER log_patient_access_trigger
-    AFTER INSERT OR UPDATE OR DELETE ON patients
-    FOR EACH ROW EXECUTE FUNCTION trigger_log_patient_access();
 
 -- Create function to check LGPD consent
 CREATE OR REPLACE FUNCTION check_lgpd_consent(p_patient_id UUID)

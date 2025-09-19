@@ -10,10 +10,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createServerClient } from '@/src/lib/supabase/server'
 import { getCurrentUser, hasPermission } from '@/src/lib/auth/server'
-import { logAuditEvent } from '@/src/lib/audit/server'
+// import { logAuditEvent } from '@/src/lib/audit/server' // Temporariamente desabilitado
 import logger from '../../../lib/logger';
 
-// Schema for exercise creation
+// Schema for exercise creation - Temporariamente desabilitado
+/*
 const createExerciseSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres').max(255),
   description: z.string().min(10, 'Descrição deve ter pelo menos 10 caracteres'),
@@ -34,6 +35,7 @@ const createExerciseSchema = z.object({
   is_active: z.boolean().default(true),
   is_template: z.boolean().default(false)
 })
+*/
 
 // Schema for exercise search/filters
 const searchExercisesSchema = z.object({
@@ -188,138 +190,9 @@ export async function GET(request: NextRequest) {
  * Create new exercise
  */
 export async function POST(request: NextRequest) {
-  try {
-    const supabase = await createServerClient()
-
-    // 1. Authentication and authorization
-    const currentUser = await getCurrentUser()
-    if (!currentUser) {
-      return NextResponse.json(
-        { error: 'Não autenticado' },
-        { status: 401 }
-      )
-    }
-
-    // 2. Check permissions
-    if (!hasPermission(currentUser.role, 'write', 'exercises')) {
-      return NextResponse.json(
-        { error: 'Permissão insuficiente para criar exercícios' },
-        { status: 403 }
-      )
-    }
-
-    // 3. Parse and validate request body
-    const body = await request.json()
-    const validatedData = createExerciseSchema.parse(body)
-
-    // 4. Check if exercise name already exists
-    const { data: existingExercise, error: checkError } = await supabase
-      .from('body_assessments')
-      .select('id')
-      .eq('org_id', currentUser.org_id)
-      .eq('name', validatedData.name)
-      .eq('is_active', true)
-      .single()
-
-    if (checkError && checkError.code !== 'PGRST116') {
-      logger.error('Erro ao verificar exercício existente:', checkError)
-      return NextResponse.json(
-        { error: 'Erro ao verificar exercício' },
-        { status: 500 }
-      )
-    }
-
-    if (existingExercise) {
-      return NextResponse.json(
-        { error: 'Já existe um exercício com este nome' },
-        { status: 409 }
-      )
-    }
-
-    // 5. Create exercise
-    const { data: newExercise, error: createError } = await supabase
-      .from('exercises')
-      .insert({
-        org_id: currentUser.org_id,
-        name: validatedData.name,
-        description: validatedData.description,
-        category: validatedData.category,
-        body_regions: validatedData.body_regions,
-        difficulty_level: validatedData.difficulty_level,
-        duration_minutes: validatedData.duration_minutes,
-        repetitions: validatedData.repetitions,
-        sets: validatedData.sets,
-        hold_time_seconds: validatedData.hold_time_seconds,
-        equipment_needed: validatedData.equipment_needed,
-        instructions: validatedData.instructions,
-        precautions: validatedData.precautions,
-        contraindications: validatedData.contraindications,
-        video_url: validatedData.video_url,
-        thumbnail_url: validatedData.thumbnail_url,
-        tags: validatedData.tags,
-        is_active: validatedData.is_active,
-        is_template: validatedData.is_template,
-        created_by: currentUser.id,
-        updated_by: currentUser.id
-      })
-      .select(`
-        id,
-        name,
-        category,
-        difficulty_level,
-        duration_minutes,
-        created_at,
-        created_by:profiles!exercises_created_by_fkey(full_name)
-      `)
-      .single()
-
-    if (createError) {
-      logger.error('Erro ao criar exercício:', createError)
-      return NextResponse.json(
-        { error: 'Erro ao criar exercício' },
-        { status: 500 }
-      )
-    }
-
-    // 6. Log audit event
-    await logAuditEvent({
-      table_name: 'exercises',
-      operation: 'CREATE',
-      record_id: newExercise.id,
-      user_id: currentUser.id,
-      additional_data: {
-        exercise_name: newExercise.name,
-        category: validatedData.category,
-        difficulty_level: validatedData.difficulty_level
-      }
-    })
-
-    // 7. Return response
-    return NextResponse.json({
-      success: true,
-      data: newExercise,
-      message: 'Exercício criado com sucesso'
-    }, { status: 201 })
-
-  } catch (error) {
-    logger.error('Erro inesperado ao criar exercício:', error)
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: 'Dados inválidos',
-          details: error.errors.map(e => ({
-            field: e.path.join('.'),
-            message: e.message
-          }))
-        },
-        { status: 400 }
-      )
-    }
-
-    return NextResponse.json(
-      { error: 'Erro interno do servidor' },
-      { status: 500 }
-    )
-  }
+  // Temporariamente desabilitado até a tabela exercises ser criada
+  return NextResponse.json(
+    { error: 'Funcionalidade temporariamente desabilitada - tabela exercises não disponível' },
+    { status: 503 }
+  )
 }
