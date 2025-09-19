@@ -1,5 +1,18 @@
 import '@testing-library/jest-dom'
 
+// Add jest globals to global scope for TypeScript
+if (typeof globalThis !== 'undefined') {
+  globalThis.jest = jest
+  globalThis.expect = expect
+  globalThis.test = test
+  globalThis.it = it
+  globalThis.describe = describe
+  globalThis.beforeEach = beforeEach
+  globalThis.afterEach = afterEach
+  globalThis.beforeAll = beforeAll
+  globalThis.afterAll = afterAll
+}
+
 // Mock Next.js router
 jest.mock('next/navigation', () => ({
   useRouter() {

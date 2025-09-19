@@ -74,7 +74,9 @@ class APICache {
 
     if (!entry) {
       if (this.enableLogging) {
-        console.log(`Cache miss: ${key}`);
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`Cache miss: ${key}`);
+        }
       }
       return null;
     }
@@ -82,13 +84,17 @@ class APICache {
     if (!this.isValid(entry)) {
       this.cache.delete(key);
       if (this.enableLogging) {
-        console.log(`Cache expired: ${key}`);
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`Cache expired: ${key}`);
+        }
       }
       return null;
     }
 
     if (this.enableLogging) {
-      console.log(`Cache hit: ${key}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Cache hit: ${key}`);
+      }
     }
     return entry.data;
   }
@@ -115,7 +121,9 @@ class APICache {
     });
 
     if (this.enableLogging) {
-      console.log(`Cache set: ${key} (TTL: ${ttl}ms)`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Cache set: ${key} (TTL: ${ttl}ms)`);
+      }
     }
   }
 
@@ -134,7 +142,9 @@ class APICache {
     }
 
     if (this.enableLogging) {
-      console.log(`Cache invalidated: ${count} entries matching ${pattern}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Cache invalidated: ${count} entries matching ${pattern}`);
+      }
     }
   }
 
@@ -144,7 +154,9 @@ class APICache {
   clear(): void {
     this.cache.clear();
     if (this.enableLogging) {
-      console.log('Cache cleared');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Cache cleared');
+      }
     }
   }
 
@@ -235,3 +247,5 @@ export const cacheInvalidation = {
   // Invalidate all cache
   all: () => apiCache.clear(),
 };
+
+

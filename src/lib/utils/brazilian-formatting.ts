@@ -74,7 +74,7 @@ export function formatBrazilianDate(
         })
 
       case 'ISO':
-        return dateObj.toISOString().split('T')[0]
+        return dateObj.toISOString().split('T')[0] || ''
 
       case 'TIME_ONLY':
         return dateObj.toLocaleTimeString(BRAZILIAN_LOCALE, {
@@ -197,7 +197,7 @@ export function getDayOfWeek(date: Date | string, short: boolean = false): strin
   const dateObj = new Date(date)
   const dayIndex = dateObj.getDay()
 
-  return short ? WEEKDAYS_SHORT[dayIndex] : WEEKDAYS[dayIndex]
+  return short ? (WEEKDAYS_SHORT[dayIndex] || '') : (WEEKDAYS[dayIndex] || '')
 }
 
 /**
@@ -207,7 +207,7 @@ export function getMonthName(date: Date | string | number, short: boolean = fals
   const dateObj = new Date(date)
   const monthIndex = dateObj.getMonth()
 
-  return short ? MONTHS_SHORT[monthIndex] : MONTHS[monthIndex]
+  return short ? (MONTHS_SHORT[monthIndex] || '') : (MONTHS[monthIndex] || '')
 }
 
 /**
@@ -273,12 +273,12 @@ export function parseBrazilianDate(dateString: string): Date | null {
   }
 
   const [, day, month, year] = match
-  const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+  const date = new Date(parseInt(year || '0'), parseInt(month || '0') - 1, parseInt(day || '0'))
 
   // Validate the date
-  if (date.getDate() !== parseInt(day) ||
-      date.getMonth() !== parseInt(month) - 1 ||
-      date.getFullYear() !== parseInt(year)) {
+  if (date.getDate() !== parseInt(day || '0') ||
+      date.getMonth() !== parseInt(month || '0') - 1 ||
+      date.getFullYear() !== parseInt(year || '0')) {
     return null
   }
 

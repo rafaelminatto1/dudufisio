@@ -71,21 +71,15 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 3. Get user profile with role information
+    // 3. Get user profile
     const { data: profiles, error: profileError } = await supabase
       .from('profiles')
       .select(`
         id,
         email,
-        name,
-        org_memberships(
-          role,
-          org_id,
-          status
-        )
+        name
       `)
-      .eq('id', data.user.id)
-      .eq('org_memberships.status', 'active')
+      .eq('auth_user_id', data.user.id)
 
     if (profileError || !profiles || profiles.length === 0) {
       logger.error('Erro ao buscar perfil do usuário:', profileError)
@@ -104,6 +98,27 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       )
     }
+
+    // 4. Get active org memberships
+    const { data: memberships, error: membershipError } = await supabase
+      .from('org_memberships')
+      .select(`
+        role,
+        org_id,
+        status
+      `)
+      .eq('profile_id', profile.id)
+      .eq('status', 'active')
+
+    if (membershipError || !memberships || memberships.length === 0) {
+      logger.error('Usuário não possui membros ativos em nenhuma organização')
+      return NextResponse.json(
+        { error: 'Usuário não possui acesso a nenhuma organização' },
+        { status: 403 }
+      )
+    }
+
+    const activeMemberships = memberships
 
     // 4. Log successful login
     if (false) { // Disabled user check for now
@@ -172,8 +187,8 @@ export async function POST(request: NextRequest) {
           id: profile.id,
           email: profile.email,
           full_name: profile.name || '',
-          role: profile.org_memberships?.[0]?.role || 'admin', // Default role if not set
-          org_id: profile.org_memberships?.[0]?.org_id || null,
+          role: (activeMemberships[0] as any)?.role || 'admin', // Default role if not set
+          org_id: (activeMemberships[0] as any)?.org_id || null,
           org_name: null
         },
         session: {

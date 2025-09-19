@@ -341,7 +341,9 @@ export class HealthcareSecurityValidator {
     }
 
     // Em um sistema real, isso seria salvo no banco de dados
-    console.log('Healthcare Access Log:', accessLog)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Healthcare Access Log:', accessLog)
+    }
   }
 }
 

@@ -264,7 +264,9 @@ export async function cleanupTestData(): Promise<void> {
   });
 
   if (!response.ok) {
-    console.warn(`Test cleanup failed: ${response.statusText}`);
+    if (process.env.NODE_ENV === 'test') {
+      console.warn(`Test cleanup failed: ${response.statusText}`);
+    }
   }
 }
 

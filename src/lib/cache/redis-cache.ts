@@ -33,16 +33,20 @@ class RedisCache {
         });
 
         this.redis.on('error', (err) => {
-          console.error('Redis connection error:', err);
+          if (process.env.NODE_ENV === 'development') {
+            console.error('Redis connection error:', err);
+          }
         });
 
         this.redis.on('connect', () => {
-          if (this.enableLogging) {
+          if (this.enableLogging && process.env.NODE_ENV === 'development') {
             console.log('Redis connected successfully');
           }
         });
       } catch (error) {
-        console.error('Failed to initialize Redis:', error);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Failed to initialize Redis:', error);
+        }
         this.redis = null;
       }
     }
@@ -74,19 +78,21 @@ class RedisCache {
       const cached = await this.redis!.get(this.generateKey(key));
       
       if (!cached) {
-        if (this.enableLogging) {
+        if (this.enableLogging && process.env.NODE_ENV === 'development') {
           console.log(`Redis cache miss: ${key}`);
         }
         return null;
       }
 
-      if (this.enableLogging) {
+      if (this.enableLogging && process.env.NODE_ENV === 'development') {
         console.log(`Redis cache hit: ${key}`);
       }
 
       return JSON.parse(cached);
     } catch (error) {
-      console.error('Redis get error:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Redis get error:', error);
+      }
       return null;
     }
   }
@@ -106,11 +112,13 @@ class RedisCache {
 
       await this.redis!.setex(cacheKey, cacheTTL, serialized);
 
-      if (this.enableLogging) {
+      if (this.enableLogging && process.env.NODE_ENV === 'development') {
         console.log(`Redis cache set: ${key} (TTL: ${cacheTTL}s)`);
       }
     } catch (error) {
-      console.error('Redis set error:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Redis set error:', error);
+      }
     }
   }
 
@@ -125,11 +133,13 @@ class RedisCache {
     try {
       await this.redis!.del(this.generateKey(key));
 
-      if (this.enableLogging) {
+      if (this.enableLogging && process.env.NODE_ENV === 'development') {
         console.log(`Redis cache deleted: ${key}`);
       }
     } catch (error) {
-      console.error('Redis delete error:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Redis delete error:', error);
+      }
     }
   }
 
@@ -148,11 +158,13 @@ class RedisCache {
         await this.redis!.del(...keys);
       }
 
-      if (this.enableLogging) {
+      if (this.enableLogging && process.env.NODE_ENV === 'development') {
         console.log(`Redis cache invalidated: ${keys.length} entries matching ${pattern}`);
       }
     } catch (error) {
-      console.error('Redis invalidate pattern error:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Redis invalidate pattern error:', error);
+      }
     }
   }
 
@@ -171,11 +183,13 @@ class RedisCache {
         await this.redis!.del(...keys);
       }
 
-      if (this.enableLogging) {
+      if (this.enableLogging && process.env.NODE_ENV === 'development') {
         console.log(`Redis cache cleared: ${keys.length} entries`);
       }
     } catch (error) {
-      console.error('Redis clear error:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Redis clear error:', error);
+      }
     }
   }
 
@@ -205,7 +219,9 @@ class RedisCache {
         keys: keys.length,
       };
     } catch (error) {
-      console.error('Redis stats error:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Redis stats error:', error);
+      }
       return {
         connected: false,
         memory: null,
@@ -274,3 +290,5 @@ export const redisCacheInvalidation = {
   // Invalidate all cache
   all: () => redisCache.clear(),
 };
+
+

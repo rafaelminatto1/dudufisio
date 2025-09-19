@@ -54,14 +54,14 @@ export function validateCNPJ(cnpj: string): boolean {
 
   let sum = 0
   for (let i = 0; i < 12; i++) {
-    sum += parseInt(cleaned.charAt(i)) * weights1[i]
+    sum += parseInt(cleaned.charAt(i)) * (weights1[i] || 0)
   }
   let remainder = sum % 11
   const digit1 = remainder < 2 ? 0 : 11 - remainder
 
   sum = 0
   for (let i = 0; i < 13; i++) {
-    sum += parseInt(cleaned.charAt(i)) * weights2[i]
+    sum += parseInt(cleaned.charAt(i)) * (weights2[i] || 0)
   }
   remainder = sum % 11
   const digit2 = remainder < 2 ? 0 : 11 - remainder
@@ -98,11 +98,11 @@ export function validateBrazilianDate(dateString: string): boolean {
   if (!match) return false
 
   const [, day, month, year] = match
-  const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+  const date = new Date(parseInt(year || '0'), parseInt(month || '0') - 1, parseInt(day || '0'))
 
-  return date.getDate() === parseInt(day) &&
-         date.getMonth() === parseInt(month) - 1 &&
-         date.getFullYear() === parseInt(year)
+  return date.getDate() === parseInt(day || '0') &&
+         date.getMonth() === parseInt(month || '0') - 1 &&
+         date.getFullYear() === parseInt(year || '0')
 }
 
 // Brazilian time validation (HH:MM)

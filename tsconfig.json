@@ -36,10 +36,7 @@
     ".next",
     "out",
     "build",
-    "dist",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "tests/**/*"
+    "dist"
   ],
   "ts-node": {
     "esm": true
