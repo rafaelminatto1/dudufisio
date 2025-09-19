@@ -232,7 +232,7 @@ export async function POST(request: NextRequest) {
 
     // 4. Validate CPF using database function
     const { data: cpfValid, error: cpfError } = await supabase
-      .rpc('validate_cpf', { cpf_text: validatedData.cpf })
+      .rpc('validate_cpf', { cpf: validatedData.cpf })
 
     if (cpfError || !cpfValid) {
       return NextResponse.json(
