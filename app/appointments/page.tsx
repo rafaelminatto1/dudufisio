@@ -37,6 +37,8 @@ import {
 } from '@/components/ui/table'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { DraggableCalendar } from '@/components/appointments/DraggableCalendar'
+import { DragDropCalendar } from '@/components/appointments/DragDropCalendar'
+import { WaitingListModal } from '@/components/appointments/WaitingListModal'
 import AppointmentBookingModal from '@/components/appointments/AppointmentBookingModal'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { useToast } from '@/hooks/use-toast'
@@ -57,7 +59,9 @@ import {
   List,
   TrendingUp,
   Users,
-  CalendarDays
+  CalendarDays,
+  Clock as ClockIcon,
+  Users as UsersIcon
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { Appointment, Patient, UserRole } from '@/lib/supabase/database.types'
@@ -85,9 +89,11 @@ export default function AppointmentsPage() {
 
   // Estados do modal de agendamento
   const [showBookingModal, setShowBookingModal] = useState(false)
+  const [showWaitingListModal, setShowWaitingListModal] = useState(false)
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | undefined>()
   const [selectedDate, setSelectedDate] = useState<Date | undefined>()
   const [selectedTime, setSelectedTime] = useState<string | undefined>()
+  const [currentWeek, setCurrentWeek] = useState(new Date())
 
   // Estados de filtros
   const [searchQuery, setSearchQuery] = useState('')
@@ -289,6 +295,75 @@ export default function AppointmentsPage() {
     }
   }
 
+  const handleAppointmentMove = async (appointmentId: string, newDate: string, newTime: string) => {
+    try {
+      const response = await fetch(`/api/appointments/${appointmentId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          appointment_date: newDate,
+          start_time: newTime
+        })
+      })
+
+      const result = await response.json()
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Erro ao mover agendamento')
+      }
+
+      // Atualizar lista local
+      setAppointments(prev => prev.map(apt =>
+        apt.id === appointmentId
+          ? { ...apt, appointment_date: newDate, start_time: newTime, updated_at: new Date().toISOString() }
+          : apt
+      ))
+    } catch (error: any) {
+      throw error
+    }
+  }
+
+  const handleAppointmentEdit = (appointmentId: string) => {
+    router.push(`/appointments/${appointmentId}`)
+  }
+
+  const handleAppointmentDelete = async (appointmentId: string) => {
+    try {
+      const response = await fetch(`/api/appointments/${appointmentId}`, {
+        method: 'DELETE'
+      })
+
+      const result = await response.json()
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Erro ao cancelar agendamento')
+      }
+
+      // Atualizar lista local
+      setAppointments(prev => prev.filter(apt => apt.id !== appointmentId))
+      
+      toast({
+        title: 'Sucesso',
+        description: 'Agendamento cancelado com sucesso'
+      })
+    } catch (error: any) {
+      toast({
+        title: 'Erro',
+        description: error.message || 'Erro ao cancelar agendamento',
+        variant: 'destructive'
+      })
+    }
+  }
+
+  const handleScheduleFromWaitingList = (entryId: string) => {
+    // Implementar lógica para agendar a partir da lista de espera
+    console.log('Agendando a partir da lista de espera:', entryId)
+    setShowWaitingListModal(false)
+    setShowBookingModal(true)
+  }
+
   if (loading) {
     return (
       <div className="container mx-auto py-6">
@@ -305,10 +380,16 @@ export default function AppointmentsPage() {
           <h1 className="text-3xl font-bold text-gray-900">Agendamentos</h1>
           <p className="text-gray-600">Gerencie sua agenda e agendamentos de pacientes</p>
         </div>
-        <Button onClick={() => router.push('/appointments/new')} data-testid="new-appointment-button">
-          <Plus className="h-4 w-4 mr-2" />
-          Novo Agendamento
-        </Button>
+        <div className="flex space-x-2">
+          <Button onClick={() => setShowWaitingListModal(true)} variant="outline">
+            <ClockIcon className="h-4 w-4 mr-2" />
+            Lista de Espera
+          </Button>
+          <Button onClick={() => router.push('/appointments/new')} data-testid="new-appointment-button">
+            <Plus className="h-4 w-4 mr-2" />
+            Novo Agendamento
+          </Button>
+        </div>
       </div>
 
       {/* Estatísticas */}
@@ -459,42 +540,13 @@ export default function AppointmentsPage() {
 
       {/* Conteúdo Principal */}
       {view === 'calendar' ? (
-        <DraggableCalendar
-          onAppointmentClick={handleEditAppointment}
-          onTimeSlotClick={(date, time, practitionerId) => {
-            // Open new appointment modal with pre-filled data
-            const appointmentDate = new Date(date)
-            setSelectedDate(appointmentDate)
-            setSelectedTime(time)
-            setShowBookingModal(true)
-          }}
-          onAppointmentDrop={async (appointmentId, newDate, newTime, newPractitionerId) => {
-            try {
-              const response = await fetch(`/api/appointments/${appointmentId}`, {
-                method: 'PATCH',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                  appointment_date: newDate,
-                  start_time: newTime,
-                  practitioner_id: newPractitionerId
-                })
-              })
-
-              const result = await response.json()
-
-              if (!response.ok || !result.success) {
-                throw new Error(result.error || 'Erro ao reagendar')
-              }
-
-              // Refresh appointments list
-              loadData()
-            } catch (error: any) {
-              throw error
-            }
-          }}
-          onNewAppointment={() => handleNewAppointment()}
+        <DragDropCalendar
+          appointments={filteredAppointments}
+          onAppointmentMove={handleAppointmentMove}
+          onAppointmentEdit={handleAppointmentEdit}
+          onAppointmentDelete={handleAppointmentDelete}
+          currentWeek={currentWeek}
+          onWeekChange={setCurrentWeek}
         />
       ) : (
         <Card>
@@ -606,6 +658,13 @@ export default function AppointmentsPage() {
         selectedDate={selectedDate}
         selectedTime={selectedTime}
         currentUserRole={currentUserRole}
+      />
+
+      {/* Modal de Lista de Espera */}
+      <WaitingListModal
+        isOpen={showWaitingListModal}
+        onClose={() => setShowWaitingListModal(false)}
+        onSchedule={handleScheduleFromWaitingList}
       />
     </div>
   )

@@ -12,18 +12,6 @@ const nextConfig: NextConfig = {
   experimental: {
     // Otimizações para desenvolvimento
     optimizePackageImports: ['@/components', '@/lib'],
-    // Acelera compilação
-    turbo: {
-      // Configurações do Turbopack para acelerar builds
-      experimental: true,
-    },
-  },
-  // Configurações de cache
-  onDemandEntries: {
-    // Período de cache de páginas (5 minutos)
-    maxInactiveAge: 5 * 60 * 1000,
-    // Páginas para manter no cache
-    pagesBufferLength: 5,
   },
 };
 

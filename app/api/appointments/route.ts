@@ -12,6 +12,9 @@ import { createServerClient } from '@/lib/supabase/server'
 import { getCurrentUser, hasPermission } from '@/lib/auth/server'
 import { logAuditEvent } from '@/lib/audit/server'
 
+// Force Node.js runtime to avoid Edge Runtime issues with Supabase
+export const runtime = 'nodejs'
+
 // Schema for appointment creation
 const createAppointmentSchema = z.object({
   patient_id: z.string().uuid('ID do paciente inválido'),

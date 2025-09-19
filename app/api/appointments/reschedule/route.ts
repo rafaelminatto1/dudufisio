@@ -9,6 +9,9 @@ import { createServerClient } from '@/lib/supabase/server'
 import { getCurrentUser, hasPermission } from '@/lib/auth/server'
 import { logAuditEvent } from '@/lib/audit/server'
 
+// Force Node.js runtime to avoid Edge Runtime issues with Supabase
+export const runtime = 'nodejs'
+
 const rescheduleSchema = z.object({
   appointment_id: z.string().uuid(),
   preferred_dates: z.array(z.string()).min(1, 'Pelo menos uma data preferencial é obrigatória'),

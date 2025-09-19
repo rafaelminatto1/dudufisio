@@ -11,6 +11,9 @@ import { z } from 'zod'
 import { createServerClient } from '@/lib/supabase/server'
 import { logAuditEvent } from '@/lib/audit/server'
 
+// Force Node.js runtime to avoid Edge Runtime issues with Supabase
+export const runtime = 'nodejs'
+
 // Schema for login request
 const loginSchema = z.object({
   email: z.string().email('Email inválido'),
