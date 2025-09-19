@@ -69,6 +69,7 @@ export async function POST(request: NextRequest) {
         duration_minutes,
         appointment_type,
         status,
+        notes,
         patient:patients!appointments_patient_id_fkey(
           id,
           name,
@@ -213,7 +214,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Dados inválidos',
-          details: error.errors.map(e => ({
+          details: error.issues.map(e => ({
             field: e.path.join('.'),
             message: e.message
           }))
@@ -308,8 +309,8 @@ async function getPractitioners(supabase: any, orgId: string) {
     .in('role', ['admin', 'fisioterapeuta'])
 
   return practitioners
-    ?.filter(p => p.profiles)
-    .map(p => ({
+    ?.filter((p: any) => p.profiles)
+    .map((p: any) => ({
       id: p.profiles.id,
       name: p.profiles.name
     })) || []

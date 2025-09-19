@@ -1,27 +1,38 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Separator } from '@/components/ui/separator'
-import { LoadingSpinner } from '@/components/ui/loading-spinner'
-import { Calendar, Clock, User, MapPin, Phone, Mail, FileText, Edit, Trash2, ArrowLeft, Zap } from 'lucide-react'
-import { useToast } from '@/hooks/use-toast'
-import { AppointmentBookingModal } from '@/components/appointments/AppointmentBookingModal'
-import { SmartRescheduleModal } from '@/components/appointments/SmartRescheduleModal'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
+  ArrowLeft,
+  Calendar,
+  Clock,
+  User,
+  Phone,
+  Mail,
+  MapPin,
+  Edit,
+  Trash2,
+  Check,
+  X,
+  AlertTriangle,
+  MessageCircle,
+  FileText,
+  Plus,
+  History,
+  Target,
+  Activity
+} from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface Appointment {
   id: string
@@ -29,49 +40,60 @@ interface Appointment {
   practitioner_id: string
   appointment_date: string
   start_time: string
-  end_time: string
   duration_minutes: number
   appointment_type: string
-  status: string
+  status: 'scheduled' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled' | 'no_show'
   notes?: string
   reminder_sent: boolean
   is_recurring: boolean
   recurrence_pattern?: string
-  recurrence_count?: number
   created_at: string
   updated_at: string
   patient: {
     id: string
     name: string
+    cpf: string
     phone?: string
     email?: string
+    photo_url?: string
   }
   practitioner: {
     id: string
     full_name: string
     role: string
+    phone?: string
+    email?: string
+  }
+  sessions?: Array<{
+    id: string
+    session_type: string
+    duration_minutes: number
+    status: string
+    created_at: string
+  }>
+}
+
+interface AppointmentNote {
+  id: string
+  note: string
+  note_type: 'general' | 'medical' | 'administrative'
+  created_at: string
+  created_by: {
+    full_name: string
+    role: string
   }
 }
 
-const STATUS_LABELS = {
-  agendado: 'Agendado',
-  confirmado: 'Confirmado',
-  em_andamento: 'Em Andamento',
-  concluido: 'Concluído',
-  cancelado: 'Cancelado',
-  falta: 'Falta'
+const STATUS_CONFIG = {
+  scheduled: { label: 'Agendado', color: 'bg-blue-100 text-blue-800' },
+  confirmed: { label: 'Confirmado', color: 'bg-green-100 text-green-800' },
+  in_progress: { label: 'Em Andamento', color: 'bg-yellow-100 text-yellow-800' },
+  completed: { label: 'Concluído', color: 'bg-emerald-100 text-emerald-800' },
+  cancelled: { label: 'Cancelado', color: 'bg-red-100 text-red-800' },
+  no_show: { label: 'Faltou', color: 'bg-gray-100 text-gray-800' }
 }
 
-const STATUS_COLORS = {
-  agendado: 'bg-blue-100 text-blue-800',
-  confirmado: 'bg-green-100 text-green-800',
-  em_andamento: 'bg-yellow-100 text-yellow-800',
-  concluido: 'bg-gray-100 text-gray-800',
-  cancelado: 'bg-red-100 text-red-800',
-  falta: 'bg-orange-100 text-orange-800'
-}
-
-const TYPE_LABELS = {
+const APPOINTMENT_TYPES = {
   consulta: 'Consulta',
   retorno: 'Retorno',
   avaliacao: 'Avaliação',
@@ -81,77 +103,93 @@ const TYPE_LABELS = {
 }
 
 export default function AppointmentDetailsPage() {
-  const params = useParams()
   const router = useRouter()
+  const params = useParams()
   const { toast } = useToast()
   const appointmentId = params.id as string
 
   const [appointment, setAppointment] = useState<Appointment | null>(null)
+  const [notes, setNotes] = useState<AppointmentNote[]>([])
   const [loading, setLoading] = useState(true)
-  const [editModalOpen, setEditModalOpen] = useState(false)
-  const [rescheduleModalOpen, setRescheduleModalOpen] = useState(false)
   const [updating, setUpdating] = useState(false)
+  const [newNote, setNewNote] = useState('')
+  const [showCancelDialog, setShowCancelDialog] = useState(false)
+  const [showRescheduleDialog, setShowRescheduleDialog] = useState(false)
 
   useEffect(() => {
-    fetchAppointment()
+    if (appointmentId) {
+      fetchAppointmentDetails()
+      fetchAppointmentNotes()
+    }
   }, [appointmentId])
 
-  const fetchAppointment = async () => {
+  const fetchAppointmentDetails = async () => {
     try {
+      setLoading(true)
       const response = await fetch(`/api/appointments/${appointmentId}`)
-      const result = await response.json()
-
-      if (response.ok && result.success) {
-        setAppointment(result.data)
-      } else {
-        toast({
-          title: 'Erro ao carregar agendamento',
-          description: result.error || 'Não foi possível carregar os dados',
-          variant: 'destructive'
-        })
-        router.push('/appointments')
+      
+      if (!response.ok) {
+        if (response.status === 404) {
+          toast({
+            title: 'Agendamento não encontrado',
+            description: 'O agendamento solicitado não foi encontrado',
+            variant: 'destructive'
+          })
+          router.push('/appointments')
+          return
+        }
+        throw new Error('Erro ao carregar agendamento')
       }
+
+      const data = await response.json()
+      setAppointment(data.data)
     } catch (error) {
-      console.error('Error fetching appointment:', error)
+      console.error('Erro ao buscar detalhes do agendamento:', error)
       toast({
-        title: 'Erro de conexão',
-        description: 'Não foi possível conectar ao servidor',
+        title: 'Erro',
+        description: 'Não foi possível carregar os detalhes do agendamento',
         variant: 'destructive'
       })
-      router.push('/appointments')
     } finally {
       setLoading(false)
     }
   }
 
-  const updateAppointmentStatus = async (status: string) => {
-    if (!appointment) return
-
-    setUpdating(true)
+  const fetchAppointmentNotes = async () => {
     try {
+      const response = await fetch(`/api/appointments/${appointmentId}/notes`)
+      if (response.ok) {
+        const data = await response.json()
+        setNotes(data.data || [])
+      }
+    } catch (error) {
+      console.error('Erro ao buscar notas:', error)
+    }
+  }
+
+  const updateAppointmentStatus = async (newStatus: string) => {
+    try {
+      setUpdating(true)
       const response = await fetch(`/api/appointments/${appointmentId}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ status })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
       })
 
-      const result = await response.json()
-
-      if (response.ok && result.success) {
-        setAppointment(prev => prev ? { ...prev, status } : null)
+      if (response.ok) {
+        const data = await response.json()
+        setAppointment(data.data)
         toast({
           title: 'Status atualizado',
-          description: `Agendamento marcado como ${STATUS_LABELS[status as keyof typeof STATUS_LABELS]}`
+          description: `Agendamento marcado como ${STATUS_CONFIG[newStatus as keyof typeof STATUS_CONFIG]?.label}`
         })
       } else {
-        throw new Error(result.error || 'Erro ao atualizar status')
+        throw new Error('Erro ao atualizar status')
       }
-    } catch (error: any) {
+    } catch (error) {
       toast({
-        title: 'Erro ao atualizar status',
-        description: error.message,
+        title: 'Erro',
+        description: 'Não foi possível atualizar o status',
         variant: 'destructive'
       })
     } finally {
@@ -159,64 +197,146 @@ export default function AppointmentDetailsPage() {
     }
   }
 
-  const deleteAppointment = async () => {
-    if (!appointment) return
+  const addNote = async () => {
+    if (!newNote.trim()) return
 
-    setUpdating(true)
     try {
-      const response = await fetch(`/api/appointments/${appointmentId}`, {
-        method: 'DELETE'
+      const response = await fetch(`/api/appointments/${appointmentId}/notes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          note: newNote,
+          note_type: 'general'
+        })
       })
 
-      const result = await response.json()
-
-      if (response.ok && result.success) {
+      if (response.ok) {
+        setNewNote('')
+        fetchAppointmentNotes()
         toast({
-          title: 'Agendamento cancelado',
-          description: 'O agendamento foi cancelado com sucesso'
+          title: 'Nota adicionada',
+          description: 'A nota foi salva com sucesso'
         })
-        router.push('/appointments')
-      } else {
-        throw new Error(result.error || 'Erro ao cancelar agendamento')
       }
-    } catch (error: any) {
+    } catch (error) {
       toast({
-        title: 'Erro ao cancelar agendamento',
-        description: error.message,
+        title: 'Erro',
+        description: 'Não foi possível adicionar a nota',
         variant: 'destructive'
       })
-    } finally {
-      setUpdating(false)
+    }
+  }
+
+  const cancelAppointment = async () => {
+    await updateAppointmentStatus('cancelled')
+    setShowCancelDialog(false)
+  }
+
+  const createSession = () => {
+    if (appointment) {
+      router.push(`/patients/${appointment.patient_id}?create_session=true&appointment_id=${appointmentId}`)
+    }
+  }
+
+  const formatDateTime = (date: string, time: string) => {
+    const dateTime = new Date(`${date}T${time}`)
+    return {
+      date: dateTime.toLocaleDateString('pt-BR', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      }),
+      time: dateTime.toLocaleTimeString('pt-BR', { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      })
+    }
+  }
+
+  const getStatusActions = (status: string) => {
+    switch (status) {
+      case 'scheduled':
+        return [
+          { label: 'Confirmar', action: () => updateAppointmentStatus('confirmed'), variant: 'default' },
+          { label: 'Cancelar', action: () => setShowCancelDialog(true), variant: 'destructive' }
+        ]
+      case 'confirmed':
+        return [
+          { label: 'Iniciar Atendimento', action: () => updateAppointmentStatus('in_progress'), variant: 'default' },
+          { label: 'Reagendar', action: () => setShowRescheduleDialog(true), variant: 'outline' },
+          { label: 'Cancelar', action: () => setShowCancelDialog(true), variant: 'destructive' }
+        ]
+      case 'in_progress':
+        return [
+          { label: 'Finalizar', action: () => updateAppointmentStatus('completed'), variant: 'default' },
+          { label: 'Nova Sessão', action: createSession, variant: 'outline' }
+        ]
+      case 'completed':
+        return [
+          { label: 'Nova Sessão', action: createSession, variant: 'outline' }
+        ]
+      default:
+        return []
     }
   }
 
   if (loading) {
     return (
-      <div className="container mx-auto py-8">
-        <LoadingSpinner size="lg" text="Carregando agendamento..." />
+      <div className="container mx-auto py-6 space-y-6">
+        <div className="flex items-center space-x-4">
+          <Skeleton className="h-10 w-20" />
+          <div>
+            <Skeleton className="h-8 w-64 mb-2" />
+            <Skeleton className="h-4 w-96" />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-6">
+            <Card>
+              <CardHeader>
+                <Skeleton className="h-6 w-48" />
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-40 w-full" />
+              </CardContent>
+            </Card>
+          </div>
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <Skeleton className="h-6 w-32" />
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-32 w-full" />
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     )
   }
 
   if (!appointment) {
     return (
-      <div className="container mx-auto py-8">
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-center text-muted-foreground">Agendamento não encontrado</p>
-          </CardContent>
-        </Card>
+      <div className="container mx-auto py-6">
+        <Alert>
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription>
+            Agendamento não encontrado ou você não tem permissão para visualizá-lo.
+          </AlertDescription>
+        </Alert>
       </div>
     )
   }
 
-  const appointmentDateTime = new Date(`${appointment.appointment_date}T${appointment.start_time}`)
-  const canEdit = ['agendado', 'confirmado'].includes(appointment.status)
-  const canComplete = ['confirmado', 'em_andamento'].includes(appointment.status)
-  const canStart = appointment.status === 'confirmado'
+  const dateTime = formatDateTime(appointment.appointment_date, appointment.start_time)
+  const statusConfig = STATUS_CONFIG[appointment.status]
+  const appointmentTypeLabel = APPOINTMENT_TYPES[appointment.appointment_type as keyof typeof APPOINTMENT_TYPES]
+  const actions = getStatusActions(appointment.status)
 
   return (
-    <div className="container mx-auto py-8 space-y-6">
+    <div className="container mx-auto py-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
@@ -229,256 +349,354 @@ export default function AppointmentDetailsPage() {
             Voltar
           </Button>
           <div>
-            <h1 className="text-2xl font-bold">Detalhes do Agendamento</h1>
+            <h1 className="text-3xl font-bold">Detalhes do Agendamento</h1>
             <p className="text-muted-foreground">
-              {TYPE_LABELS[appointment.appointment_type as keyof typeof TYPE_LABELS]} • {appointment.patient.name}
+              {appointmentTypeLabel} • {appointment.patient.name}
             </p>
           </div>
         </div>
-        <Badge className={STATUS_COLORS[appointment.status as keyof typeof STATUS_COLORS]}>
-          {STATUS_LABELS[appointment.status as keyof typeof STATUS_LABELS]}
-        </Badge>
+
+        <div className="flex items-center space-x-2">
+          <Badge variant="secondary" className={statusConfig?.color}>
+            {statusConfig?.label}
+          </Badge>
+          {actions.map((action, index) => (
+            <Button
+              key={index}
+              variant={action.variant as any}
+              size="sm"
+              onClick={action.action}
+              disabled={updating}
+            >
+              {action.label}
+            </Button>
+          ))}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Details */}
+        {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Appointment Info */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <Calendar className="h-5 w-5 mr-2" />
+              <CardTitle className="flex items-center gap-2">
+                <Calendar className="h-5 w-5" />
                 Informações do Agendamento
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Data</label>
-                  <p className="text-lg">{appointmentDateTime.toLocaleDateString('pt-BR')}</p>
+                  <Label className="text-sm font-medium text-muted-foreground">Data</Label>
+                  <p className="text-lg font-medium">{dateTime.date}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Horário</label>
-                  <p className="text-lg flex items-center">
-                    <Clock className="h-4 w-4 mr-2" />
-                    {appointment.start_time} - {appointment.end_time}
-                  </p>
+                  <Label className="text-sm font-medium text-muted-foreground">Horário</Label>
+                  <p className="text-lg font-medium">{dateTime.time}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Duração</label>
-                  <p className="text-lg">{appointment.duration_minutes} minutos</p>
+                  <Label className="text-sm font-medium text-muted-foreground">Duração</Label>
+                  <p className="text-lg font-medium">{appointment.duration_minutes} minutos</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Tipo</label>
-                  <p className="text-lg">{TYPE_LABELS[appointment.appointment_type as keyof typeof TYPE_LABELS]}</p>
+                  <Label className="text-sm font-medium text-muted-foreground">Tipo</Label>
+                  <p className="text-lg font-medium">{appointmentTypeLabel}</p>
                 </div>
               </div>
 
-              {appointment.is_recurring && (
-                <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-                  <p className="text-sm font-medium text-blue-900">Agendamento Recorrente</p>
-                  <p className="text-sm text-blue-700">
-                    Padrão: {appointment.recurrence_pattern} •
-                    {appointment.recurrence_count} ocorrências
+              {appointment.notes && (
+                <div>
+                  <Label className="text-sm font-medium text-muted-foreground">Observações</Label>
+                  <p className="text-sm mt-1 p-3 bg-gray-50 rounded-lg">
+                    {appointment.notes}
                   </p>
                 </div>
               )}
 
-              {appointment.notes && (
-                <div className="mt-4">
-                  <label className="text-sm font-medium text-muted-foreground">Observações</label>
-                  <p className="mt-1 p-3 bg-gray-50 rounded-lg">{appointment.notes}</p>
+              {appointment.is_recurring && (
+                <Alert>
+                  <Calendar className="h-4 w-4" />
+                  <AlertDescription>
+                    Este é um agendamento recorrente ({appointment.recurrence_pattern}).
+                  </AlertDescription>
+                </Alert>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Sessions */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Activity className="h-5 w-5" />
+                Sessões Relacionadas
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {appointment.sessions && appointment.sessions.length > 0 ? (
+                <div className="space-y-3">
+                  {appointment.sessions.map((session) => (
+                    <div key={session.id} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div className="space-y-1">
+                        <h4 className="font-medium capitalize">{session.session_type}</h4>
+                        <p className="text-sm text-muted-foreground">
+                          {session.duration_minutes} min • {new Date(session.created_at).toLocaleDateString('pt-BR')}
+                        </p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Badge variant="outline">{session.status}</Badge>
+                        <Button variant="ghost" size="sm">
+                          <FileText className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-6">
+                  <Target className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                  <p className="text-sm text-muted-foreground">Nenhuma sessão registrada</p>
+                  {appointment.status === 'in_progress' || appointment.status === 'completed' ? (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="mt-2"
+                      onClick={createSession}
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Criar Sessão
+                    </Button>
+                  ) : null}
                 </div>
               )}
             </CardContent>
           </Card>
 
-          {/* Patient Info */}
+          {/* Notes and Communication */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <User className="h-5 w-5 mr-2" />
-                Informações do Paciente
+              <CardTitle className="flex items-center gap-2">
+                <MessageCircle className="h-5 w-5" />
+                Notas e Comunicações
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
+              {/* Add new note */}
+              <div className="space-y-2">
+                <Label htmlFor="new-note">Adicionar Nota</Label>
+                <Textarea
+                  id="new-note"
+                  placeholder="Escreva uma nota sobre este agendamento..."
+                  value={newNote}
+                  onChange={(e) => setNewNote(e.target.value)}
+                  rows={3}
+                />
+                <Button
+                  onClick={addNote}
+                  disabled={!newNote.trim()}
+                  size="sm"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Adicionar Nota
+                </Button>
+              </div>
+
+              <Separator />
+
+              {/* Notes list */}
               <div className="space-y-3">
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">Nome</label>
-                  <p className="text-lg">{appointment.patient.name}</p>
-                </div>
-                {appointment.patient.phone && (
-                  <div className="flex items-center">
-                    <Phone className="h-4 w-4 mr-2 text-muted-foreground" />
-                    <span>{appointment.patient.phone}</span>
-                  </div>
-                )}
-                {appointment.patient.email && (
-                  <div className="flex items-center">
-                    <Mail className="h-4 w-4 mr-2 text-muted-foreground" />
-                    <span>{appointment.patient.email}</span>
-                  </div>
+                {notes.length > 0 ? (
+                  notes.map((note) => (
+                    <div key={note.id} className="border rounded-lg p-3">
+                      <div className="flex items-start justify-between">
+                        <div className="space-y-1 flex-1">
+                          <p className="text-sm">{note.note}</p>
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <span>{note.created_by.full_name}</span>
+                            <span>•</span>
+                            <span>{note.created_by.role}</span>
+                            <span>•</span>
+                            <span>{new Date(note.created_at).toLocaleString('pt-BR')}</span>
+                          </div>
+                        </div>
+                        <Badge variant="outline" className="ml-2">
+                          {note.note_type}
+                        </Badge>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-center text-muted-foreground py-4">
+                    Nenhuma nota adicionada
+                  </p>
                 )}
               </div>
-              <Separator className="my-4" />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => router.push(`/patients/${appointment.patient.id}`)}
-              >
-                Ver Prontuário Completo
-              </Button>
             </CardContent>
           </Card>
         </div>
 
-        {/* Actions Sidebar */}
+        {/* Sidebar */}
         <div className="space-y-6">
-          {/* Quick Actions */}
+          {/* Patient Info */}
           <Card>
             <CardHeader>
-              <CardTitle>Ações Rápidas</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <User className="h-5 w-5" />
+                Paciente
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {canStart && (
-                <Button
-                  className="w-full"
-                  onClick={() => updateAppointmentStatus('em_andamento')}
-                  disabled={updating}
-                >
-                  Iniciar Atendimento
-                </Button>
-              )}
+              <div className="flex items-center space-x-3">
+                {appointment.patient.photo_url ? (
+                  <img
+                    src={appointment.patient.photo_url}
+                    alt={appointment.patient.name}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
+                    <User className="h-6 w-6 text-gray-500" />
+                  </div>
+                )}
+                <div>
+                  <h3 className="font-medium">{appointment.patient.name}</h3>
+                  <p className="text-sm text-muted-foreground">{appointment.patient.cpf}</p>
+                </div>
+              </div>
+              
+              <Separator />
+              
+              <div className="space-y-2">
+                {appointment.patient.phone && (
+                  <div className="flex items-center gap-2">
+                    <Phone className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm">{appointment.patient.phone}</span>
+                  </div>
+                )}
+                {appointment.patient.email && (
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm">{appointment.patient.email}</span>
+                  </div>
+                )}
+              </div>
 
-              {canComplete && (
-                <Button
-                  className="w-full"
-                  variant="outline"
-                  onClick={() => updateAppointmentStatus('concluido')}
-                  disabled={updating}
-                >
-                  Marcar como Concluído
-                </Button>
-              )}
-
-              {canEdit && (
-                <>
-                  <Button
-                    className="w-full"
-                    variant="outline"
-                    onClick={() => setEditModalOpen(true)}
-                    disabled={updating}
-                  >
-                    <Edit className="h-4 w-4 mr-2" />
-                    Editar Agendamento
-                  </Button>
-
-                  <Button
-                    className="w-full"
-                    variant="outline"
-                    onClick={() => setRescheduleModalOpen(true)}
-                    disabled={updating}
-                  >
-                    <Zap className="h-4 w-4 mr-2" />
-                    Reagendamento Inteligente
-                  </Button>
-                </>
-              )}
-
-              {appointment.status === 'agendado' && (
-                <Button
-                  className="w-full"
-                  variant="outline"
-                  onClick={() => updateAppointmentStatus('confirmado')}
-                  disabled={updating}
-                >
-                  Confirmar Agendamento
-                </Button>
-              )}
-
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    className="w-full"
-                    variant="destructive"
-                    disabled={updating}
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Cancelar Agendamento
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Cancelar Agendamento</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Tem certeza que deseja cancelar este agendamento? Esta ação não pode ser desfeita.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Voltar</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={deleteAppointment}
-                      className="bg-red-600 hover:bg-red-700"
-                    >
-                      Sim, Cancelar
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full"
+                onClick={() => router.push(`/patients/${appointment.patient_id}`)}
+              >
+                Ver Prontuário
+              </Button>
             </CardContent>
           </Card>
 
           {/* Practitioner Info */}
           <Card>
             <CardHeader>
-              <CardTitle>Profissional Responsável</CardTitle>
+              <CardTitle>Profissional</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-3">
+              <div>
+                <h3 className="font-medium">{appointment.practitioner.full_name}</h3>
+                <p className="text-sm text-muted-foreground capitalize">{appointment.practitioner.role}</p>
+              </div>
+
+              <Separator />
+
               <div className="space-y-2">
-                <p className="font-medium">{appointment.practitioner.full_name}</p>
-                <Badge variant="secondary">{appointment.practitioner.role}</Badge>
+                {appointment.practitioner.phone && (
+                  <div className="flex items-center gap-2">
+                    <Phone className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm">{appointment.practitioner.phone}</span>
+                  </div>
+                )}
+                {appointment.practitioner.email && (
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm">{appointment.practitioner.email}</span>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
 
-          {/* Reminder Status */}
+          {/* Quick Actions */}
           <Card>
             <CardHeader>
-              <CardTitle>Status de Lembrete</CardTitle>
+              <CardTitle>Ações Rápidas</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="flex items-center space-x-2">
-                <div className={`h-2 w-2 rounded-full ${appointment.reminder_sent ? 'bg-green-500' : 'bg-gray-300'}`} />
-                <span className="text-sm">
-                  {appointment.reminder_sent ? 'Lembrete enviado' : 'Lembrete não enviado'}
-                </span>
-              </div>
+            <CardContent className="space-y-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full justify-start"
+                onClick={() => router.push(`/appointments/new?patient_id=${appointment.patient_id}`)}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Novo Agendamento
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full justify-start"
+                onClick={() => router.push(`/appointments?patient_id=${appointment.patient_id}`)}
+              >
+                <History className="h-4 w-4 mr-2" />
+                Histórico do Paciente
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full justify-start"
+                onClick={() => router.push(`/patients/${appointment.patient_id}/edit`)}
+              >
+                <Edit className="h-4 w-4 mr-2" />
+                Editar Paciente
+              </Button>
             </CardContent>
           </Card>
         </div>
       </div>
 
-      {/* Edit Modal */}
-      <AppointmentBookingModal
-        open={editModalOpen}
-        onOpenChange={setEditModalOpen}
-        onSuccess={() => {
-          setEditModalOpen(false)
-          fetchAppointment()
-        }}
-        editingAppointment={appointment}
-      />
+      {/* Cancel Dialog */}
+      <Dialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Cancelar Agendamento</DialogTitle>
+            <DialogDescription>
+              Tem certeza de que deseja cancelar este agendamento? Esta ação não pode ser desfeita.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end space-x-2">
+            <Button variant="outline" onClick={() => setShowCancelDialog(false)}>
+              Não, manter
+            </Button>
+            <Button variant="destructive" onClick={cancelAppointment} disabled={updating}>
+              Sim, cancelar
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
-      {/* Smart Reschedule Modal */}
-      <SmartRescheduleModal
-        open={rescheduleModalOpen}
-        onOpenChange={setRescheduleModalOpen}
-        appointment={appointment}
-        onSuccess={() => {
-          setRescheduleModalOpen(false)
-          fetchAppointment()
-        }}
-      />
+      {/* Reschedule Dialog */}
+      <Dialog open={showRescheduleDialog} onOpenChange={setShowRescheduleDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reagendar</DialogTitle>
+            <DialogDescription>
+              Funcionalidade de reagendamento será implementada em breve.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end">
+            <Button onClick={() => setShowRescheduleDialog(false)}>
+              Fechar
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

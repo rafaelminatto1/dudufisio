@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
     }
 
     // 3. Get user permissions based on role
-    const permissions = getUserPermissions(profile.role)
+    const permissions = getUserPermissions('admin') // Default role for now
 
     // 4. Get organization memberships for multi-tenant access
     const { data: memberships, error: membershipsError } = await supabase

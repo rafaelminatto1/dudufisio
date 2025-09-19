@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:fast": "NODE_ENV=development next build",
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

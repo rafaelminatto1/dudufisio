@@ -1,8 +1,10 @@
 /**
- * API Endpoint - Single Appointment Management - FisioFlow
+ * API Endpoint - Appointment Details Management - FisioFlow
  * GET /api/appointments/[id] - Get appointment details
  * PATCH /api/appointments/[id] - Update appointment
  * DELETE /api/appointments/[id] - Cancel appointment
+ *
+ * Manages individual appointment operations
  */
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -19,20 +21,20 @@ const updateAppointmentSchema = z.object({
   appointment_type: z.enum(['consulta', 'retorno', 'avaliacao', 'fisioterapia', 'reavaliacao', 'emergencia']).optional(),
   status: z.enum(['agendado', 'confirmado', 'em_andamento', 'concluido', 'cancelado', 'falta']).optional(),
   notes: z.string().optional(),
-  reminder_enabled: z.boolean().optional()
+  cancellation_reason: z.string().optional()
 })
 
 /**
  * GET /api/appointments/[id]
- * Get appointment details
+ * Get appointment details with related data
  */
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  _request: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: appointmentId } = await context.params
     const supabase = await createServerClient()
-    const appointmentId = params.id
 
     // 1. Authentication and authorization
     const currentUser = await getCurrentUser()
@@ -45,23 +47,13 @@ export async function GET(
 
     // 2. Check permissions
     if (!hasPermission(currentUser.role, 'read', 'appointments')) {
-      await logAuditEvent({
-        table_name: 'appointments',
-        operation: 'READ_DENIED',
-        record_id: appointmentId,
-        user_id: currentUser.id,
-        additional_data: {
-          reason: 'insufficient_permissions'
-        }
-      })
-
       return NextResponse.json(
-        { error: 'Permissão insuficiente para visualizar agendamento' },
+        { error: 'Permissão insuficiente para visualizar agendamentos' },
         { status: 403 }
       )
     }
 
-    // 3. Get appointment details
+    // 3. Get appointment with related data
     const { data: appointment, error } = await supabase
       .from('appointments')
       .select(`
@@ -70,7 +62,6 @@ export async function GET(
         practitioner_id,
         appointment_date,
         start_time,
-        end_time,
         duration_minutes,
         appointment_type,
         status,
@@ -78,19 +69,29 @@ export async function GET(
         reminder_sent,
         is_recurring,
         recurrence_pattern,
-        recurrence_count,
         created_at,
         updated_at,
         patient:patients!appointments_patient_id_fkey(
           id,
           name,
+          cpf,
           phone,
-          email
+          email,
+          photo_url
         ),
         practitioner:profiles!appointments_practitioner_id_fkey(
           id,
           full_name,
-          role
+          role,
+          phone,
+          email
+        ),
+        sessions:sessions!sessions_appointment_id_fkey(
+          id,
+          session_type,
+          duration_minutes,
+          status,
+          created_at
         )
       `)
       .eq('id', appointmentId)
@@ -98,10 +99,17 @@ export async function GET(
       .single()
 
     if (error) {
-      console.error('Error fetching appointment:', error)
+      if (error.code === 'PGRST116') {
+        return NextResponse.json(
+          { error: 'Agendamento não encontrado' },
+          { status: 404 }
+        )
+      }
+
+      console.error('Erro ao buscar agendamento:', error)
       return NextResponse.json(
-        { error: 'Agendamento não encontrado' },
-        { status: 404 }
+        { error: 'Erro ao buscar agendamento' },
+        { status: 500 }
       )
     }
 
@@ -112,18 +120,19 @@ export async function GET(
       record_id: appointmentId,
       user_id: currentUser.id,
       additional_data: {
-        patient_id: appointment.patient_id,
-        appointment_date: appointment.appointment_date
+        appointment_date: appointment.appointment_date,
+        patient_name: appointment.patient.name
       }
     })
 
+    // 5. Return response
     return NextResponse.json({
       success: true,
       data: appointment
     })
 
   } catch (error) {
-    console.error('Unexpected error fetching appointment:', error)
+    console.error('Erro inesperado ao buscar agendamento:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }
@@ -133,15 +142,15 @@ export async function GET(
 
 /**
  * PATCH /api/appointments/[id]
- * Update appointment
+ * Update appointment details
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: appointmentId } = await context.params
     const supabase = await createServerClient()
-    const appointmentId = params.id
 
     // 1. Authentication and authorization
     const currentUser = await getCurrentUser()
@@ -154,126 +163,143 @@ export async function PATCH(
 
     // 2. Check permissions
     if (!hasPermission(currentUser.role, 'write', 'appointments')) {
-      await logAuditEvent({
-        table_name: 'appointments',
-        operation: 'UPDATE_DENIED',
-        record_id: appointmentId,
-        user_id: currentUser.id,
-        additional_data: {
-          reason: 'insufficient_permissions'
-        }
-      })
-
       return NextResponse.json(
-        { error: 'Permissão insuficiente para editar agendamento' },
+        { error: 'Permissão insuficiente para editar agendamentos' },
         { status: 403 }
       )
     }
 
-    // 3. Parse and validate request body
+    // 3. Get current appointment
+    const { data: currentAppointment, error: fetchError } = await supabase
+      .from('appointments')
+      .select('id, status, appointment_date, start_time, patient_id, practitioner_id')
+      .eq('id', appointmentId)
+      .eq('org_id', currentUser.org_id)
+      .single()
+
+    if (fetchError) {
+      if (fetchError.code === 'PGRST116') {
+        return NextResponse.json(
+          { error: 'Agendamento não encontrado' },
+          { status: 404 }
+        )
+      }
+
+      console.error('Erro ao buscar agendamento atual:', fetchError)
+      return NextResponse.json(
+        { error: 'Erro ao buscar agendamento' },
+        { status: 500 }
+      )
+    }
+
+    // 4. Parse and validate request body
     const body = await request.json()
     const validatedData = updateAppointmentSchema.parse(body)
 
-    // 4. Calculate end time if start time or duration changed
-    let updateData: any = {
-      ...validatedData,
+    // 5. Check for conflicts if date/time is being changed
+    if (validatedData.appointment_date || validatedData.start_time) {
+      const newDate = validatedData.appointment_date || currentAppointment.appointment_date
+      const newTime = validatedData.start_time || currentAppointment.start_time
+      
+      // Check for conflicts (exclude current appointment)
+      const { data: conflictingAppointments } = await supabase
+        .rpc('check_appointment_conflicts', {
+          p_practitioner_id: currentAppointment.practitioner_id,
+          p_appointment_date: newDate,
+          p_start_time: newTime,
+          p_end_time: `${parseInt(newTime.split(':')[0]) + 1}:${newTime.split(':')[1]}:00`,
+          p_exclude_appointment_id: appointmentId
+        })
+
+      if (conflictingAppointments && conflictingAppointments.length > 0) {
+        return NextResponse.json(
+          { 
+            error: 'Conflito de horário detectado',
+            conflicts: conflictingAppointments
+          },
+          { status: 409 }
+        )
+      }
+    }
+
+    // 6. Prepare update data
+    const updateData: any = {
       updated_by: currentUser.id,
       updated_at: new Date().toISOString()
     }
 
-    if (validatedData.start_time && validatedData.duration_minutes) {
-      const startTime = new Date(`2024-01-01T${validatedData.start_time}`)
-      const endTime = new Date(startTime.getTime() + validatedData.duration_minutes * 60000)
-      updateData.end_time = endTime.toTimeString().slice(0, 5)
-    }
-
-    // 5. Check for conflicts if appointment time is being changed
-    if (validatedData.appointment_date || validatedData.start_time || validatedData.duration_minutes) {
-      // Get current appointment data for conflict checking
-      const { data: currentAppointment } = await supabase
-        .from('appointments')
-        .select('practitioner_id, appointment_date, start_time, duration_minutes')
-        .eq('id', appointmentId)
-        .single()
-
-      if (currentAppointment) {
-        const checkDate = validatedData.appointment_date || currentAppointment.appointment_date
-        const checkStartTime = validatedData.start_time || currentAppointment.start_time
-        const checkDuration = validatedData.duration_minutes || currentAppointment.duration_minutes
-
-        const startTime = new Date(`${checkDate}T${checkStartTime}`)
-        const endTime = new Date(startTime.getTime() + checkDuration * 60000)
-        const endTimeString = endTime.toTimeString().slice(0, 5)
-
-        const { data: conflicts } = await supabase
-          .rpc('check_appointment_conflicts', {
-            p_practitioner_id: currentAppointment.practitioner_id,
-            p_appointment_date: checkDate,
-            p_start_time: checkStartTime,
-            p_end_time: endTimeString,
-            p_exclude_appointment_id: appointmentId
-          })
-
-        if (conflicts && conflicts.length > 0) {
-          return NextResponse.json(
-            {
-              error: 'Conflito de horário detectado',
-              conflicts: conflicts
-            },
-            { status: 409 }
-          )
-        }
+    // Add fields that were provided
+    Object.keys(validatedData).forEach(key => {
+      const value = validatedData[key as keyof typeof validatedData]
+      if (value !== undefined) {
+        updateData[key] = value
       }
-    }
+    })
 
-    // 6. Update appointment
+    // 7. Update appointment
     const { data: updatedAppointment, error: updateError } = await supabase
       .from('appointments')
       .update(updateData)
       .eq('id', appointmentId)
-      .eq('org_id', currentUser.org_id)
       .select(`
         id,
         patient_id,
         practitioner_id,
         appointment_date,
         start_time,
-        end_time,
         duration_minutes,
         appointment_type,
         status,
         notes,
+        reminder_sent,
+        reminder_enabled,
+        is_recurring,
+        cancellation_reason,
         updated_at,
         patient:patients!appointments_patient_id_fkey(
-          name
+          id,
+          name,
+          cpf,
+          phone,
+          email
         ),
         practitioner:profiles!appointments_practitioner_id_fkey(
-          full_name
+          id,
+          full_name,
+          role
         )
       `)
       .single()
 
     if (updateError) {
-      console.error('Error updating appointment:', updateError)
+      console.error('Erro ao atualizar agendamento:', updateError)
       return NextResponse.json(
         { error: 'Erro ao atualizar agendamento' },
         { status: 500 }
       )
     }
 
-    // 7. Log audit event
+    // 8. Log audit event
     await logAuditEvent({
       table_name: 'appointments',
       operation: 'UPDATE',
       record_id: appointmentId,
       user_id: currentUser.id,
       additional_data: {
-        updated_fields: Object.keys(validatedData),
-        old_status: body.old_status,
-        new_status: validatedData.status
+        old_status: currentAppointment.status,
+        new_status: validatedData.status,
+        changes: Object.keys(validatedData),
+        patient_id: currentAppointment.patient_id
       }
     })
 
+    // 9. Send notification if status changed to cancelled
+    if (validatedData.status === 'cancelado') {
+      // TODO: Implement notification sending
+      console.log('Appointment cancelled, should send notification')
+    }
+
+    // 10. Return response
     return NextResponse.json({
       success: true,
       data: updatedAppointment,
@@ -281,13 +307,13 @@ export async function PATCH(
     })
 
   } catch (error) {
-    console.error('Unexpected error updating appointment:', error)
+    console.error('Erro inesperado ao atualizar agendamento:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
           error: 'Dados inválidos',
-          details: error.errors.map(e => ({
+          details: error.issues.map(e => ({
             field: e.path.join('.'),
             message: e.message
           }))
@@ -308,12 +334,12 @@ export async function PATCH(
  * Cancel appointment (soft delete)
  */
 export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  _request: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: appointmentId } = await context.params
     const supabase = await createServerClient()
-    const appointmentId = params.id
 
     // 1. Authentication and authorization
     const currentUser = await getCurrentUser()
@@ -326,83 +352,110 @@ export async function DELETE(
 
     // 2. Check permissions
     if (!hasPermission(currentUser.role, 'delete', 'appointments')) {
-      await logAuditEvent({
-        table_name: 'appointments',
-        operation: 'DELETE_DENIED',
-        record_id: appointmentId,
-        user_id: currentUser.id,
-        additional_data: {
-          reason: 'insufficient_permissions'
-        }
-      })
-
       return NextResponse.json(
-        { error: 'Permissão insuficiente para cancelar agendamento' },
+        { error: 'Permissão insuficiente para cancelar agendamentos' },
         { status: 403 }
       )
     }
 
-    // 3. Get appointment info before deletion for logging
-    const { data: appointment } = await supabase
+    // 3. Get appointment details
+    const { data: appointment, error: fetchError } = await supabase
       .from('appointments')
-      .select(`
-        patient_id,
-        appointment_date,
-        start_time,
-        patient:patients!appointments_patient_id_fkey(name),
-        practitioner:profiles!appointments_practitioner_id_fkey(full_name)
-      `)
+      .select('id, status, patient_id, appointment_date, start_time')
       .eq('id', appointmentId)
       .eq('org_id', currentUser.org_id)
       .single()
 
-    if (!appointment) {
+    if (fetchError) {
+      if (fetchError.code === 'PGRST116') {
+        return NextResponse.json(
+          { error: 'Agendamento não encontrado' },
+          { status: 404 }
+        )
+      }
+
+      console.error('Erro ao buscar agendamento:', fetchError)
       return NextResponse.json(
-        { error: 'Agendamento não encontrado' },
-        { status: 404 }
+        { error: 'Erro ao buscar agendamento' },
+        { status: 500 }
       )
     }
 
-    // 4. Soft delete by updating status to cancelled
-    const { error: deleteError } = await supabase
+    // 4. Check if appointment can be cancelled
+    if (appointment.status === 'concluido') {
+      return NextResponse.json(
+        { error: 'Não é possível cancelar um agendamento já concluído' },
+        { status: 400 }
+      )
+    }
+
+    if (appointment.status === 'cancelado') {
+      return NextResponse.json(
+        { error: 'Agendamento já está cancelado' },
+        { status: 400 }
+      )
+    }
+
+    // 5. Cancel appointment
+    const { data: cancelledAppointment, error: cancelError } = await supabase
       .from('appointments')
       .update({
         status: 'cancelado',
+        cancellation_reason: 'Cancelado pelo usuário',
+        cancelled_at: new Date().toISOString(),
+        cancelled_by: currentUser.id,
         updated_by: currentUser.id,
         updated_at: new Date().toISOString()
       })
       .eq('id', appointmentId)
-      .eq('org_id', currentUser.org_id)
+      .select('id, status, appointment_date, start_time')
+      .single()
 
-    if (deleteError) {
-      console.error('Error cancelling appointment:', deleteError)
+    if (cancelError) {
+      console.error('Erro ao cancelar agendamento:', cancelError)
       return NextResponse.json(
         { error: 'Erro ao cancelar agendamento' },
         { status: 500 }
       )
     }
 
-    // 5. Log audit event
+    // 6. Log audit event
     await logAuditEvent({
       table_name: 'appointments',
-      operation: 'DELETE',
+      operation: 'CANCEL',
       record_id: appointmentId,
       user_id: currentUser.id,
       additional_data: {
-        patient_name: appointment.patient?.name,
-        practitioner_name: appointment.practitioner?.full_name,
+        old_status: appointment.status,
+        patient_id: appointment.patient_id,
         appointment_date: appointment.appointment_date,
-        appointment_time: appointment.start_time
+        start_time: appointment.start_time
       }
     })
 
+    // 7. Return response
     return NextResponse.json({
       success: true,
+      data: cancelledAppointment,
       message: 'Agendamento cancelado com sucesso'
     })
 
   } catch (error) {
-    console.error('Unexpected error cancelling appointment:', error)
+    console.error('Erro inesperado ao cancelar agendamento:', error)
+
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Dados inválidos',
+          details: error.issues.map(e => ({
+            field: e.path.join('.'),
+            message: e.message
+          }))
+        },
+        { status: 400 }
+      )
+    }
+
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }

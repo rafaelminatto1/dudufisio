@@ -37,7 +37,7 @@ import {
 } from '@/components/ui/table'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { DraggableCalendar } from '@/components/appointments/DraggableCalendar'
-import { AppointmentBookingModal } from '@/components/appointments/AppointmentBookingModal'
+import AppointmentBookingModal from '@/components/appointments/AppointmentBookingModal'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { useToast } from '@/hooks/use-toast'
 import {
@@ -60,7 +60,6 @@ import {
   CalendarDays
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { useToast } from '@/hooks/use-toast'
 import type { Appointment, Patient, UserRole } from '@/lib/supabase/database.types'
 
 type AppointmentView = 'calendar' | 'list'
@@ -95,9 +94,8 @@ export default function AppointmentsPage() {
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [dateFilter, setDateFilter] = useState<string>('today')
 
-  // Carregar dados iniciais
-  useEffect(() => {
-    const loadData = async () => {
+  // Função para carregar dados
+  const loadData = async () => {
       try {
         setLoading(true)
 
@@ -173,8 +171,10 @@ export default function AppointmentsPage() {
       } finally {
         setLoading(false)
       }
-    }
+  }
 
+  // Carregar dados iniciais
+  useEffect(() => {
     loadData()
   }, [toast])
 

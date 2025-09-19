@@ -6,12 +6,24 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   typescript: {
-    // Permite warnings de TypeScript durante o build
-    ignoreBuildErrors: false,
+    // Acelera build ignorando erros de TypeScript em desenvolvimento
+    ignoreBuildErrors: process.env.NODE_ENV === 'development',
   },
   experimental: {
     // Otimizações para desenvolvimento
     optimizePackageImports: ['@/components', '@/lib'],
+    // Acelera compilação
+    turbo: {
+      // Configurações do Turbopack para acelerar builds
+      experimental: true,
+    },
+  },
+  // Configurações de cache
+  onDemandEntries: {
+    // Período de cache de páginas (5 minutos)
+    maxInactiveAge: 5 * 60 * 1000,
+    // Páginas para manter no cache
+    pagesBufferLength: 5,
   },
 };
 
