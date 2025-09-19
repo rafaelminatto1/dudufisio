@@ -5,19 +5,17 @@
  */
 
 import { createBrowserClient } from '@supabase/ssr'
-import type { Database } from './database.types'
 
 // Configurações do ambiente - usando diretamente as variáveis do .env.local
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
 /**
  * Cliente Supabase para componentes do navegador
  * Usado em Client Components
  */
 export const createClient = () =>
-  createBrowserClient<Database>(
+  createBrowserClient(
     supabaseUrl,
     supabaseAnonKey,
     {
@@ -41,26 +39,7 @@ export const createClient = () =>
   )
 
 
-/**
- * Cliente Supabase com service role
- * Usado para operações administrativas que requerem bypass de RLS
- */
-export const createServiceClient = () =>
-  createBrowserClient<Database>(
-    supabaseUrl,
-    supabaseServiceKey,
-    {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-      },
-      global: {
-        headers: {
-          'X-Client-Info': 'fisioflow-service@1.0.0',
-        },
-      },
-    }
-  )
+// Service-role client REMOVED from browser to prevent leaking server credentials.
 
 /**
  * Cliente Supabase padrão para uso geral
@@ -79,7 +58,6 @@ export const getSupabaseClient = () => {
  * Tipos e interfaces para o cliente Supabase
  */
 export type SupabaseClient = ReturnType<typeof createClient>
-export type SupabaseServiceClient = ReturnType<typeof createServiceClient>
 
 /**
  * Configurações de Real-time para diferentes recursos

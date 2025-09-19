@@ -1,18 +1,13 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+const nextConfig = {
   eslint: {
-    // Ignora warnings do ESLint durante o build para permitir compilação
-    ignoreDuringBuilds: true,
+    // Só ignora ESLint durante builds não-produtivos
+    ignoreDuringBuilds: process.env.NODE_ENV !== 'production',
   },
   typescript: {
     // Acelera build ignorando erros de TypeScript em desenvolvimento
     ignoreBuildErrors: process.env.NODE_ENV === 'development',
   },
-  experimental: {
-    // Otimizações para desenvolvimento
-    optimizePackageImports: ['@/components', '@/lib'],
-  },
+  // experimental: {},
 };
 
 export default nextConfig;

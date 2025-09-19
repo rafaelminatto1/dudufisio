@@ -101,6 +101,10 @@ class Logger {
 
   private async sendToExternalLogger(entry: LogEntry) {
     try {
+      // Avoid filesystem writes on serverless platforms like Vercel/Edge
+      if (process.env.VERCEL === '1' || process.env.NEXT_RUNTIME === 'edge') {
+        return
+      }
       // Integração com serviços como Sentry, LogRocket, etc.
       // Por enquanto, mantém em arquivo local
       if (typeof window === 'undefined') {
