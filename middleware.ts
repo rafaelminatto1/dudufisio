@@ -38,11 +38,11 @@ const SECURITY_CONFIG = {
     // Permissions Policy (controle de recursos sensíveis)
     'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=()',
 
-    // Content Security Policy para dados de saúde
+    // Content Security Policy para dados de saúde (mais restritivo)
     'Content-Security-Policy': [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "script-src 'self'",
+      "style-src 'self' https://fonts.googleapis.com",
       "img-src 'self' data: https: blob:",
       "font-src 'self' https://fonts.gstatic.com",
       "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
