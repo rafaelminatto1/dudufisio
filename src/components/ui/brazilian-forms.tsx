@@ -1,10 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "@/lib/utils"
+import { cn } from '@/src/lib/utils'
 import { Input } from "./input"
 import { Label } from "./label"
 import { Textarea } from "./textarea"
+import logger from '../../../lib/logger';
 
 interface BrazilianFormFieldProps {
   label: string
@@ -190,7 +191,7 @@ function CEPInput({
         onAddressLoad?.(data)
       }
     } catch (error) {
-      console.error('Erro ao buscar CEP:', error)
+      logger.error('Erro ao buscar CEP:', error)
     }
   }
 

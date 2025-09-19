@@ -9,10 +9,11 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { getCurrentUser, hasPermission } from '@/lib/auth/server'
-import { logAuditEvent } from '@/lib/audit/server'
-import { validateLGPDConsent } from '@/lib/lgpd/server'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { getCurrentUser, hasPermission } from '@/src/lib/auth/server'
+import { logAuditEvent } from '@/src/lib/audit/server'
+import { validateLGPDConsent } from '@/src/lib/lgpd/server'
+import logger from '../../../../lib/logger';
 
 // Schema for patient update
 const updatePatientSchema = z.object({
@@ -136,7 +137,7 @@ export async function GET(
         )
       }
       
-      console.error('Erro ao buscar paciente:', error)
+      logger.error('Erro ao buscar paciente:', error)
       return NextResponse.json(
         { error: 'Erro ao buscar paciente' },
         { status: 500 }
@@ -188,7 +189,7 @@ export async function GET(
     })
 
   } catch (error) {
-    console.error('Erro inesperado ao buscar paciente:', error)
+    logger.error('Erro inesperado ao buscar paciente:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }
@@ -252,7 +253,7 @@ export async function PUT(
         )
       }
       
-      console.error('Erro ao buscar paciente:', fetchError)
+      logger.error('Erro ao buscar paciente:', fetchError)
       return NextResponse.json(
         { error: 'Erro ao buscar paciente' },
         { status: 500 }
@@ -299,7 +300,7 @@ export async function PUT(
       .single()
 
     if (updateError) {
-      console.error('Erro ao atualizar paciente:', updateError)
+      logger.error('Erro ao atualizar paciente:', updateError)
       return NextResponse.json(
         { error: 'Erro ao atualizar paciente' },
         { status: 500 }
@@ -353,7 +354,7 @@ export async function PUT(
     })
 
   } catch (error) {
-    console.error('Erro inesperado ao atualizar paciente:', error)
+    logger.error('Erro inesperado ao atualizar paciente:', error)
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -431,7 +432,7 @@ export async function DELETE(
         )
       }
       
-      console.error('Erro ao buscar paciente:', fetchError)
+      logger.error('Erro ao buscar paciente:', fetchError)
       return NextResponse.json(
         { error: 'Erro ao buscar paciente' },
         { status: 500 }
@@ -448,7 +449,7 @@ export async function DELETE(
       .limit(1)
 
     if (appointmentsError) {
-      console.error('Erro ao verificar agendamentos:', appointmentsError)
+      logger.error('Erro ao verificar agendamentos:', appointmentsError)
       return NextResponse.json(
         { error: 'Erro ao verificar agendamentos' },
         { status: 500 }
@@ -476,7 +477,7 @@ export async function DELETE(
       .single()
 
     if (archiveError) {
-      console.error('Erro ao arquivar paciente:', archiveError)
+      logger.error('Erro ao arquivar paciente:', archiveError)
       return NextResponse.json(
         { error: 'Erro ao arquivar paciente' },
         { status: 500 }
@@ -503,7 +504,7 @@ export async function DELETE(
     })
 
   } catch (error) {
-    console.error('Erro inesperado ao arquivar paciente:', error)
+    logger.error('Erro inesperado ao arquivar paciente:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }

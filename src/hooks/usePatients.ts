@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { createClient } from '@/lib/supabase/client-simple'
-import type { Patient, PatientInsert, PatientUpdate } from '@/lib/supabase/database.types'
+import { createClient } from '@/src/lib/supabase/client-simple'
+import type { Patient, PatientInsert, PatientUpdate } from '@/src/lib/supabase/database.types'
 import { toast } from 'sonner'
 
 interface PatientsFilter {

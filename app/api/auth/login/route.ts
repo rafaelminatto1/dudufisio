@@ -8,8 +8,9 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { logAuditEvent } from '@/lib/audit/server'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { logAuditEvent } from '@/src/lib/audit/server'
+import logger from '../../../../lib/logger';
 
 // Force Node.js runtime to avoid Edge Runtime issues with Supabase
 export const runtime = 'nodejs'
@@ -82,7 +83,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (profileError || !profile) {
-      console.error('Erro ao buscar perfil do usuário:', profileError)
+      logger.error('Erro ao buscar perfil do usuário:', profileError)
       return NextResponse.json(
         { error: 'Erro ao carregar perfil do usuário' },
         { status: 500 }
@@ -170,7 +171,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Erro inesperado no login:', error)
+    logger.error('Erro inesperado no login:', error)
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(

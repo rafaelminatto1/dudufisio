@@ -1,15 +1,16 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Calendar } from '@/components/ui/calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Button } from '@/src/components/ui/button'
+import { Input } from '@/src/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select'
+import { Calendar } from '@/src/components/ui/calendar'
+import { Popover, PopoverContent, PopoverTrigger } from '@/src/components/ui/popover'
+import { Badge } from '@/src/components/ui/badge'
+import { Separator } from '@/src/components/ui/separator'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/src/components/ui/tabs'
+import logger from '../../lib/logger';
 import {
   FileText,
   Download,
@@ -240,7 +241,7 @@ export default function ReportsPage() {
         setGeneratedReports(prev => [newReport, ...prev])
       }
     } catch (error) {
-      console.error('Erro ao gerar relatório:', error)
+      logger.error('Erro ao gerar relatório:', error)
     } finally {
       setGeneratingReports(prev => {
         const newSet = new Set(prev)
@@ -253,13 +254,13 @@ export default function ReportsPage() {
 
   const downloadReport = (report: GeneratedReport) => {
     // Mock download
-    console.log('Downloading report:', report.name)
+    logger.info('Downloading report:', report.name)
     // window.open(report.downloadUrl, '_blank')
   }
 
   const scheduleReport = (templateId: string) => {
     // TODO: Implement scheduling modal
-    console.log('Scheduling report:', templateId)
+    logger.info('Scheduling report:', templateId)
   }
 
   const formatDate = (dateString: string) => {
@@ -512,7 +513,7 @@ export default function ReportsPage() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => console.log('Preview:', report.name)}
+                            onClick={() => logger.info('Preview:', report.name)}
                             disabled={report.status !== 'ready'}
                           >
                             <Eye className="h-4 w-4" />
@@ -528,7 +529,7 @@ export default function ReportsPage() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => console.log('Send email:', report.name)}
+                            onClick={() => logger.info('Send email:', report.name)}
                             disabled={report.status !== 'ready'}
                           >
                             <Mail className="h-4 w-4" />

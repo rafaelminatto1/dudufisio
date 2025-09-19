@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { useNotificationPermission } from '@/components/pwa/PWAManager'
+import { useNotificationPermission } from '@/src/components/pwa/PWAManager'
+import logger from '../../../lib/logger';
 
 /**
  * Componente para testar e demonstrar notificações push
@@ -62,7 +63,7 @@ export function NotificationTester() {
         tag: `test-${Date.now()}`
       })
     } catch (error) {
-      console.error('Erro ao enviar notificação:', error)
+      logger.error('Erro ao enviar notificação:', error)
       alert('Erro ao enviar notificação. Verifique as permissões.')
     } finally {
       setIsLoading(false)

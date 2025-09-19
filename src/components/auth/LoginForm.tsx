@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { createClient } from '@/src/lib/supabase/client'
+import { Button } from '@/src/components/ui/button'
+import { Input } from '@/src/components/ui/input'
+import { Label } from '@/src/components/ui/label'
 import { toast } from 'sonner'
 import Link from 'next/link'
+import logger from '../../../lib/logger';
 
 interface LoginFormProps {
   onSuccess?: () => void
@@ -52,7 +53,7 @@ export function LoginForm({ onSuccess, onError }: LoginFormProps) {
       })
 
       if (signInError) {
-        console.error('Erro no login:', signInError)
+        logger.error('Erro no login:', signInError)
         const errorMessage = getErrorMessage(signInError.message)
         setError(errorMessage)
         toast.error(errorMessage)
@@ -68,7 +69,7 @@ export function LoginForm({ onSuccess, onError }: LoginFormProps) {
         router.push('/dashboard')
       }
     } catch (error) {
-      console.error('Erro inesperado:', error)
+      logger.error('Erro inesperado:', error)
       const errorMessage = 'Erro inesperado ao fazer login'
       setError(errorMessage)
       toast.error(errorMessage)

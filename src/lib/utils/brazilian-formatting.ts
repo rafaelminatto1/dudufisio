@@ -1,3 +1,5 @@
+import logger from '../../../lib/logger';
+
 /**
  * Brazilian Date and Time Formatting Utilities
  * Handles Brazilian locale formatting for dates, times, and related operations
@@ -95,7 +97,7 @@ export function formatBrazilianDate(
         return dateObj.toLocaleDateString(BRAZILIAN_LOCALE)
     }
   } catch (error) {
-    console.error('Error formatting date:', error)
+    logger.error('Error formatting date:', error)
     return 'Erro na formatação'
   }
 }

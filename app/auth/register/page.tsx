@@ -2,13 +2,14 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { createClient } from '@/lib/supabase/client-simple'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Button } from '@/src/components/ui/button'
+import { Input } from '@/src/components/ui/input'
+import { Label } from '@/src/components/ui/label'
+import { createClient } from '@/src/lib/supabase/client-simple'
 import { toast } from 'sonner'
 import Link from 'next/link'
+import logger from '../../../lib/logger';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -62,7 +63,7 @@ export default function RegisterPage() {
       })
 
       if (signUpError) {
-        console.error('Erro no cadastro:', signUpError)
+        logger.error('Erro no cadastro:', signUpError)
         const errorMessage = getErrorMessage(signUpError.message)
         setError(errorMessage)
         toast.error(errorMessage)
@@ -74,7 +75,7 @@ export default function RegisterPage() {
         router.push('/login')
       }
     } catch (error) {
-      console.error('Erro inesperado:', error)
+      logger.error('Erro inesperado:', error)
       const errorMessage = 'Erro inesperado ao criar conta'
       setError(errorMessage)
       toast.error(errorMessage)

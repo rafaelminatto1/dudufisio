@@ -5,16 +5,17 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Checkbox } from '@/components/ui/checkbox'
-import { LoadingSpinner } from '@/components/ui/loading-spinner'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Button } from '@/src/components/ui/button'
+import { Input } from '@/src/components/ui/input'
+import { Textarea } from '@/src/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/src/components/ui/form'
+import { Checkbox } from '@/src/components/ui/checkbox'
+import { LoadingSpinner } from '@/src/components/ui/loading-spinner'
 import { Calendar, Clock, User, ArrowLeft, Save, Plus } from 'lucide-react'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/src/hooks/use-toast'
+import logger from '../../../lib/logger';
 
 const createAppointmentSchema = z.object({
   patient_id: z.string().min(1, 'Selecione um paciente'),
@@ -115,7 +116,7 @@ export default function NewAppointmentPage() {
         setPractitioners(practitionersData.data)
       }
     } catch (error) {
-      console.error('Error fetching data:', error)
+      logger.error('Error fetching data:', error)
       toast({
         title: 'Erro ao carregar dados',
         description: 'Não foi possível carregar pacientes e profissionais',

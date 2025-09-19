@@ -1,14 +1,15 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Switch } from '@/components/ui/switch'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { LoadingSpinner } from '@/components/ui/loading'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Button } from '@/src/components/ui/button'
+import { Badge } from '@/src/components/ui/badge'
+import { Switch } from '@/src/components/ui/switch'
+import { Checkbox } from '@/src/components/ui/checkbox'
+import { Alert, AlertDescription } from '@/src/components/ui/alert'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/src/components/ui/tabs'
+import { LoadingSpinner } from '@/src/components/ui/loading'
+import logger from '../../../lib/logger';
 import {
   Shield,
   FileText,
@@ -22,7 +23,7 @@ import {
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { ConsentType, ConsentRecord, DataExportRequest, DataDeletionRequest, lgpdCompliance, lgpdUtils } from '@/lib/lgpd'
+import { ConsentType, ConsentRecord, DataExportRequest, DataDeletionRequest, lgpdCompliance, lgpdUtils } from '@/src/lib/lgpd'
 
 interface ConsentManagerProps {
   userId: string
@@ -136,7 +137,7 @@ export default function ConsentManager({
       setDeletionRequests([])
 
     } catch (error) {
-      console.error('Failed to load consent data:', error)
+      logger.error('Failed to load consent data:', error)
     } finally {
       setIsLoading(false)
     }
@@ -167,7 +168,7 @@ export default function ConsentManager({
 
       onConsentChange?.(consentType, granted)
     } catch (error) {
-      console.error('Failed to update consent:', error)
+      logger.error('Failed to update consent:', error)
     } finally {
       setActionLoading(null)
     }
@@ -179,7 +180,7 @@ export default function ConsentManager({
       await lgpdCompliance.requestDataExport(userId, userId, format)
       await loadConsentData() // Reload to show new request
     } catch (error) {
-      console.error('Failed to request data export:', error)
+      logger.error('Failed to request data export:', error)
     } finally {
       setActionLoading(null)
     }
@@ -195,7 +196,7 @@ export default function ConsentManager({
       )
       await loadConsentData() // Reload to show new request
     } catch (error) {
-      console.error('Failed to request data deletion:', error)
+      logger.error('Failed to request data deletion:', error)
     } finally {
       setActionLoading(null)
     }

@@ -4,7 +4,7 @@
  * Supports hierarchical permissions and fine-grained access control
  */
 
-import type { UserRole } from '@/lib/supabase/database.types'
+import type { UserRole } from '@/src/lib/supabase/database.types'
 import type { AuthUser } from './types'
 
 /**

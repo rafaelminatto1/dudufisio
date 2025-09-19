@@ -2,11 +2,12 @@
 
 import { useState, useRef } from 'react'
 import { Camera, Upload, X, User } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { useToast } from '@/hooks/use-toast'
-import { cn } from '@/lib/utils'
+import { Button } from '@/src/components/ui/button'
+import { Card, CardContent } from '@/src/components/ui/card'
+import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar'
+import { useToast } from '@/src/hooks/use-toast'
+import { cn } from '@/src/lib/utils'
+import logger from '../../../lib/logger';
 
 interface PatientPhotoUploadProps {
   patientId: string
@@ -114,7 +115,7 @@ export default function PatientPhotoUpload({
       })
 
     } catch (error) {
-      console.error('Erro no upload da foto:', error)
+      logger.error('Erro no upload da foto:', error)
       toast({
         title: 'Erro',
         description: error instanceof Error ? error.message : 'Erro ao fazer upload da foto',
@@ -154,7 +155,7 @@ export default function PatientPhotoUpload({
       })
 
     } catch (error) {
-      console.error('Erro ao remover foto:', error)
+      logger.error('Erro ao remover foto:', error)
       toast({
         title: 'Erro',
         description: error instanceof Error ? error.message : 'Erro ao remover foto',

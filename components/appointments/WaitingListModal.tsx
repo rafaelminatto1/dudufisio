@@ -1,19 +1,20 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
-import { useToast } from '@/hooks/use-toast'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/src/components/ui/dialog'
+import { Button } from '@/src/components/ui/button'
+import { Input } from '@/src/components/ui/input'
+import { Label } from '@/src/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select'
+import { Textarea } from '@/src/components/ui/textarea'
+import { Badge } from '@/src/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Separator } from '@/src/components/ui/separator'
+import { useToast } from '@/src/hooks/use-toast'
 import { Clock, User, Phone, Calendar, Plus, Trash2, CheckCircle } from 'lucide-react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import logger from '../../lib/logger';
 
 interface WaitingListEntry {
   id: string
@@ -81,7 +82,7 @@ export function WaitingListModal({ isOpen, onClose, onSchedule }: WaitingListMod
         throw new Error(data.error || 'Erro ao carregar lista de espera')
       }
     } catch (error: any) {
-      console.error('Erro ao carregar lista de espera:', error)
+      logger.error('Erro ao carregar lista de espera:', error)
       toast({
         title: 'Erro',
         description: error.message,
@@ -101,7 +102,7 @@ export function WaitingListModal({ isOpen, onClose, onSchedule }: WaitingListMod
         setPatients(data.data || [])
       }
     } catch (error) {
-      console.error('Erro ao carregar pacientes:', error)
+      logger.error('Erro ao carregar pacientes:', error)
     }
   }
 
@@ -114,7 +115,7 @@ export function WaitingListModal({ isOpen, onClose, onSchedule }: WaitingListMod
         setPractitioners(data.data || [])
       }
     } catch (error) {
-      console.error('Erro ao carregar profissionais:', error)
+      logger.error('Erro ao carregar profissionais:', error)
     }
   }
 
@@ -148,7 +149,7 @@ export function WaitingListModal({ isOpen, onClose, onSchedule }: WaitingListMod
         throw new Error(data.error || 'Erro ao adicionar à lista de espera')
       }
     } catch (error: any) {
-      console.error('Erro ao adicionar à lista de espera:', error)
+      logger.error('Erro ao adicionar à lista de espera:', error)
       toast({
         title: 'Erro',
         description: error.message,
@@ -175,7 +176,7 @@ export function WaitingListModal({ isOpen, onClose, onSchedule }: WaitingListMod
         throw new Error(data.error || 'Erro ao remover da lista de espera')
       }
     } catch (error: any) {
-      console.error('Erro ao remover da lista de espera:', error)
+      logger.error('Erro ao remover da lista de espera:', error)
       toast({
         title: 'Erro',
         description: error.message,

@@ -1,12 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/src/components/ui/dialog'
+import { Button } from '@/src/components/ui/button'
+import { Badge } from '@/src/components/ui/badge'
+import { Separator } from '@/src/components/ui/separator'
+import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/src/components/ui/tabs'
+import logger from '../../../lib/logger';
 import {
   User,
   Calendar,
@@ -142,17 +143,17 @@ export function PrescriptionDetailsModal({ prescription, open, onOpenChange, onU
 
   const handleStatusChange = async (newStatus: string) => {
     // TODO: Implement status update API call
-    console.log('Mudando status para:', newStatus)
+    logger.info('Mudando status para:', newStatus)
   }
 
   const handleEdit = () => {
     // TODO: Open edit modal
-    console.log('Editando prescrição:', prescription.id)
+    logger.info('Editando prescrição:', prescription.id)
   }
 
   const handleDuplicate = () => {
     // TODO: Duplicate prescription
-    console.log('Duplicando prescrição:', prescription.id)
+    logger.info('Duplicando prescrição:', prescription.id)
   }
 
   const handleDelete = async () => {
@@ -161,9 +162,9 @@ export function PrescriptionDetailsModal({ prescription, open, onOpenChange, onU
     setLoading(true)
     try {
       // TODO: Implement delete API call
-      console.log('Excluindo prescrição:', prescription.id)
+      logger.info('Excluindo prescrição:', prescription.id)
     } catch (error) {
-      console.error('Erro ao excluir prescrição:', error)
+      logger.error('Erro ao excluir prescrição:', error)
     } finally {
       setLoading(false)
     }

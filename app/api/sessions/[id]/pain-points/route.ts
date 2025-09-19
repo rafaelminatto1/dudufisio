@@ -8,9 +8,10 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { getCurrentUser, hasPermission } from '@/lib/auth/server'
-import { logAuditEvent } from '@/lib/audit/server'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { getCurrentUser, hasPermission } from '@/src/lib/auth/server'
+import { logAuditEvent } from '@/src/lib/audit/server'
+import logger from '../../../../../lib/logger';
 
 // Schema for pain point creation
 const createPainPointSchema = z.object({
@@ -71,7 +72,7 @@ export async function GET(
         )
       }
 
-      console.error('Erro ao verificar sessão:', sessionError)
+      logger.error('Erro ao verificar sessão:', sessionError)
       return NextResponse.json(
         { error: 'Erro ao verificar sessão' },
         { status: 500 }
@@ -105,7 +106,7 @@ export async function GET(
       .order('created_at', { ascending: false })
 
     if (error) {
-      console.error('Erro ao buscar pontos de dor:', error)
+      logger.error('Erro ao buscar pontos de dor:', error)
       return NextResponse.json(
         { error: 'Erro ao buscar pontos de dor' },
         { status: 500 }
@@ -119,7 +120,7 @@ export async function GET(
     })
 
   } catch (error) {
-    console.error('Erro inesperado ao buscar pontos de dor:', error)
+    logger.error('Erro inesperado ao buscar pontos de dor:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }
@@ -172,7 +173,7 @@ export async function POST(
         )
       }
 
-      console.error('Erro ao verificar sessão:', sessionError)
+      logger.error('Erro ao verificar sessão:', sessionError)
       return NextResponse.json(
         { error: 'Erro ao verificar sessão' },
         { status: 500 }
@@ -221,7 +222,7 @@ export async function POST(
       .single()
 
     if (createError) {
-      console.error('Erro ao criar ponto de dor:', createError)
+      logger.error('Erro ao criar ponto de dor:', createError)
       return NextResponse.json(
         { error: 'Erro ao registrar ponto de dor' },
         { status: 500 }
@@ -250,7 +251,7 @@ export async function POST(
     }, { status: 201 })
 
   } catch (error) {
-    console.error('Erro inesperado ao criar ponto de dor:', error)
+    logger.error('Erro inesperado ao criar ponto de dor:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

@@ -1,10 +1,11 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
-import { Icons } from '@/components/ui/icons'
-import { createClient } from '@/lib/supabase/client'
+import { Button } from '@/src/components/ui/button'
+import { Icons } from '@/src/components/ui/icons'
+import { createClient } from '@/src/lib/supabase/client'
 import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
+import logger from '../../../lib/logger';
 
 interface GoogleSignInButtonProps {
   onSuccess?: () => void
@@ -46,7 +47,7 @@ export function GoogleSignInButton({
       })
 
       if (error) {
-        console.error('Erro ao iniciar login com Google:', error)
+        logger.error('Erro ao iniciar login com Google:', error)
         const errorMessage = getErrorMessage(error.message)
         toast.error(errorMessage)
         onError?.(errorMessage)
@@ -57,7 +58,7 @@ export function GoogleSignInButton({
       toast.success('Redirecionando para Google...')
       onSuccess?.()
     } catch (error) {
-      console.error('Erro inesperado:', error)
+      logger.error('Erro inesperado:', error)
       const errorMessage = 'Erro inesperado ao conectar com Google'
       toast.error(errorMessage)
       onError?.(errorMessage)

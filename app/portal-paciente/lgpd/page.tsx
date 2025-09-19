@@ -6,14 +6,15 @@
 'use client'
 
 import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Button } from '@/src/components/ui/button'
+import { Badge } from '@/src/components/ui/badge'
+import { Separator } from '@/src/components/ui/separator'
+import { Alert, AlertDescription } from '@/src/components/ui/alert'
+import { Checkbox } from '@/src/components/ui/checkbox'
+import { Textarea } from '@/src/components/ui/textarea'
+import { Label } from '@/src/components/ui/label'
+import logger from '../../../lib/logger';
 import {
   Download,
   Shield,
@@ -91,7 +92,7 @@ export default function LGPDPortalPage() {
         setSelectedCategories([])
       }
     } catch (error) {
-      console.error('Export request failed:', error)
+      logger.error('Export request failed:', error)
     } finally {
       setIsSubmitting(false)
     }
@@ -117,7 +118,7 @@ export default function LGPDPortalPage() {
         setDeletionReason('')
       }
     } catch (error) {
-      console.error('Deletion request failed:', error)
+      logger.error('Deletion request failed:', error)
     } finally {
       setIsSubmitting(false)
     }

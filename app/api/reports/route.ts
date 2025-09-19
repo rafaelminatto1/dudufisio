@@ -8,9 +8,10 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { getCurrentUser, hasPermission } from '@/lib/auth/server'
-import { logAuditEvent } from '@/lib/audit/server'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { getCurrentUser, hasPermission } from '@/src/lib/auth/server'
+import { logAuditEvent } from '@/src/lib/audit/server'
+import logger from '../../../lib/logger';
 
 // Schema for report generation
 const generateReportSchema = z.object({
@@ -245,7 +246,7 @@ export async function GET(request: NextRequest) {
     const { data: reports, error, count } = await query
 
     if (error) {
-      console.error('Erro ao buscar relatórios:', error)
+      logger.error('Erro ao buscar relatórios:', error)
       return NextResponse.json(
         { error: 'Erro ao buscar relatórios' },
         { status: 500 }
@@ -272,7 +273,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Erro inesperado ao buscar relatórios:', error)
+    logger.error('Erro inesperado ao buscar relatórios:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }
@@ -369,7 +370,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (createError) {
-      console.error('Erro ao criar relatório:', createError)
+      logger.error('Erro ao criar relatório:', createError)
       return NextResponse.json(
         { error: 'Erro ao criar relatório' },
         { status: 500 }
@@ -393,7 +394,7 @@ export async function POST(request: NextRequest) {
           })
           .eq('id', newReport.id)
       } catch (error) {
-        console.error('Erro ao completar geração do relatório:', error)
+        logger.error('Erro ao completar geração do relatório:', error)
         await supabase
           .from('generated_reports')
           .update({
@@ -450,7 +451,7 @@ export async function POST(request: NextRequest) {
     }, { status: 201 })
 
   } catch (error) {
-    console.error('Erro inesperado ao gerar relatório:', error)
+    logger.error('Erro inesperado ao gerar relatório:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

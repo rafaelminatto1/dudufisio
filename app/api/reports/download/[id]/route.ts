@@ -6,9 +6,10 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@/lib/supabase/server'
-import { getCurrentUser, hasPermission } from '@/lib/auth/server'
-import { logAuditEvent } from '@/lib/audit/server'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { getCurrentUser, hasPermission } from '@/src/lib/auth/server'
+import { logAuditEvent } from '@/src/lib/audit/server'
+import logger from '../../../../../lib/logger';
 
 /**
  * GET /api/reports/download/[id]
@@ -67,7 +68,7 @@ export async function GET(
         )
       }
 
-      console.error('Erro ao buscar relatório:', reportError)
+      logger.error('Erro ao buscar relatório:', reportError)
       return NextResponse.json(
         { error: 'Erro ao buscar relatório' },
         { status: 500 }
@@ -264,7 +265,7 @@ startxref
     })
 
   } catch (error) {
-    console.error('Erro inesperado ao baixar relatório:', error)
+    logger.error('Erro inesperado ao baixar relatório:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }

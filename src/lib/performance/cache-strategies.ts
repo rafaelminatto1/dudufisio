@@ -1,3 +1,5 @@
+import logger from '../../../lib/logger';
+
 /**
  * Advanced Caching Strategies
  * Implements intelligent caching for different resource types
@@ -129,7 +131,7 @@ export class ServiceWorkerCache {
       const cache = await caches.open(CACHE_CONFIG.STATIC_CACHE)
       await cache.addAll(urls)
     } catch (error) {
-      console.warn('Failed to cache static assets:', error)
+      logger.warn('Failed to cache static assets:', error)
     }
   }
 
@@ -140,7 +142,7 @@ export class ServiceWorkerCache {
       const cache = await caches.open(CACHE_CONFIG.API_CACHE)
       await cache.put(request, response.clone())
     } catch (error) {
-      console.warn('Failed to cache API response:', error)
+      logger.warn('Failed to cache API response:', error)
     }
   }
 
@@ -151,7 +153,7 @@ export class ServiceWorkerCache {
       const cache = await caches.open(CACHE_CONFIG.API_CACHE)
       return await cache.match(request)
     } catch (error) {
-      console.warn('Failed to get cached response:', error)
+      logger.warn('Failed to get cached response:', error)
       return undefined
     }
   }
@@ -167,7 +169,7 @@ export class ServiceWorkerCache {
 
       await Promise.all(deletePromises)
     } catch (error) {
-      console.warn('Failed to clear expired cache:', error)
+      logger.warn('Failed to clear expired cache:', error)
     }
   }
 }
@@ -212,7 +214,7 @@ export function useSWR<T>(
   } = options
 
   // Get cached data immediately
-  let cached = cache.get<T>(key)
+  const cached = cache.get<T>(key)
 
   // Background revalidation
   const revalidate = async () => {
@@ -221,7 +223,7 @@ export function useSWR<T>(
       cache.set(key, fresh, ttl)
       return fresh
     } catch (error) {
-      console.warn('Revalidation failed for key:', key, error)
+      logger.warn('Revalidation failed for key:', key, error)
       return cached
     }
   }

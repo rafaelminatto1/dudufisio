@@ -6,9 +6,9 @@
 export const dynamic = 'force-dynamic'
 
 import { Metadata } from 'next'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Badge } from '@/src/components/ui/badge'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/src/components/ui/tabs'
 import { Calendar, Clock, Users, BookOpen, Eye, AlertCircle } from 'lucide-react'
 
 export const metadata: Metadata = {

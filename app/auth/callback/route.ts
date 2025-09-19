@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
-import { createServerClient } from '@/lib/supabase/server'
+import { createServerClient } from '@/src/lib/supabase/server'
 import { cookies } from 'next/headers'
+import logger from '../../../lib/logger';
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
@@ -15,7 +16,7 @@ export async function GET(request: Request) {
       const { data, error } = await supabase.auth.exchangeCodeForSession(code)
 
       if (error) {
-        console.error('Erro ao trocar código por sessão:', error)
+        logger.error('Erro ao trocar código por sessão:', error)
         return NextResponse.redirect(`${origin}/auth/auth-code-error?error=${encodeURIComponent(error.message)}`)
       }
 
@@ -28,7 +29,7 @@ export async function GET(request: Request) {
             accessed_fields: undefined
           })
         } catch (auditError) {
-          console.error('Erro ao registrar log de auditoria:', auditError)
+          logger.error('Erro ao registrar log de auditoria:', auditError)
         }
 
         // Determinar redirecionamento baseado no papel do usuário
@@ -66,7 +67,7 @@ export async function GET(request: Request) {
 
       return NextResponse.redirect(`${origin}${next}`)
     } catch (error) {
-      console.error('Erro durante callback OAuth:', error)
+      logger.error('Erro durante callback OAuth:', error)
       return NextResponse.redirect(`${origin}/auth/auth-code-error?error=${encodeURIComponent('Erro interno do servidor')}`)
     }
   }

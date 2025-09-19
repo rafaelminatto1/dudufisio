@@ -1,3 +1,5 @@
+import logger from './logger';
+
 /**
  * LGPD (Lei Geral de Proteção de Dados) Compliance Module
  * Handles Brazilian data protection requirements
@@ -47,7 +49,7 @@ export async function recordConsent(data: Omit<ConsentRecord, 'id' | 'timestamp'
   }
 
   // TODO: Store in database
-  console.log('Recording consent:', record)
+  logger.info('Recording consent:', record)
 
   return record
 }
@@ -66,14 +68,14 @@ export async function requestDataExport(userId: string, requestedBy: string): Pr
   }
 
   // TODO: Store in database and process export
-  console.log('Data export requested:', request)
+  logger.info('Data export requested:', request)
 
   return request
 }
 
 export async function deleteUserData(userId: string, requestedBy: string): Promise<boolean> {
   // TODO: Implement data deletion with proper anonymization
-  console.log('Data deletion requested for user:', userId, 'by:', requestedBy)
+  logger.info('Data deletion requested for user:', userId, 'by:', requestedBy)
 
   return true
 }

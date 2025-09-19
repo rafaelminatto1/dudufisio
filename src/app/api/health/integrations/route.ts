@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { whatsappAPI } from '@/lib/integrations/whatsapp-api'
-import { pushNotificationService } from '@/lib/notifications/push-service'
+import { whatsappAPI } from '@/src/lib/integrations/whatsapp-api'
+import { pushNotificationService } from '@/src/lib/notifications/push-service'
 
 export async function GET(request: NextRequest) {
   try {

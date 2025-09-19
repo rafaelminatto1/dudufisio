@@ -6,6 +6,7 @@
 
 import { createBrowserClient } from '@supabase/ssr'
 import type { Database } from './database.types'
+import logger from '../../../lib/logger';
 
 // Configurações do ambiente - usando diretamente as variáveis do .env.local
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -276,7 +277,7 @@ export const deleteFile = async (
  * Configurações de error handling
  */
 export const handleSupabaseError = (error: any) => {
-  console.error('Erro Supabase:', error)
+  logger.error('Erro Supabase:', error)
 
   // Erros específicos do PostgreSQL
   if (error.code === '23505') {
@@ -329,7 +330,7 @@ export const withRetry = async <T>(
       return await operation()
     } catch (error) {
       lastError = error as Error
-      console.warn(`Tentativa ${attempt} falhou:`, error)
+      logger.warn(`Tentativa ${attempt} falhou:`, error)
 
       if (attempt === maxRetries) {
         break

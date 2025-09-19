@@ -8,10 +8,11 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { getCurrentUser, hasPermission } from '@/lib/auth/server'
-import { logAuditEvent } from '@/lib/audit/server'
-import { validateLGPDConsent } from '@/lib/lgpd/server'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { getCurrentUser, hasPermission } from '@/src/lib/auth/server'
+import { logAuditEvent } from '@/src/lib/audit/server'
+import { validateLGPDConsent } from '@/src/lib/lgpd/server'
+import logger from '../../../../../../lib/logger';
 
 // Schema de validação para criação de ponto de dor
 const painPointSchema = z.object({
@@ -260,7 +261,7 @@ export async function POST(
       // Validar região corporal (pode implementar lista válida)
       if (!['head', 'neck', 'chest', 'back', 'arm_left', 'arm_right', 'leg_left', 'leg_right', 'Lombar', 'Ombro Direito'].includes(painPoint.body_region)) {
         // Log para auditoria mas não bloqueia (aceita regiões customizadas)
-        console.warn(`Região corporal não padrão: ${painPoint.body_region}`)
+        logger.warn(`Região corporal não padrão: ${painPoint.body_region}`)
       }
 
       // Validar coordenadas estão dentro do SVG
@@ -294,7 +295,7 @@ export async function POST(
       `)
 
     if (insertError) {
-      console.error('Erro ao inserir pontos de dor:', insertError)
+      logger.error('Erro ao inserir pontos de dor:', insertError)
 
       await logAuditEvent({
         table_name: 'pain_points',
@@ -368,7 +369,7 @@ export async function POST(
     return NextResponse.json(responseData, { status: 201 })
 
   } catch (error) {
-    console.error('Erro inesperado na criação de pontos de dor:', error)
+    logger.error('Erro inesperado na criação de pontos de dor:', error)
 
     // Log de erro para monitoramento
     try {
@@ -386,7 +387,7 @@ export async function POST(
         }
       })
     } catch (logError) {
-      console.error('Erro ao fazer log de auditoria:', logError)
+      logger.error('Erro ao fazer log de auditoria:', logError)
     }
 
     return NextResponse.json(
@@ -461,7 +462,7 @@ export async function GET(
       .order('created_at', { ascending: false })
 
     if (error) {
-      console.error('Erro ao buscar pontos de dor:', error)
+      logger.error('Erro ao buscar pontos de dor:', error)
       return NextResponse.json(
         { error: 'Erro ao buscar pontos de dor' },
         { status: 500 }
@@ -496,7 +497,7 @@ export async function GET(
     })
 
   } catch (error) {
-    console.error('Erro inesperado ao buscar pontos de dor:', error)
+    logger.error('Erro inesperado ao buscar pontos de dor:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }

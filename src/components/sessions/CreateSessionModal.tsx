@@ -7,20 +7,21 @@ import { z } from 'zod'
 import { CalendarIcon, Clock, FileText, Save, X } from 'lucide-react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import logger from '../../../lib/logger';
 
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Calendar } from '@/components/ui/calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
-import { Badge } from '@/components/ui/badge'
-import { useToast } from '@/hooks/use-toast'
-import { cn } from '@/lib/utils'
+import { Button } from '@/src/components/ui/button'
+import { Input } from '@/src/components/ui/input'
+import { Label } from '@/src/components/ui/label'
+import { Textarea } from '@/src/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select'
+import { Calendar } from '@/src/components/ui/calendar'
+import { Popover, PopoverContent, PopoverTrigger } from '@/src/components/ui/popover'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/src/components/ui/dialog'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Separator } from '@/src/components/ui/separator'
+import { Badge } from '@/src/components/ui/badge'
+import { useToast } from '@/src/hooks/use-toast'
+import { cn } from '@/src/lib/utils'
 
 const sessionSchema = z.object({
   patient_id: z.string().min(1, 'Paciente é obrigatório'),
@@ -152,7 +153,7 @@ export default function CreateSessionModal({
       setCurrentStep(1)
 
     } catch (error) {
-      console.error('Erro ao criar sessão:', error)
+      logger.error('Erro ao criar sessão:', error)
       toast({
         title: 'Erro',
         description: error instanceof Error ? error.message : 'Erro ao criar sessão',

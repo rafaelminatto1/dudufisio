@@ -8,10 +8,10 @@ export const dynamic = 'force-dynamic'
 
 import { Suspense } from 'react'
 import { Metadata } from 'next'
-import { requireRole, getCurrentUser } from '@/lib/auth/auth'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { requireRole, getCurrentUser } from '@/src/lib/auth/auth'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Button } from '@/src/components/ui/button'
+import { Badge } from '@/src/components/ui/badge'
 import {
   Users,
   Calendar,

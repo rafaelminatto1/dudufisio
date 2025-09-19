@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import logger from '../../../lib/logger';
 import {
   Dialog,
   DialogContent,
@@ -11,8 +12,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
+} from '@/src/components/ui/dialog'
+import { Button } from '@/src/components/ui/button'
 import {
   Form,
   FormControl,
@@ -21,20 +22,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+} from '@/src/components/ui/form'
+import { Input } from '@/src/components/ui/input'
+import { Textarea } from '@/src/components/ui/textarea'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Checkbox } from '@/components/ui/checkbox'
-import { BrazilianSchemas } from '@/lib/validation/brazilian-validators'
-import { formatCPF, formatPhone, formatCEP } from '@/lib/utils/brazilian-formatting'
-import { useToast } from '@/hooks/use-toast'
+} from '@/src/components/ui/select'
+import { Checkbox } from '@/src/components/ui/checkbox'
+import { BrazilianSchemas } from '@/src/lib/validation/brazilian-validators'
+import { formatCPF, formatPhone, formatCEP } from '@/src/lib/utils/brazilian-formatting'
+import { useToast } from '@/src/hooks/use-toast'
 import { Loader2 } from 'lucide-react'
 
 // Patient creation schema
@@ -118,7 +119,7 @@ export function CreatePatientDialog({
       form.reset()
       onOpenChange(false)
     } catch (error) {
-      console.error('Error creating patient:', error)
+      logger.error('Error creating patient:', error)
     } finally {
       setIsSubmitting(false)
     }

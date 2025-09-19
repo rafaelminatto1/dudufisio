@@ -1,8 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "@/lib/utils"
-import { ARIA_LABELS, ACCESSIBILITY_HELPERS, FOCUS_MANAGEMENT } from "@/lib/accessibility/portuguese-labels"
+import { cn } from '@/src/lib/utils'
+import { ARIA_LABELS, ACCESSIBILITY_HELPERS, FOCUS_MANAGEMENT } from '@/src/lib/accessibility/portuguese-labels'
 
 // Skip Links Component
 interface SkipLinksProps {
@@ -48,7 +48,8 @@ function AccessibleFormField({
   className,
   fieldId
 }: AccessibleFormFieldProps) {
-  const id = fieldId || React.useId()
+  const generatedId = React.useId()
+  const id = fieldId || generatedId
   const helpId = `${id}-help`
   const errorId = `${id}-error`
 

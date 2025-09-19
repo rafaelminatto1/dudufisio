@@ -1,3 +1,5 @@
+import logger from '../../../lib/logger';
+
 /**
  * Sistema de Logging Profissional para FisioFlow
  * Centraliza todos os logs com níveis apropriados e formatação consistente
@@ -73,17 +75,17 @@ class Logger {
     if (this.isDevelopment) {
       switch (level) {
         case LogLevel.DEBUG:
-          console.debug(formattedMessage)
+          logger.debug(formattedMessage)
           break
         case LogLevel.INFO:
-          console.info(formattedMessage)
+          logger.info(formattedMessage)
           break
         case LogLevel.WARN:
-          console.warn(formattedMessage)
+          logger.warn(formattedMessage)
           break
         case LogLevel.ERROR:
         case LogLevel.CRITICAL:
-          console.error(formattedMessage, error)
+          logger.error(formattedMessage, error)
           break
       }
     }

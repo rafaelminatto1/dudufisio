@@ -8,9 +8,10 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { getCurrentUser, hasPermission } from '@/lib/auth/server'
-import { logAuditEvent } from '@/lib/audit/server'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { getCurrentUser, hasPermission } from '@/src/lib/auth/server'
+import { logAuditEvent } from '@/src/lib/audit/server'
+import logger from '../../../lib/logger';
 
 // Force Node.js runtime to avoid Edge Runtime issues with Supabase
 export const runtime = 'nodejs'
@@ -175,7 +176,7 @@ export async function GET(request: NextRequest) {
     const { data: appointments, error, count } = await query
 
     if (error) {
-      console.error('Erro ao buscar agendamentos:', error)
+      logger.error('Erro ao buscar agendamentos:', error)
       return NextResponse.json(
         { error: 'Erro ao buscar agendamentos' },
         { status: 500 }
@@ -207,7 +208,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Erro inesperado ao buscar agendamentos:', error)
+    logger.error('Erro inesperado ao buscar agendamentos:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }
@@ -271,7 +272,7 @@ export async function POST(request: NextRequest) {
         })
 
       if (conflictError) {
-        console.error('Erro ao verificar conflitos:', conflictError)
+        logger.error('Erro ao verificar conflitos:', conflictError)
         return NextResponse.json(
           { error: 'Erro ao verificar conflitos de horário' },
           { status: 500 }
@@ -378,7 +379,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (createError) {
-      console.error('Erro ao criar agendamento:', createError)
+      logger.error('Erro ao criar agendamento:', createError)
       return NextResponse.json(
         { error: 'Erro ao criar agendamento' },
         { status: 500 }
@@ -416,7 +417,7 @@ export async function POST(request: NextRequest) {
     }, { status: 201 })
 
   } catch (error) {
-    console.error('Erro inesperado ao criar agendamento:', error)
+    logger.error('Erro inesperado ao criar agendamento:', error)
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(

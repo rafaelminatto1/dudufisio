@@ -3,7 +3,8 @@
  * Funções para logging de auditoria e conformidade LGPD
  */
 
-import { createServerClient } from '@/lib/supabase/server'
+import { createServerClient } from '@/src/lib/supabase/server'
+import logger from '../../../lib/logger';
 
 export interface AuditEventData {
   table_name: string
@@ -40,11 +41,11 @@ export async function logAuditEvent(eventData: AuditEventData): Promise<void> {
       .insert(auditLogEntry)
 
     if (error) {
-      console.error('Erro ao registrar log de auditoria:', error)
+      logger.error('Erro ao registrar log de auditoria:', error)
       // Não propagar erro para não afetar a operação principal
     }
   } catch (error) {
-    console.error('Erro inesperado ao registrar log de auditoria:', error)
+    logger.error('Erro inesperado ao registrar log de auditoria:', error)
     // Não propagar erro para não afetar a operação principal
   }
 }
@@ -67,7 +68,7 @@ export async function logPatientDataAccess(
       accessed_fields: accessedFields,
     })
   } catch (error) {
-    console.error('Erro ao registrar acesso aos dados do paciente:', error)
+    logger.error('Erro ao registrar acesso aos dados do paciente:', error)
     // Não propagar erro para não afetar a operação principal
   }
 }

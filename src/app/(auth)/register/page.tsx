@@ -9,7 +9,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Eye, EyeOff, Heart, Lock, Mail, User, Phone, FileText, Loader2, CheckCircle } from 'lucide-react'
-import { signUpAction } from '@/lib/auth/client-actions'
+import { signUpAction } from '@/src/lib/auth/client-actions'
 
 // Tipos locais para evitar importar auth.ts no client
 interface SignUpData {

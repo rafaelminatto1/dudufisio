@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { mlPredictionEngine, type PatientData } from '@/lib/ml/prediction-engine'
-import { logger } from '@/lib/logging/logger'
+import { mlPredictionEngine, type PatientData } from '@/src/lib/ml/prediction-engine'
+import { logger } from '@/src/lib/logging/logger'
 
 export async function POST(request: NextRequest) {
   try {

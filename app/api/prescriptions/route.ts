@@ -8,9 +8,10 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { getCurrentUser, hasPermission } from '@/lib/auth/server'
-import { logAuditEvent } from '@/lib/audit/server'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { getCurrentUser, hasPermission } from '@/src/lib/auth/server'
+import { logAuditEvent } from '@/src/lib/audit/server'
+import logger from '../../../lib/logger';
 
 // Schema for exercise prescription item
 const prescriptionExerciseSchema = z.object({
@@ -172,7 +173,7 @@ export async function GET(request: NextRequest) {
     const { data: prescriptions, error, count } = await query
 
     if (error) {
-      console.error('Erro ao buscar prescrições:', error)
+      logger.error('Erro ao buscar prescrições:', error)
       return NextResponse.json(
         { error: 'Erro ao buscar prescrições' },
         { status: 500 }
@@ -192,7 +193,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Erro inesperado ao buscar prescrições:', error)
+    logger.error('Erro inesperado ao buscar prescrições:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }
@@ -245,7 +246,7 @@ export async function POST(request: NextRequest) {
         )
       }
 
-      console.error('Erro ao verificar paciente:', patientError)
+      logger.error('Erro ao verificar paciente:', patientError)
       return NextResponse.json(
         { error: 'Erro ao verificar paciente' },
         { status: 500 }
@@ -299,7 +300,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (createError) {
-      console.error('Erro ao criar prescrição:', createError)
+      logger.error('Erro ao criar prescrição:', createError)
       return NextResponse.json(
         { error: 'Erro ao criar prescrição' },
         { status: 500 }
@@ -335,7 +336,7 @@ export async function POST(request: NextRequest) {
         .delete()
         .eq('id', newPrescription.id)
 
-      console.error('Erro ao criar exercícios da prescrição:', exercisesInsertError)
+      logger.error('Erro ao criar exercícios da prescrição:', exercisesInsertError)
       return NextResponse.json(
         { error: 'Erro ao criar exercícios da prescrição' },
         { status: 500 }
@@ -368,7 +369,7 @@ export async function POST(request: NextRequest) {
     }, { status: 201 })
 
   } catch (error) {
-    console.error('Erro inesperado ao criar prescrição:', error)
+    logger.error('Erro inesperado ao criar prescrição:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

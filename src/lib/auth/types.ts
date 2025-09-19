@@ -4,7 +4,7 @@
  */
 
 import type { User } from '@supabase/supabase-js'
-import type { UserRole, Org, OrgMembership, Profile } from '@/lib/supabase/database.types'
+import type { UserRole, Org, OrgMembership, Profile } from '@/src/lib/supabase/database.types'
 
 /**
  * Interfaces para autenticação

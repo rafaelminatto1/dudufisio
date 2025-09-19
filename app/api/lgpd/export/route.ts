@@ -5,9 +5,10 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { getCurrentUser } from '@/lib/auth/server'
-import { logAuditEvent } from '@/lib/audit/server'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { getCurrentUser } from '@/src/lib/auth/server'
+import { logAuditEvent } from '@/src/lib/audit/server'
+import logger from '../../../../lib/logger';
 
 const exportRequestSchema = z.object({
   type: z.enum(['complete', 'specific']),
@@ -74,7 +75,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (createError) {
-      console.error('Error creating export request:', createError)
+      logger.error('Error creating export request:', createError)
       return NextResponse.json(
         { error: 'Erro ao criar solicitação de exportação' },
         { status: 500 }
@@ -111,7 +112,7 @@ export async function POST(request: NextRequest) {
     }, { status: 201 })
 
   } catch (error) {
-    console.error('Unexpected error in export request:', error)
+    logger.error('Unexpected error in export request:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -158,7 +159,7 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false })
 
     if (error) {
-      console.error('Error fetching export requests:', error)
+      logger.error('Error fetching export requests:', error)
       return NextResponse.json(
         { error: 'Erro ao buscar solicitações' },
         { status: 500 }
@@ -179,7 +180,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Unexpected error in export list:', error)
+    logger.error('Unexpected error in export list:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }
@@ -226,10 +227,10 @@ async function processExportRequest(requestId: string, patientId: string, reques
           })
           .eq('id', requestId)
 
-        console.log(`Export request ${requestId} completed`)
+        logger.info(`Export request ${requestId} completed`)
 
       } catch (error) {
-        console.error(`Export request ${requestId} failed:`, error)
+        logger.error(`Export request ${requestId} failed:`, error)
 
         // Mark as failed
         await supabase
@@ -240,7 +241,7 @@ async function processExportRequest(requestId: string, patientId: string, reques
     }, 5000) // 5 second delay for demo
 
   } catch (error) {
-    console.error('Error processing export request:', error)
+    logger.error('Error processing export request:', error)
   }
 }
 

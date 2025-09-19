@@ -1,14 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import BodyMapSVG from '@/components/bodymap/BodyMapSVG'
-import PainPointModal from '@/components/bodymap/PainPointModal'
+import { Button } from '@/src/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Badge } from '@/src/components/ui/badge'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/src/components/ui/tabs'
+import BodyMapSVG from '@/src/components/bodymap/BodyMapSVG'
+import PainPointModal from '@/src/components/bodymap/PainPointModal'
 import { RotateCcw, Save, Eye } from 'lucide-react'
-import type { PainPoint } from '@/lib/supabase/database.types'
+import type { PainPoint } from '@/src/lib/supabase/database.types'
 
 // Mock data for testing
 const mockPainPoints: PainPoint[] = [

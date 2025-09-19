@@ -5,7 +5,7 @@
  */
 
 import { describe, test, expect, beforeAll, afterAll } from '@jest/testing-library/jest-dom'
-import type { Database } from '@/lib/supabase/database.types'
+import type { Database } from '@/src/lib/supabase/database.types'
 
 // Test authentication tokens by role
 const authTokens = {

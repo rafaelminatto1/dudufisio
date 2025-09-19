@@ -6,7 +6,8 @@
 
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
-import type { Database, UserRole } from '@/lib/supabase/database.types'
+import type { Database, UserRole } from '@/src/lib/supabase/database.types'
+import logger from '../../../lib/logger';
 
 /**
  * Tipos de eventos auditáveis segundo LGPD Art. 37
@@ -183,7 +184,7 @@ export class AuditLogger {
         .insert(auditEntry)
 
       if (error) {
-        console.error('Erro ao registrar audit log:', error)
+        logger.error('Erro ao registrar audit log:', error)
         // Em produção, usar sistema de alertas
         await this.handleAuditError(error, auditEntry)
       }
@@ -194,7 +195,7 @@ export class AuditLogger {
       }
 
     } catch (error) {
-      console.error('Falha crítica no audit logger:', error)
+      logger.error('Falha crítica no audit logger:', error)
       // Fallback: log local para investigação
       await this.logToFile(entry)
     }
@@ -364,7 +365,7 @@ export class AuditLogger {
 
   private async handleAuditError(error: any, entry: AuditLogEntry): Promise<void> {
     // Em caso de falha no audit log, usar sistema de backup
-    console.error('Audit log failed, using backup system:', error)
+    logger.error('Audit log failed, using backup system:', error)
 
     // Salvar em arquivo local para investigação
     await this.logToFile(entry)
@@ -387,13 +388,13 @@ export class AuditLogger {
       await fs.mkdir(logDir, { recursive: true })
       await fs.appendFile(logFile, JSON.stringify(entry) + '\n')
     } catch (error) {
-      console.error('Failed to write audit log to file:', error)
+      logger.error('Failed to write audit log to file:', error)
     }
   }
 
   private async sendCriticalAlert(entry: AuditLogEntry): Promise<void> {
     // Implementar sistema de alertas para eventos críticos
-    console.log('CRITICAL AUDIT EVENT:', entry)
+    logger.info('CRITICAL AUDIT EVENT:', entry)
 
     // Em produção, integrar com:
     // - Sistema de notificações por email

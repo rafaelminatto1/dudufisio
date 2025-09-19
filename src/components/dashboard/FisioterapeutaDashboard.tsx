@@ -9,17 +9,17 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+} from '@/src/components/ui/card'
+import { Button } from '@/src/components/ui/button'
+import { Badge } from '@/src/components/ui/badge'
+import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar'
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from '@/components/ui/tabs'
-import { Progress } from '@/components/ui/progress'
+} from '@/src/components/ui/tabs'
+import { Progress } from '@/src/components/ui/progress'
 import {
   Calendar,
   Clock,
@@ -44,8 +44,8 @@ import {
   Star,
   BarChart3
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import type { Appointment, Patient, Session, UserRole } from '@/lib/supabase/database.types'
+import { cn } from '@/src/lib/utils'
+import type { Appointment, Patient, Session, UserRole } from '@/src/lib/supabase/database.types'
 
 interface FisioterapeutaDashboardProps {
   currentUser: {

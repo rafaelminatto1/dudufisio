@@ -4,14 +4,15 @@
  * Includes LGPD compliance and multi-role authentication
  */
 
-import { createServerClient } from '@/lib/supabase/server'
-import { createClient } from '@/lib/supabase/client'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { createClient } from '@/src/lib/supabase/client'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { cache } from 'react'
-import type { Org, UserRole } from '@/lib/supabase/database.types'
-import type { Database } from '@/lib/supabase/database.types'
+import type { Org, UserRole } from '@/src/lib/supabase/database.types'
+import type { Database } from '@/src/lib/supabase/database.types'
 import type { AuthUser, SignInCredentials, SignUpData, PasswordResetData, AuthError } from './types'
+import logger from '../../../lib/logger';
 
 /**
  * Obter usuário atual do servidor (cached)
@@ -58,7 +59,7 @@ export const getCurrentUser = cache(async (): Promise<AuthUser | null> => {
       memberships: (memberships || []) as any
     }
   } catch (error) {
-    console.error('Erro ao obter usuário atual:', error)
+    logger.error('Erro ao obter usuário atual:', error)
     return null
   }
 })
@@ -219,7 +220,7 @@ export const signUp = async (
         } as any)
 
       if (profileError) {
-        console.error('Erro ao criar perfil:', profileError)
+        logger.error('Erro ao criar perfil:', profileError)
       }
     }
 
@@ -391,7 +392,7 @@ export const checkLgpdConsent = async (patientId: string): Promise<boolean> => {
 
     return Boolean(data) || false
   } catch (error) {
-    console.error('Erro ao verificar consentimento LGPD:', error)
+    logger.error('Erro ao verificar consentimento LGPD:', error)
     return false
   }
 }
@@ -413,7 +414,7 @@ export const logPatientDataAccess = async (
       accessed_fields: accessedFields || null
     })
   } catch (error) {
-    console.error('Erro ao registrar acesso aos dados:', error)
+    logger.error('Erro ao registrar acesso aos dados:', error)
   }
 }
 

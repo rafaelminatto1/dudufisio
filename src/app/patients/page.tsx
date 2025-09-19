@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
-import { PatientsListPage } from '@/components/patients/PatientsListPage'
-import { LoadingSpinner } from '@/components/ui/loading'
+import { PatientsListPage } from '@/src/components/patients/PatientsListPage'
+import { LoadingSpinner } from '@/src/components/ui/loading'
 
 export default function PatientsPage() {
   return (

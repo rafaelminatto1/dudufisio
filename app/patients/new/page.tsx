@@ -3,10 +3,11 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { CreatePatientDialog } from '@/components/patients/CreatePatientDialog'
-import { useToast } from '@/hooks/use-toast'
+import { Button } from '@/src/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { CreatePatientDialog } from '@/src/components/patients/CreatePatientDialog'
+import { useToast } from '@/src/hooks/use-toast'
+import logger from '../../../lib/logger';
 
 export default function NewPatientPage() {
   const router = useRouter()
@@ -41,7 +42,7 @@ export default function NewPatientPage() {
       router.push(`/patients/${result.data.id}`)
 
     } catch (error) {
-      console.error('Erro ao criar paciente:', error)
+      logger.error('Erro ao criar paciente:', error)
       toast({
         title: 'Erro',
         description: error instanceof Error ? error.message : 'Erro ao criar paciente',

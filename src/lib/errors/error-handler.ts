@@ -6,7 +6,8 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { ZodError } from 'zod'
-import { createAuditLogger, AuditEventType, AuditSeverity } from '@/lib/audit/audit-logger'
+import { createAuditLogger, AuditEventType, AuditSeverity } from '@/src/lib/audit/audit-logger'
+import logger from '../../../lib/logger';
 
 /**
  * Tipos de erro específicos do sistema de saúde
@@ -513,7 +514,7 @@ export class ErrorHandler {
         }
       })
     } catch (auditError) {
-      console.error('Failed to log error to audit system:', auditError)
+      logger.error('Failed to log error to audit system:', auditError)
     }
   }
 
@@ -551,7 +552,7 @@ export function withErrorHandler(handler: (...args: any[]) => Promise<any>) {
     try {
       return await handler(request, ...args)
     } catch (error) {
-      console.error('Unhandled error in API route:', error)
+      logger.error('Unhandled error in API route:', error)
       return ErrorHandler.handleApiError(error, request)
     }
   }

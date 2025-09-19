@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { iotDeviceManager, type IoTDevice } from '@/lib/iot/device-manager'
-import { logger } from '@/lib/logging/logger'
+import { iotDeviceManager, type IoTDevice } from '@/src/lib/iot/device-manager'
+import { logger } from '@/src/lib/logging/logger'
 
 export async function GET(request: NextRequest) {
   try {

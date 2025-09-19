@@ -9,9 +9,10 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { getCurrentUser, hasPermission } from '@/lib/auth/server'
-import { logAuditEvent } from '@/lib/audit/server'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { getCurrentUser, hasPermission } from '@/src/lib/auth/server'
+import { logAuditEvent } from '@/src/lib/audit/server'
+import logger from '../../../../lib/logger';
 
 // Force Node.js runtime to avoid Edge Runtime issues with Supabase
 export const runtime = 'nodejs'
@@ -109,7 +110,7 @@ export async function GET(
         )
       }
 
-      console.error('Erro ao buscar agendamento:', error)
+      logger.error('Erro ao buscar agendamento:', error)
       return NextResponse.json(
         { error: 'Erro ao buscar agendamento' },
         { status: 500 }
@@ -135,7 +136,7 @@ export async function GET(
     })
 
   } catch (error) {
-    console.error('Erro inesperado ao buscar agendamento:', error)
+    logger.error('Erro inesperado ao buscar agendamento:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }
@@ -188,7 +189,7 @@ export async function PATCH(
         )
       }
 
-      console.error('Erro ao buscar agendamento atual:', fetchError)
+      logger.error('Erro ao buscar agendamento atual:', fetchError)
       return NextResponse.json(
         { error: 'Erro ao buscar agendamento' },
         { status: 500 }
@@ -275,7 +276,7 @@ export async function PATCH(
       .single()
 
     if (updateError) {
-      console.error('Erro ao atualizar agendamento:', updateError)
+      logger.error('Erro ao atualizar agendamento:', updateError)
       return NextResponse.json(
         { error: 'Erro ao atualizar agendamento' },
         { status: 500 }
@@ -299,7 +300,7 @@ export async function PATCH(
     // 9. Send notification if status changed to cancelled
     if (validatedData.status === 'cancelado') {
       // TODO: Implement notification sending
-      console.log('Appointment cancelled, should send notification')
+      logger.info('Appointment cancelled, should send notification')
     }
 
     // 10. Return response
@@ -310,7 +311,7 @@ export async function PATCH(
     })
 
   } catch (error) {
-    console.error('Erro inesperado ao atualizar agendamento:', error)
+    logger.error('Erro inesperado ao atualizar agendamento:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -377,7 +378,7 @@ export async function DELETE(
         )
       }
 
-      console.error('Erro ao buscar agendamento:', fetchError)
+      logger.error('Erro ao buscar agendamento:', fetchError)
       return NextResponse.json(
         { error: 'Erro ao buscar agendamento' },
         { status: 500 }
@@ -415,7 +416,7 @@ export async function DELETE(
       .single()
 
     if (cancelError) {
-      console.error('Erro ao cancelar agendamento:', cancelError)
+      logger.error('Erro ao cancelar agendamento:', cancelError)
       return NextResponse.json(
         { error: 'Erro ao cancelar agendamento' },
         { status: 500 }
@@ -444,7 +445,7 @@ export async function DELETE(
     })
 
   } catch (error) {
-    console.error('Erro inesperado ao cancelar agendamento:', error)
+    logger.error('Erro inesperado ao cancelar agendamento:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

@@ -3,7 +3,7 @@
  * Prediz resultados de tratamentos, evolução de pacientes e recomendações
  */
 
-import { logger } from '@/lib/logging/logger'
+import { logger } from '@/src/lib/logging/logger'
 
 export interface PatientData {
   id: string

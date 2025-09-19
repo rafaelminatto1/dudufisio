@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { getCurrentUser, hasPermission } from '@/lib/auth/server'
-import { logAuditEvent } from '@/lib/audit/server'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { getCurrentUser, hasPermission } from '@/src/lib/auth/server'
+import { logAuditEvent } from '@/src/lib/audit/server'
+import logger from '../../../../../lib/logger';
 
 const updateNotesSchema = z.object({
   notes: z.string().optional()
@@ -46,7 +47,7 @@ export async function PUT(
       if (fetchError.code === 'PGRST116') {
         return NextResponse.json({ error: 'Agendamento não encontrado' }, { status: 404 })
       }
-      console.error('Erro ao buscar agendamento para atualização de notas:', fetchError)
+      logger.error('Erro ao buscar agendamento para atualização de notas:', fetchError)
       return NextResponse.json({ error: 'Erro ao buscar agendamento' }, { status: 500 })
     }
 
@@ -62,7 +63,7 @@ export async function PUT(
       .single()
 
     if (updateError) {
-      console.error('Erro ao atualizar notas do agendamento:', updateError)
+      logger.error('Erro ao atualizar notas do agendamento:', updateError)
       return NextResponse.json({ error: 'Erro ao atualizar notas do agendamento' }, { status: 500 })
     }
 
@@ -80,7 +81,7 @@ export async function PUT(
       message: 'Notas do agendamento atualizadas com sucesso'
     })
   } catch (error) {
-    console.error('Erro inesperado ao atualizar notas do agendamento:', error)
+    logger.error('Erro inesperado ao atualizar notas do agendamento:', error)
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: 'Dados inválidos', details: error.issues }, { status: 400 })
     }

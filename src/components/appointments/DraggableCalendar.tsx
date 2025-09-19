@@ -1,14 +1,15 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { LoadingSpinner } from '@/components/ui/loading-spinner'
+import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Button } from '@/src/components/ui/button'
+import { Badge } from '@/src/components/ui/badge'
+import { LoadingSpinner } from '@/src/components/ui/loading-spinner'
 import { Calendar, ChevronLeft, ChevronRight, Clock, User, Phone, Plus } from 'lucide-react'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/src/hooks/use-toast'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
-import { cn } from '@/lib/utils'
+import { cn } from '@/src/lib/utils'
+import logger from '../../../lib/logger';
 
 interface Appointment {
   id: string
@@ -118,7 +119,7 @@ export function DraggableCalendar({
         setPractitioners(practitionersData.data)
       }
     } catch (error) {
-      console.error('Error fetching data:', error)
+      logger.error('Error fetching data:', error)
       toast({
         title: 'Erro ao carregar dados',
         description: 'Não foi possível carregar os agendamentos',

@@ -2,14 +2,15 @@
 
 import { useState, useEffect } from 'react'
 import { Plus, Search, Filter, Calendar, User, Target } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { CreatePrescriptionModal } from '@/components/prescriptions/CreatePrescriptionModal'
-import { PrescriptionDetailsModal } from '@/components/prescriptions/PrescriptionDetailsModal'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Button } from '@/src/components/ui/button'
+import { Input } from '@/src/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select'
+import { Badge } from '@/src/components/ui/badge'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { CreatePrescriptionModal } from '@/src/components/prescriptions/CreatePrescriptionModal'
+import { PrescriptionDetailsModal } from '@/src/components/prescriptions/PrescriptionDetailsModal'
+import { Skeleton } from '@/src/components/ui/skeleton'
+import logger from '../../lib/logger';
 
 interface Prescription {
   id: string
@@ -102,7 +103,7 @@ export default function PrescriptionsPage() {
         setTotalPages(data.meta.total_pages)
       }
     } catch (error) {
-      console.error('Erro ao buscar prescrições:', error)
+      logger.error('Erro ao buscar prescrições:', error)
     } finally {
       setLoading(false)
     }

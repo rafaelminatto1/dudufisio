@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { FinancialDashboard } from '@/components/financial/FinancialDashboard'
+import { FinancialDashboard } from '@/src/components/financial/FinancialDashboard'
 
 export const metadata: Metadata = {
   title: 'Gestão Financeira | FisioFlow',

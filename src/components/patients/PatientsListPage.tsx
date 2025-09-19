@@ -2,18 +2,19 @@
 
 import { useState, useEffect } from 'react'
 import { Plus, Search, Filter, Download, Users } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/src/components/ui/button'
+import { Input } from '@/src/components/ui/input'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Badge } from '@/src/components/ui/badge'
+import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar'
+import logger from '../../../lib/logger';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from '@/src/components/ui/select'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,14 +22,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { LoadingSpinner } from '@/components/ui/loading'
+} from '@/src/components/ui/dropdown-menu'
+import { LoadingSpinner } from '@/src/components/ui/loading'
 import { PatientCard } from './PatientCard'
 import { CreatePatientDialog } from './CreatePatientDialog'
 import { PatientFilters } from './PatientFilters'
-import { usePatients } from '@/hooks/usePatients'
-import { formatCPF, formatPhone } from '@/lib/utils/brazilian-formatting'
-import type { Patient } from '@/lib/supabase/database.types'
+import { usePatients } from '@/src/hooks/usePatients'
+import { formatCPF, formatPhone } from '@/src/lib/utils/brazilian-formatting'
+import type { Patient } from '@/src/lib/supabase/database.types'
 
 export function PatientsListPage() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -60,7 +61,7 @@ export function PatientsListPage() {
       await createPatient(patientData)
       setShowCreateDialog(false)
     } catch (error) {
-      console.error('Error creating patient:', error)
+      logger.error('Error creating patient:', error)
     }
   }
 
@@ -205,7 +206,7 @@ export function PatientsListPage() {
           <CardContent>
             <PatientFilters onFiltersChange={(filters) => {
               // Handle advanced filters
-              console.log('Advanced filters:', filters)
+              logger.info('Advanced filters:', filters)
             }} />
           </CardContent>
         </Card>
@@ -248,7 +249,7 @@ export function PatientsListPage() {
               viewMode={viewMode}
               onEdit={(patient) => {
                 // Handle edit
-                console.log('Edit patient:', patient)
+                logger.info('Edit patient:', patient)
               }}
               onDelete={(patientId) => {
                 // Handle delete

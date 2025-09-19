@@ -3,8 +3,9 @@
  * Funções para autenticação e autorização no servidor
  */
 
-import { createServerClient } from '@/lib/supabase/server'
-import { type UserRole } from '@/lib/supabase/database.types'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { type UserRole } from '@/src/lib/supabase/database.types'
+import logger from '../../../lib/logger';
 
 export interface CurrentUser {
   id: string
@@ -68,7 +69,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
       org_id: activeMembership.org_id,
     }
   } catch (error) {
-    console.error('Erro ao obter usuário atual:', error)
+    logger.error('Erro ao obter usuário atual:', error)
     return null
   }
 }
@@ -133,13 +134,13 @@ export async function canAccessPatient(
     })
 
     if (error) {
-      console.error('Erro ao verificar acesso ao paciente:', error)
+      logger.error('Erro ao verificar acesso ao paciente:', error)
       return false
     }
 
     return data === true
   } catch (error) {
-    console.error('Erro ao verificar acesso ao paciente:', error)
+    logger.error('Erro ao verificar acesso ao paciente:', error)
     return false
   }
 }
@@ -159,13 +160,13 @@ export async function hasOrgAccess(
     })
 
     if (error) {
-      console.error('Erro ao verificar acesso à organização:', error)
+      logger.error('Erro ao verificar acesso à organização:', error)
       return false
     }
 
     return data === true
   } catch (error) {
-    console.error('Erro ao verificar acesso à organização:', error)
+    logger.error('Erro ao verificar acesso à organização:', error)
     return false
   }
 }
@@ -185,13 +186,13 @@ export async function getUserRoleInOrg(
     })
 
     if (error) {
-      console.error('Erro ao obter role do usuário:', error)
+      logger.error('Erro ao obter role do usuário:', error)
       return null
     }
 
     return data as UserRole
   } catch (error) {
-    console.error('Erro ao obter role do usuário:', error)
+    logger.error('Erro ao obter role do usuário:', error)
     return null
   }
 }

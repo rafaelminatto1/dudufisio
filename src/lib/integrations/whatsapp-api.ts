@@ -3,7 +3,7 @@
  * Envio de lembretes, confirmações e comunicação com pacientes
  */
 
-import { logger } from '@/lib/logging/logger'
+import { logger } from '@/src/lib/logging/logger'
 
 export interface WhatsAppMessage {
   to: string // Número do telefone no formato +5511999999999

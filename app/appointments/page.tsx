@@ -4,29 +4,30 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { format, startOfWeek, endOfWeek, addDays, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import logger from '../../lib/logger';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+} from '@/src/components/ui/card'
+import { Button } from '@/src/components/ui/button'
+import { Badge } from '@/src/components/ui/badge'
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from '@/components/ui/tabs'
+} from '@/src/components/ui/tabs'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
+} from '@/src/components/ui/select'
+import { Input } from '@/src/components/ui/input'
 import {
   Table,
   TableBody,
@@ -34,14 +35,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { DraggableCalendar } from '@/components/appointments/DraggableCalendar'
+} from '@/src/components/ui/table'
+import { Alert, AlertDescription } from '@/src/components/ui/alert'
 import { DragDropCalendar } from '@/components/appointments/DragDropCalendar'
 import { WaitingListModal } from '@/components/appointments/WaitingListModal'
-import AppointmentBookingModal from '@/components/appointments/AppointmentBookingModal'
-import { LoadingSpinner } from '@/components/ui/loading-spinner'
-import { useToast } from '@/hooks/use-toast'
+import AppointmentBookingModal from '@/src/components/appointments/AppointmentBookingModal'
+import { LoadingSpinner } from '@/src/components/ui/loading-spinner'
+import { useToast } from '@/src/hooks/use-toast'
 import {
   Calendar,
   Clock,
@@ -63,8 +63,8 @@ import {
   Clock as ClockIcon,
   Users as UsersIcon
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import type { Appointment, Patient, UserRole } from '@/lib/supabase/database.types'
+import { cn } from '@/src/lib/utils'
+import type { Appointment, Patient, UserRole } from '@/src/lib/supabase/database.types'
 
 type AppointmentView = 'calendar' | 'list'
 type AppointmentStatus = 'agendado' | 'confirmado' | 'em_andamento' | 'concluido' | 'cancelado' | 'falta'
@@ -111,7 +111,7 @@ export default function AppointmentsPage() {
           const patientsResult = await patientsResponse.json()
           setPatients(patientsResult.data || [])
         } else {
-          console.error('Erro ao carregar pacientes')
+          logger.error('Erro ao carregar pacientes')
         }
 
         // Carregar agendamentos
@@ -121,7 +121,7 @@ export default function AppointmentsPage() {
           setAppointments(appointmentsResult.data || [])
         } else {
           // Se a API não existir ainda, usar dados mock
-          console.warn('API de agendamentos não implementada, usando dados simulados')
+          logger.warn('API de agendamentos não implementada, usando dados simulados')
 
           const mockAppointments: Appointment[] = [
             {
@@ -168,7 +168,7 @@ export default function AppointmentsPage() {
         setCurrentUserRole('fisioterapeuta')
 
       } catch (error) {
-        console.error('Erro ao carregar dados:', error)
+        logger.error('Erro ao carregar dados:', error)
         toast({
           title: 'Erro',
           description: 'Não foi possível carregar os agendamentos.',
@@ -262,7 +262,7 @@ export default function AppointmentsPage() {
 
   const handleSaveAppointment = async (appointmentData: any) => {
     // Simular salvamento
-    console.log('Salvando agendamento:', appointmentData)
+    logger.info('Salvando agendamento:', appointmentData)
 
     if (selectedAppointment) {
       // Atualizar agendamento existente
@@ -359,7 +359,7 @@ export default function AppointmentsPage() {
 
   const handleScheduleFromWaitingList = (entryId: string) => {
     // Implementar lógica para agendar a partir da lista de espera
-    console.log('Agendando a partir da lista de espera:', entryId)
+    logger.info('Agendando a partir da lista de espera:', entryId)
     setShowWaitingListModal(false)
     setShowBookingModal(true)
   }
@@ -367,7 +367,7 @@ export default function AppointmentsPage() {
   if (loading) {
     return (
       <div className="container mx-auto py-6">
-        <Loading message="Carregando agendamentos..." />
+        <LoadingSpinner message="Carregando agendamentos..." />
       </div>
     )
   }

@@ -10,34 +10,35 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import logger from '../../../../lib/logger';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
+} from '@/src/components/ui/card'
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from '@/components/ui/tabs'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+} from '@/src/components/ui/tabs'
+import { Button } from '@/src/components/ui/button'
+import { Badge } from '@/src/components/ui/badge'
+import { Separator } from '@/src/components/ui/separator'
+import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar'
+import { Alert, AlertDescription } from '@/src/components/ui/alert'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import BodyMapSVG, { BodyMapSkeleton } from '@/components/bodymap/BodyMapSVG'
-import PainPointModal from '@/components/bodymap/PainPointModal'
-import PainTimeline from '@/components/bodymap/PainTimeline'
+} from '@/src/components/ui/dropdown-menu'
+import BodyMapSVG, { BodyMapSkeleton } from '@/src/components/bodymap/BodyMapSVG'
+import PainPointModal from '@/src/components/bodymap/PainPointModal'
+import PainTimeline from '@/src/components/bodymap/PainTimeline'
 import {
   User,
   Calendar,
@@ -57,14 +58,14 @@ import {
   Heart,
   Stethoscope
 } from 'lucide-react'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/src/hooks/use-toast'
 import type {
   Patient,
   PainPoint,
   Session,
   Appointment,
   UserRole
-} from '@/lib/supabase/database.types'
+} from '@/src/lib/supabase/database.types'
 
 interface PatientDetailsProps {
   patient: Patient
@@ -200,7 +201,7 @@ export default function PatientDetailsPage() {
         setLgpdConsent(mockPatient.consent_lgpd)
 
       } catch (error) {
-        console.error('Erro ao carregar dados do paciente:', error)
+        logger.error('Erro ao carregar dados do paciente:', error)
         toast({
           title: 'Erro',
           description: 'Não foi possível carregar os dados do paciente.',
@@ -241,7 +242,7 @@ export default function PatientDetailsPage() {
   const handleSavePainPoint = useCallback(async (data: any) => {
     try {
       // Simular salvamento - em produção seria uma chamada à API
-      console.log('Salvando ponto de dor:', data)
+      logger.info('Salvando ponto de dor:', data)
 
       if (selectedPainPoint) {
         // Atualizar ponto existente
@@ -287,7 +288,7 @@ export default function PatientDetailsPage() {
         })
       }
     } catch (error) {
-      console.error('Erro ao salvar ponto de dor:', error)
+      logger.error('Erro ao salvar ponto de dor:', error)
       toast({
         title: 'Erro',
         description: 'Não foi possível salvar o ponto de dor.',

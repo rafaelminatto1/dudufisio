@@ -3,10 +3,11 @@
  * Manipula o callback de autenticação OAuth (Google) e Magic Links
  */
 
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@/src/lib/supabase/client'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { env } from '@/lib/env'
+import { env } from '@/src/lib/env'
+import logger from '../../../../lib/logger';
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url)
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest) {
               access_type: 'oauth_login'
             })
           } catch (logError) {
-            console.warn('Erro ao registrar log de acesso OAuth:', logError)
+            logger.warn('Erro ao registrar log de acesso OAuth:', logError)
           }
 
           // Verificar se o usuário tem um perfil
@@ -64,7 +65,7 @@ export async function GET(request: NextRequest) {
       )
 
     } catch (error) {
-      console.error('Erro no callback de autenticação:', error)
+      logger.error('Erro no callback de autenticação:', error)
       return NextResponse.redirect(
         `${origin}/login?error=${encodeURIComponent('Erro interno do servidor')}`
       )

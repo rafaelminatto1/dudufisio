@@ -89,27 +89,14 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // 3. Parse search parameters
-    const { searchParams } = new URL(request.url)
-    const searchData = searchBillingSchema.parse({
-      patient_id: searchParams.get('patient_id'),
-      therapist_id: searchParams.get('therapist_id'),
-      payment_status: searchParams.get('payment_status'),
-      payment_method: searchParams.get('payment_method'),
-      date_from: searchParams.get('date_from'),
-      date_to: searchParams.get('date_to'),
-      due_from: searchParams.get('due_from'),
-      due_to: searchParams.get('due_to'),
-      amount_min: searchParams.get('amount_min'),
-      amount_max: searchParams.get('amount_max'),
-      search: searchParams.get('search'),
-      page: searchParams.get('page'),
-      limit: searchParams.get('limit'),
-      sort_by: searchParams.get('sort_by'),
-      sort_order: searchParams.get('sort_order')
+    // 3. TEMPORARILY DISABLED: billing table doesn't exist yet
+    return NextResponse.json({
+      success: true,
+      data: [],
+      message: 'Billing module not yet implemented'
     })
 
-    // 4. Build query
+    /*
     let query = supabase
       .from('billing')
       .select(`
@@ -238,6 +225,7 @@ export async function GET(request: NextRequest) {
         total_pages: Math.ceil((count || 0) / searchData.limit)
       }
     })
+    */
 
   } catch (error) {
     console.error('Erro inesperado ao buscar cobranças:', error)

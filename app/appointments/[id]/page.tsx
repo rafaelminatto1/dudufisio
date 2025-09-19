@@ -2,15 +2,16 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Separator } from '@/components/ui/separator'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Button } from '@/src/components/ui/button'
+import { Badge } from '@/src/components/ui/badge'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/src/components/ui/tabs'
+import { Separator } from '@/src/components/ui/separator'
+import { Alert, AlertDescription } from '@/src/components/ui/alert'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/src/components/ui/dialog'
+import { Textarea } from '@/src/components/ui/textarea'
+import { Label } from '@/src/components/ui/label'
+import logger from '../../../lib/logger';
 import {
   ArrowLeft,
   Calendar,
@@ -31,8 +32,8 @@ import {
   Target,
   Activity
 } from 'lucide-react'
-import { useToast } from '@/hooks/use-toast'
-import { Skeleton } from '@/components/ui/skeleton'
+import { useToast } from '@/src/hooks/use-toast'
+import { Skeleton } from '@/src/components/ui/skeleton'
 
 interface Appointment {
   id: string
@@ -144,7 +145,7 @@ export default function AppointmentDetailsPage() {
       const data = await response.json()
       setAppointment(data.data)
     } catch (error) {
-      console.error('Erro ao buscar detalhes do agendamento:', error)
+      logger.error('Erro ao buscar detalhes do agendamento:', error)
       toast({
         title: 'Erro',
         description: 'Não foi possível carregar os detalhes do agendamento',
@@ -163,7 +164,7 @@ export default function AppointmentDetailsPage() {
         setNotes(data.data || [])
       }
     } catch (error) {
-      console.error('Erro ao buscar notas:', error)
+      logger.error('Erro ao buscar notas:', error)
     }
   }
 

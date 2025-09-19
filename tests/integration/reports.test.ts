@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { ClinicalReportGenerator, type PatientReport, type ReportType } from '@/lib/reports/clinical-reports'
+import { ClinicalReportGenerator, type PatientReport, type ReportType } from '@/src/lib/reports/clinical-reports'
 
 // Mock do puppeteer
 vi.mock('puppeteer', () => ({

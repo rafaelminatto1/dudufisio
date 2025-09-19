@@ -3,8 +3,9 @@
  * Funções para conformidade com a Lei Geral de Proteção de Dados
  */
 
-import { createServerClient } from '@/lib/supabase/server'
-import { logAuditEvent } from '@/lib/audit/server'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { logAuditEvent } from '@/src/lib/audit/server'
+import logger from '../../../lib/logger';
 
 /**
  * Validar consentimento LGPD de um paciente
@@ -18,13 +19,13 @@ export async function validateLGPDConsent(patientId: string): Promise<boolean> {
     })
 
     if (error) {
-      console.error('Erro ao verificar consentimento LGPD:', error)
+      logger.error('Erro ao verificar consentimento LGPD:', error)
       return false
     }
 
     return data === true
   } catch (error) {
-    console.error('Erro ao validar consentimento LGPD:', error)
+    logger.error('Erro ao validar consentimento LGPD:', error)
     return false
   }
 }
@@ -54,7 +55,7 @@ export async function recordLGPDConsent(
       .eq('id', patientId)
 
     if (updateError) {
-      console.error('Erro ao atualizar consentimento LGPD:', updateError)
+      logger.error('Erro ao atualizar consentimento LGPD:', updateError)
       throw updateError
     }
 
@@ -76,7 +77,7 @@ export async function recordLGPDConsent(
       },
     })
   } catch (error) {
-    console.error('Erro ao registrar consentimento LGPD:', error)
+    logger.error('Erro ao registrar consentimento LGPD:', error)
     throw error
   }
 }
@@ -110,7 +111,7 @@ export async function canAccessSensitiveData(
 
     return patient.status === 'active' && patient.consent_lgpd
   } catch (error) {
-    console.error('Erro ao verificar acesso a dados sensíveis:', error)
+    logger.error('Erro ao verificar acesso a dados sensíveis:', error)
     return false
   }
 }
@@ -189,7 +190,7 @@ export async function anonymizePatientData(
     // Anonimizar dados relacionados
     await anonymizeRelatedData(patientId, userId)
   } catch (error) {
-    console.error('Erro ao anonimizar dados do paciente:', error)
+    logger.error('Erro ao anonimizar dados do paciente:', error)
     throw error
   }
 }
@@ -243,7 +244,7 @@ async function anonymizeRelatedData(
       },
     })
   } catch (error) {
-    console.error('Erro ao anonimizar dados relacionados:', error)
+    logger.error('Erro ao anonimizar dados relacionados:', error)
     throw error
   }
 }
@@ -324,7 +325,7 @@ export async function exportPatientData(
 
     return exportData
   } catch (error) {
-    console.error('Erro ao exportar dados do paciente:', error)
+    logger.error('Erro ao exportar dados do paciente:', error)
     throw error
   }
 }

@@ -5,9 +5,10 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { getCurrentUser } from '@/lib/auth/server'
-import { logAuditEvent } from '@/lib/audit/server'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { getCurrentUser } from '@/src/lib/auth/server'
+import { logAuditEvent } from '@/src/lib/audit/server'
+import logger from '../../../../lib/logger';
 
 const deletionRequestSchema = z.object({
   reason: z.string().min(10, 'Motivo deve ter pelo menos 10 caracteres').max(1000)
@@ -83,7 +84,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (createError) {
-      console.error('Error creating deletion request:', createError)
+      logger.error('Error creating deletion request:', createError)
       return NextResponse.json(
         { error: 'Erro ao criar solicitação de eliminação' },
         { status: 500 }
@@ -116,7 +117,7 @@ export async function POST(request: NextRequest) {
     }, { status: 201 })
 
   } catch (error) {
-    console.error('Unexpected error in deletion request:', error)
+    logger.error('Unexpected error in deletion request:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -163,7 +164,7 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false })
 
     if (error) {
-      console.error('Error fetching deletion requests:', error)
+      logger.error('Error fetching deletion requests:', error)
       return NextResponse.json(
         { error: 'Erro ao buscar solicitações' },
         { status: 500 }
@@ -182,7 +183,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Unexpected error in deletion list:', error)
+    logger.error('Unexpected error in deletion list:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }
@@ -286,7 +287,7 @@ async function notifyAdministrators(deletionRequest: any) {
     .insert(notifications)
 
   // In a real implementation, also send emails
-  console.log(`LGPD deletion request ${deletionRequest.id} notifications sent to ${admins.length} administrators`)
+  logger.info(`LGPD deletion request ${deletionRequest.id} notifications sent to ${admins.length} administrators`)
 }
 
 /**
@@ -340,7 +341,7 @@ export async function PATCH(request: NextRequest) {
       .single()
 
     if (error) {
-      console.error('Error updating deletion request:', error)
+      logger.error('Error updating deletion request:', error)
       return NextResponse.json(
         { error: 'Erro ao atualizar solicitação' },
         { status: 500 }
@@ -371,7 +372,7 @@ export async function PATCH(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Unexpected error updating deletion request:', error)
+    logger.error('Unexpected error updating deletion request:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }
@@ -440,10 +441,10 @@ async function processDeletionRequest(deletionRequest: any) {
       })
       .eq('id', deletionRequest.id)
 
-    console.log(`Patient data deletion completed for ID: ${patientId}`)
+    logger.info(`Patient data deletion completed for ID: ${patientId}`)
 
   } catch (error) {
-    console.error('Error processing deletion request:', error)
+    logger.error('Error processing deletion request:', error)
 
     // Mark as failed
     await supabase

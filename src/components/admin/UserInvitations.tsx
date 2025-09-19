@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import logger from '../../../lib/logger';
 import {
   Plus,
   Mail,
@@ -11,12 +12,12 @@ import {
   Users,
   AlertTriangle
 } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import type { UserRole } from '@/lib/rbac'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Badge } from '@/src/components/ui/badge'
+import { Button } from '@/src/components/ui/button'
+import { Input } from '@/src/components/ui/input'
+import { Label } from '@/src/components/ui/label'
+import type { UserRole } from '@/src/lib/rbac'
 
 interface InviteUserData {
   email: string
@@ -50,7 +51,7 @@ export default function UserInvitations() {
     try {
       setInvitations([])
     } catch (error) {
-      console.error('Erro ao carregar convites:', error)
+      logger.error('Erro ao carregar convites:', error)
     } finally {
       setIsLoading(false)
     }
@@ -174,7 +175,7 @@ export default function UserInvitations() {
               <Mail className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
               <p className="text-muted-foreground">Nenhum convite enviado ainda</p>
               <p className="text-sm text-muted-foreground mt-1">
-                Clique em "Convidar Usuário" para começar
+                Clique em &quot;Convidar Usuário&quot; para começar
               </p>
             </div>
           ) : (

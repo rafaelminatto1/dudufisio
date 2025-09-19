@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import logger from '../../lib/logger';
 
 const envSchema = z.object({
   // Supabase
@@ -24,8 +25,8 @@ function validateEnv(): Env {
   const parsed = envSchema.safeParse(process.env);
 
   if (!parsed.success) {
-    console.error('❌ Invalid environment variables:');
-    console.error(parsed.error.flatten().fieldErrors);
+    logger.error('❌ Invalid environment variables:');
+    logger.error(parsed.error.flatten().fieldErrors);
     throw new Error('Invalid environment variables');
   }
 

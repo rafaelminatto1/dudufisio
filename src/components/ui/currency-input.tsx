@@ -1,9 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "@/lib/utils"
+import { cn } from '@/src/lib/utils'
 import { Input } from "./input"
-import { formatCurrency, parseCurrency } from "@/lib/utils/brazilian-currency"
+import { formatCurrency, parseCurrency } from '@/src/lib/utils/brazilian-currency'
 
 interface CurrencyInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> {
   value?: number

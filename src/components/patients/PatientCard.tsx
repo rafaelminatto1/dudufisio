@@ -2,10 +2,10 @@
 
 import { useState } from 'react'
 import { Calendar, MapPin, Phone, Mail, MoreHorizontal, Eye, Edit2, Trash2 } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar'
+import { Badge } from '@/src/components/ui/badge'
+import { Button } from '@/src/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@/src/components/ui/dropdown-menu'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,10 +24,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
-import { formatCPF, formatPhone, formatDate } from '@/lib/utils/brazilian-formatting'
-import { calculateAge } from '@/lib/utils'
-import type { Patient } from '@/lib/supabase/database.types'
+} from '@/src/components/ui/alert-dialog'
+import { formatCPF, formatPhone, formatDate } from '@/src/lib/utils/brazilian-formatting'
+import { calculateAge } from '@/src/lib/utils'
+import type { Patient } from '@/src/lib/supabase/database.types'
 import Link from 'next/link'
 
 interface PatientCardProps {

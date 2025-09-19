@@ -9,21 +9,21 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+} from '@/src/components/ui/card'
+import { Button } from '@/src/components/ui/button'
+import { Badge } from '@/src/components/ui/badge'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from '@/src/components/ui/select'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover'
+} from '@/src/components/ui/popover'
 import {
   ChevronLeft,
   ChevronRight,
@@ -40,8 +40,8 @@ import {
   PlayCircle,
   StopCircle
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import type { Appointment, Patient, UserRole } from '@/lib/supabase/database.types'
+import { cn } from '@/src/lib/utils'
+import type { Appointment, Patient, UserRole } from '@/src/lib/supabase/database.types'
 
 interface AppointmentCalendarProps {
   appointments: Appointment[]

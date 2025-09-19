@@ -10,6 +10,7 @@ import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
+import logger from '../../../lib/logger';
 import {
   Dialog,
   DialogContent,
@@ -17,7 +18,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
+} from '@/src/components/ui/dialog'
 import {
   Form,
   FormControl,
@@ -26,26 +27,26 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
+} from '@/src/components/ui/form'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { Slider } from '@/components/ui/slider'
-import { Textarea } from '@/components/ui/textarea'
-import { Calendar } from '@/components/ui/calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+} from '@/src/components/ui/select'
+import { Input } from '@/src/components/ui/input'
+import { Button } from '@/src/components/ui/button'
+import { Badge } from '@/src/components/ui/badge'
+import { Separator } from '@/src/components/ui/separator'
+import { Slider } from '@/src/components/ui/slider'
+import { Textarea } from '@/src/components/ui/textarea'
+import { Calendar } from '@/src/components/ui/calendar'
+import { Popover, PopoverContent, PopoverTrigger } from '@/src/components/ui/popover'
 import { CalendarIcon, AlertTriangle, Save, X, MapPin } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import type { PainPoint, PainType, AssessmentType } from '@/lib/supabase/database.types'
+import type { PainPoint, PainType, AssessmentType } from '@/src/lib/supabase/database.types'
 
 // Schema de validação para pontos de dor
 const painPointSchema = z.object({
@@ -194,7 +195,7 @@ export default function PainPointModal({
 
   const handleSubmit = async (data: PainPointFormData) => {
     if (!coordinates && !painPoint) {
-      console.error('Coordenadas ou ponto de dor existente são obrigatórios')
+      logger.error('Coordenadas ou ponto de dor existente são obrigatórios')
       return
     }
 
@@ -212,7 +213,7 @@ export default function PainPointModal({
       form.reset()
       onClose()
     } catch (error) {
-      console.error('Erro ao salvar ponto de dor:', error)
+      logger.error('Erro ao salvar ponto de dor:', error)
     } finally {
       setIsLoading(false)
     }

@@ -3,7 +3,7 @@
  * Integração com WebRTC e plataformas de videochamada
  */
 
-import { logger } from '@/lib/logging/logger'
+import { logger } from '@/src/lib/logging/logger'
 
 export interface VideoSession {
   id: string

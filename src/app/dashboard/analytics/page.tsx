@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { ClinicalAnalyticsDashboard } from '@/components/analytics/ClinicalAnalyticsDashboard'
+import { ClinicalAnalyticsDashboard } from '@/src/components/analytics/ClinicalAnalyticsDashboard'
 
 export const metadata: Metadata = {
   title: 'Analytics Clínicos | FisioFlow',

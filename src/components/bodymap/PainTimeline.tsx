@@ -7,6 +7,7 @@
 'use client'
 
 import React, { useState, useMemo } from 'react'
+import logger from '../../../lib/logger';
 import {
   LineChart,
   Line,
@@ -25,23 +26,23 @@ import {
 } from 'recharts'
 import { format as formatDate, parseISO, startOfWeek, endOfWeek, eachDayOfInterval } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
+import { Button } from '@/src/components/ui/button'
+import { Badge } from '@/src/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Separator } from '@/src/components/ui/separator'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from '@/src/components/ui/select'
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from '@/components/ui/tabs'
+} from '@/src/components/ui/tabs'
 import {
   Calendar,
   Download,
@@ -55,7 +56,7 @@ import {
   FileText,
   Filter
 } from 'lucide-react'
-import type { PainPoint } from '@/lib/supabase/database.types'
+import type { PainPoint } from '@/src/lib/supabase/database.types'
 
 interface PainTimelineProps {
   painPoints: PainPoint[]
@@ -314,11 +315,11 @@ export default function PainTimeline({
 
         case 'pdf':
           // Implementar exportação PDF (pode usar jsPDF ou chamar API)
-          console.log('PDF export não implementado ainda')
+          logger.info('PDF export não implementado ainda')
           break
       }
     } catch (error) {
-      console.error('Erro ao exportar dados:', error)
+      logger.error('Erro ao exportar dados:', error)
     }
   }
 

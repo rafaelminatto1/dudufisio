@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { pushNotificationService, NotificationType } from '@/lib/notifications/push-service'
+import { pushNotificationService, NotificationType } from '@/src/lib/notifications/push-service'
 
 // Mock do Service Worker
 Object.defineProperty(navigator, 'serviceWorker', {

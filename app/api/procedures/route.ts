@@ -8,9 +8,10 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { getCurrentUser, hasPermission } from '@/lib/auth/server'
-import { logAuditEvent } from '@/lib/audit/server'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { getCurrentUser, hasPermission } from '@/src/lib/auth/server'
+import { logAuditEvent } from '@/src/lib/audit/server'
+import logger from '../../../lib/logger';
 
 // Schema for procedure creation
 const createProcedureSchema = z.object({
@@ -130,7 +131,7 @@ export async function GET(request: NextRequest) {
     const { data: procedures, error, count } = await query
 
     if (error) {
-      console.error('Erro ao buscar procedimentos:', error)
+      logger.error('Erro ao buscar procedimentos:', error)
       return NextResponse.json(
         { error: 'Erro ao buscar procedimentos' },
         { status: 500 }
@@ -150,7 +151,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Erro inesperado ao buscar procedimentos:', error)
+    logger.error('Erro inesperado ao buscar procedimentos:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }
@@ -197,7 +198,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (checkError && checkError.code !== 'PGRST116') {
-      console.error('Erro ao verificar procedimento existente:', checkError)
+      logger.error('Erro ao verificar procedimento existente:', checkError)
       return NextResponse.json(
         { error: 'Erro ao verificar procedimento' },
         { status: 500 }
@@ -241,7 +242,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (createError) {
-      console.error('Erro ao criar procedimento:', createError)
+      logger.error('Erro ao criar procedimento:', createError)
       return NextResponse.json(
         { error: 'Erro ao criar procedimento' },
         { status: 500 }
@@ -269,7 +270,7 @@ export async function POST(request: NextRequest) {
     }, { status: 201 })
 
   } catch (error) {
-    console.error('Erro inesperado ao criar procedimento:', error)
+    logger.error('Erro inesperado ao criar procedimento:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

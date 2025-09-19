@@ -6,9 +6,9 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@/src/lib/supabase/client'
 import type { SignInCredentials, SignUpData, AuthError } from './types'
-import { logger } from '@/lib/logging/logger'
+import { logger } from '@/src/lib/logging/logger'
 
 interface MagicLinkCredentials {
   email: string

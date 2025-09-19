@@ -8,7 +8,8 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 import type { Session, User } from '@supabase/supabase-js'
-import type { Database, UserRole } from '@/lib/supabase/database.types'
+import type { Database, UserRole } from '@/src/lib/supabase/database.types'
+import logger from '../logger';
 
 // Configurações de sessão para saúde brasileira
 const SESSION_CONFIG = {
@@ -144,7 +145,7 @@ export class SessionManager {
       }
 
     } catch (error) {
-      console.error('Erro na validação de sessão:', error)
+      logger.error('Erro na validação de sessão:', error)
       return {
         isValid: false,
         error: 'Erro interno na validação de sessão',
@@ -188,7 +189,7 @@ export class SessionManager {
       return await this.validateSession()
 
     } catch (error) {
-      console.error('Erro no refresh de sessão:', error)
+      logger.error('Erro no refresh de sessão:', error)
       return {
         isValid: false,
         error: 'Erro interno no refresh de sessão',
@@ -213,7 +214,7 @@ export class SessionManager {
       await this.clearSessionCookies()
 
     } catch (error) {
-      console.error('Erro no logout:', error)
+      logger.error('Erro no logout:', error)
     }
   }
 
@@ -250,7 +251,7 @@ export class SessionManager {
         orgStatus: org.status
       }
     } catch (error) {
-      console.error('Erro ao obter dados do usuário:', error)
+      logger.error('Erro ao obter dados do usuário:', error)
       return null
     }
   }
@@ -309,7 +310,7 @@ export class SessionManager {
       })
 
     } catch (error) {
-      console.error('Erro ao atualizar última atividade:', error)
+      logger.error('Erro ao atualizar última atividade:', error)
     }
   }
 
@@ -353,7 +354,7 @@ export class SessionManager {
           }
         })
     } catch (error) {
-      console.error('Erro ao registrar evento de auditoria:', error)
+      logger.error('Erro ao registrar evento de auditoria:', error)
     }
   }
 }
@@ -442,7 +443,7 @@ export async function checkLgpdConsent(
 
     return patient.consent_lgpd && consentDate > twoYearsAgo
   } catch (error) {
-    console.error('Erro ao verificar consentimento LGPD:', error)
+    logger.error('Erro ao verificar consentimento LGPD:', error)
     return false
   }
 }

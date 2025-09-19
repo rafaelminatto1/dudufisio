@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Separator } from '@/components/ui/separator'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Button } from '@/src/components/ui/button'
+import { Input } from '@/src/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select'
+import { Badge } from '@/src/components/ui/badge'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/src/components/ui/tabs'
+import { Separator } from '@/src/components/ui/separator'
+import logger from '../../lib/logger';
 import {
   DollarSign,
   CreditCard,
@@ -242,7 +243,7 @@ export default function FinanceiroPage() {
       setChartData(mockChartData)
       setBillingRecords(mockBillingRecords)
     } catch (error) {
-      console.error('Erro ao buscar dados financeiros:', error)
+      logger.error('Erro ao buscar dados financeiros:', error)
     } finally {
       setLoading(false)
     }

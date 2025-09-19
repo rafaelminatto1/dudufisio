@@ -12,7 +12,7 @@ export {
   SkeletonAvatar,
   SkeletonText,
   SkeletonChart,
-} from "@/components/ui/skeleton"
+} from '@/src/components/ui/skeleton'
 
 export {
   Loading,
@@ -22,15 +22,15 @@ export {
   LoadingTable,
   LoadingDashboard,
   LOADING_MESSAGES,
-} from "@/components/ui/loading"
+} from '@/src/components/ui/loading'
 
 // Toast Notifications with Portuguese Messages (T074)
 export {
   toast,
   TOAST_MESSAGES,
-} from "@/components/ui/toast"
+} from '@/src/components/ui/toast'
 
-export { Toaster } from "@/components/ui/sonner"
+export { Toaster } from '@/src/components/ui/sonner'
 
 // Responsive Mobile Layout Components (T075)
 export {
@@ -44,7 +44,7 @@ export {
   MobileGrid,
   MobileDrawer,
   FISIOFLOW_NAV_ITEMS,
-} from "@/components/ui/mobile-layout"
+} from '@/src/components/ui/mobile-layout'
 
 export {
   ResponsiveContainer,
@@ -54,7 +54,7 @@ export {
   ResponsiveSpacing,
   ShowOn,
   HideOn,
-} from "@/components/ui/responsive"
+} from '@/src/components/ui/responsive'
 
 export {
   Sheet,
@@ -67,7 +67,7 @@ export {
   SheetFooter,
   SheetTitle,
   SheetDescription,
-} from "@/components/ui/sheet"
+} from '@/src/components/ui/sheet'
 
 // Brazilian Form Components (T076)
 export {
@@ -82,7 +82,7 @@ export {
   formatPhone,
   formatCEP,
   formatBrazilianDate as formatBrazilianDateForm,
-} from "@/components/ui/brazilian-forms"
+} from '@/src/components/ui/brazilian-forms'
 
 // Portuguese Date/Time Formatting (T077)
 export {
@@ -109,7 +109,7 @@ export {
   WEEKDAYS,
   WEEKDAYS_SHORT,
   BUSINESS_HOURS,
-} from "@/lib/utils/brazilian-formatting"
+} from '@/src/lib/utils/brazilian-formatting'
 
 // Brazilian Currency Formatting (T078)
 export {
@@ -127,9 +127,9 @@ export {
   PAYMENT_METHODS,
   INSTALLMENT_PERIODS,
   createCurrencyMask,
-} from "@/lib/utils/brazilian-currency"
+} from '@/src/lib/utils/brazilian-currency'
 
-export { CurrencyInput } from "@/components/ui/currency-input"
+export { CurrencyInput } from '@/src/components/ui/currency-input'
 
 // Portuguese Validation Messages (T079)
 export {
@@ -140,7 +140,7 @@ export {
   ALL_VALIDATION_MESSAGES,
   getValidationMessage,
   formatFieldName,
-} from "@/lib/validation/portuguese-messages"
+} from '@/src/lib/validation/portuguese-messages'
 
 export {
   validateCPF,
@@ -154,7 +154,7 @@ export {
   BrazilianSchemas,
   HealthcareSchemas,
   BrazilianAddressSchema,
-} from "@/lib/validation/brazilian-validators"
+} from '@/src/lib/validation/brazilian-validators'
 
 export type {
   PatientFormData,
@@ -164,7 +164,7 @@ export type {
   PaymentFormData,
   ProfessionalFormData,
   AddressFormData,
-} from "@/lib/validation/brazilian-validators"
+} from '@/src/lib/validation/brazilian-validators'
 
 // Portuguese Accessibility Features (T080)
 export {
@@ -175,7 +175,7 @@ export {
   ACCESSIBILITY_HELPERS,
   FOCUS_MANAGEMENT,
   VISUAL_ACCESSIBILITY,
-} from "@/lib/accessibility/portuguese-labels"
+} from '@/src/lib/accessibility/portuguese-labels'
 
 export {
   SkipLinks,
@@ -187,13 +187,13 @@ export {
   AccessibleProgress,
   AccessibleTabs,
   StatusBadge,
-} from "@/components/ui/accessible-components"
+} from '@/src/components/ui/accessible-components'
 
 export type {
   AriaLabel,
   HealthcareAriaLabel,
   ScreenReaderAnnouncement,
-} from "@/lib/accessibility/portuguese-labels"
+} from '@/src/lib/accessibility/portuguese-labels'
 
 // Combined utilities for easy import
 // Note: Commented out to allow build completion - some components may need fixing

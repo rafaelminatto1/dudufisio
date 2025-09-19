@@ -3,7 +3,7 @@
  * Gerencia notificações web push, WhatsApp e email
  */
 
-import { logger } from '@/lib/logging/logger'
+import { logger } from '@/src/lib/logging/logger'
 
 export interface NotificationPayload {
   title: string

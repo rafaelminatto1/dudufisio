@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Menu, X, ChevronLeft, Home, Calendar, Users, FileText, Settings, User } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from '@/src/lib/utils'
 import { Button } from "./button"
 import { Sheet, SheetContent, SheetTrigger } from "./sheet"
 

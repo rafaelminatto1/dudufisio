@@ -1,13 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { createClient } from '@/lib/supabase/client-simple'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Button } from '@/src/components/ui/button'
+import { Input } from '@/src/components/ui/input'
+import { Label } from '@/src/components/ui/label'
+import { createClient } from '@/src/lib/supabase/client-simple'
 import { toast } from 'sonner'
 import Link from 'next/link'
+import logger from '../../../lib/logger';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
@@ -31,7 +32,7 @@ export default function ForgotPasswordPage() {
       })
 
       if (error) {
-        console.error('Erro ao enviar email:', error)
+        logger.error('Erro ao enviar email:', error)
         toast.error('Erro ao enviar email de recuperação')
         return
       }
@@ -39,7 +40,7 @@ export default function ForgotPasswordPage() {
       setIsSent(true)
       toast.success('Email de recuperação enviado!')
     } catch (error) {
-      console.error('Erro inesperado:', error)
+      logger.error('Erro inesperado:', error)
       toast.error('Erro inesperado ao enviar email')
     } finally {
       setIsLoading(false)

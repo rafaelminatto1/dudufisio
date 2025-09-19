@@ -6,7 +6,8 @@
 
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
-import type { Database, UserRole } from '@/lib/supabase/database.types'
+import type { Database, UserRole } from '@/src/lib/supabase/database.types'
+import logger from '../logger';
 
 /**
  * Interface para contexto de isolamento organizacional
@@ -94,7 +95,7 @@ export class RLSEnforcer {
       return { allowed: true }
 
     } catch (error) {
-      console.error('Erro na validação de acesso RLS:', error)
+      logger.error('Erro na validação de acesso RLS:', error)
       return {
         allowed: false,
         reason: 'Erro interno na validação de acesso'
@@ -212,7 +213,7 @@ export class RLSEnforcer {
 
       return !error && !!membership
     } catch (error) {
-      console.error('Erro na validação de acesso organizacional:', error)
+      logger.error('Erro na validação de acesso organizacional:', error)
       return false
     }
   }
@@ -339,7 +340,7 @@ export class RLSEnforcer {
 
       return patient.consent_lgpd && consentDate > twoYearsAgo
     } catch (error) {
-      console.error('Erro ao verificar consentimento LGPD:', error)
+      logger.error('Erro ao verificar consentimento LGPD:', error)
       return false
     }
   }
@@ -365,7 +366,7 @@ export class RLSEnforcer {
         })
     } catch (error) {
       // Log de auditoria não deve impedir operação principal
-      console.error('Erro ao registrar log de auditoria:', error)
+      logger.error('Erro ao registrar log de auditoria:', error)
     }
   }
 
@@ -457,7 +458,7 @@ export async function enforceRLSMiddleware(
       enforcer
     }
   } catch (error) {
-    console.error('Erro no enforcement de RLS:', error)
+    logger.error('Erro no enforcement de RLS:', error)
     return {
       allowed: false,
       error: 'Erro interno na validação de acesso'

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import logger from '../../../lib/logger';
 
 /**
  * Componente responsável por gerenciar o PWA
@@ -32,7 +33,7 @@ export function PWAManager() {
         scope: '/'
       })
 
-      console.log('Service Worker registrado:', registration.scope)
+      logger.info('Service Worker registrado:', registration.scope)
 
       // Verificar atualizações
       registration.addEventListener('updatefound', () => {
@@ -41,7 +42,7 @@ export function PWAManager() {
           newWorker.addEventListener('statechange', () => {
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
               // Nova versão disponível
-              console.log('Nova versão do PWA disponível')
+              logger.info('Nova versão do PWA disponível')
               // Opcional: mostrar notificação de atualização
               showUpdateNotification(registration)
             }
@@ -50,7 +51,7 @@ export function PWAManager() {
       })
 
     } catch (error) {
-      console.error('Erro ao registrar Service Worker:', error)
+      logger.error('Erro ao registrar Service Worker:', error)
     }
   }
 
@@ -59,12 +60,12 @@ export function PWAManager() {
       // Verificar se as notificações estão permitidas
       if (Notification.permission === 'default') {
         // Pedir permissão apenas quando necessário (não no load inicial)
-        console.log('Permissão de notificação: padrão (será solicitada quando necessário)')
+        logger.info('Permissão de notificação: padrão (será solicitada quando necessário)')
         return
       }
 
       if (Notification.permission === 'granted') {
-        console.log('Notificações push habilitadas')
+        logger.info('Notificações push habilitadas')
 
         // Configurar VAPID keys se necessário
         const registration = await navigator.serviceWorker.ready
@@ -75,11 +76,11 @@ export function PWAManager() {
         //   applicationServerKey: VAPID_PUBLIC_KEY
         // })
 
-        console.log('Service Worker pronto para notificações')
+        logger.info('Service Worker pronto para notificações')
       }
 
     } catch (error) {
-      console.error('Erro ao configurar notificações push:', error)
+      logger.error('Erro ao configurar notificações push:', error)
     }
   }
 
@@ -87,7 +88,7 @@ export function PWAManager() {
     let deferredPrompt: any = null
 
     window.addEventListener('beforeinstallprompt', (e) => {
-      console.log('PWA pode ser instalado')
+      logger.info('PWA pode ser instalado')
       e.preventDefault()
       deferredPrompt = e
 
@@ -96,7 +97,7 @@ export function PWAManager() {
     })
 
     window.addEventListener('appinstalled', () => {
-      console.log('PWA foi instalado')
+      logger.info('PWA foi instalado')
       deferredPrompt = null
 
       // Opcional: rastrear instalação para analytics
@@ -126,7 +127,7 @@ export function PWAManager() {
 export function useNotificationPermission() {
   const requestPermission = async () => {
     if (!('Notification' in window)) {
-      console.warn('Notificações não são suportadas neste navegador')
+      logger.warn('Notificações não são suportadas neste navegador')
       return false
     }
 
@@ -181,8 +182,8 @@ export function useIsOnline() {
   const isOnline = typeof window !== 'undefined' ? navigator.onLine : true
 
   useEffect(() => {
-    const handleOnline = () => console.log('Conectado à internet')
-    const handleOffline = () => console.log('Modo offline ativado')
+    const handleOnline = () => logger.info('Conectado à internet')
+    const handleOffline = () => logger.info('Modo offline ativado')
 
     window.addEventListener('online', handleOnline)
     window.addEventListener('offline', handleOffline)

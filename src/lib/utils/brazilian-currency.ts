@@ -1,3 +1,5 @@
+import logger from '../../../lib/logger';
+
 /**
  * Brazilian Currency Formatting Utilities
  * Handles Real (R$) currency formatting and financial operations
@@ -86,7 +88,7 @@ export function formatCurrency(
 
     return showSymbol ? `R$ ${formatted}` : formatted
   } catch (error) {
-    console.error('Error formatting currency:', error)
+    logger.error('Error formatting currency:', error)
     return showSymbol ? 'R$ 0,00' : '0,00'
   }
 }

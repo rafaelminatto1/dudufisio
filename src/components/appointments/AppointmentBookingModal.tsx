@@ -13,7 +13,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
+} from '@/src/components/ui/dialog'
 import {
   Form,
   FormControl,
@@ -22,34 +22,34 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
+} from '@/src/components/ui/form'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from '@/src/components/ui/select'
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from '@/components/ui/command'
+} from '@/src/components/ui/command'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover'
-import { Calendar } from '@/components/ui/calendar'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { Badge } from '@/components/ui/badge'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Separator } from '@/components/ui/separator'
+} from '@/src/components/ui/popover'
+import { Calendar } from '@/src/components/ui/calendar'
+import { Input } from '@/src/components/ui/input'
+import { Button } from '@/src/components/ui/button'
+import { Textarea } from '@/src/components/ui/textarea'
+import { Badge } from '@/src/components/ui/badge'
+import { Alert, AlertDescription } from '@/src/components/ui/alert'
+import { Checkbox } from '@/src/components/ui/checkbox'
+import { Separator } from '@/src/components/ui/separator'
 import {
   CalendarIcon,
   Clock,
@@ -61,9 +61,9 @@ import {
   X,
   Plus
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { useToast } from '@/hooks/use-toast'
-import type { Patient, Appointment, UserRole } from '@/lib/supabase/database.types'
+import { cn } from '@/src/lib/utils'
+import { useToast } from '@/src/hooks/use-toast'
+import type { Patient, Appointment, UserRole } from '@/src/lib/supabase/database.types'
 
 // Schema de validação
 const appointmentSchema = z.object({

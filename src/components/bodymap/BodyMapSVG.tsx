@@ -7,11 +7,11 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { Badge } from '@/src/components/ui/badge'
+import { Button } from '@/src/components/ui/button'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/src/components/ui/tooltip'
 import { RotateCcw, Maximize2 } from 'lucide-react'
-import type { PainPoint } from '@/lib/supabase/database.types'
+import type { PainPoint } from '@/src/lib/supabase/database.types'
 
 interface BodyMapSVGProps {
   view: 'front' | 'back' | 'side'

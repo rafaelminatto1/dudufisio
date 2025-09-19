@@ -8,9 +8,10 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { getCurrentUser, hasPermission } from '@/lib/auth/server'
-import { logAuditEvent } from '@/lib/audit/server'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { getCurrentUser, hasPermission } from '@/src/lib/auth/server'
+import { logAuditEvent } from '@/src/lib/audit/server'
+import logger from '../../../../lib/logger';
 
 // Schema for upload request
 const uploadSchema = z.object({
@@ -113,7 +114,7 @@ export async function POST(request: NextRequest) {
       })
 
     if (pathError) {
-      console.error('Erro ao gerar caminho do arquivo:', pathError)
+      logger.error('Erro ao gerar caminho do arquivo:', pathError)
       return NextResponse.json(
         { error: 'Erro ao processar arquivo' },
         { status: 500 }
@@ -130,7 +131,7 @@ export async function POST(request: NextRequest) {
       })
 
     if (uploadError) {
-      console.error('Erro no upload:', uploadError)
+      logger.error('Erro no upload:', uploadError)
       return NextResponse.json(
         { error: 'Erro ao fazer upload do arquivo' },
         { status: 500 }
@@ -189,7 +190,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Erro inesperado no upload:', error)
+    logger.error('Erro inesperado no upload:', error)
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(

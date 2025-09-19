@@ -9,7 +9,7 @@ import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Eye, EyeOff, Heart, Lock, Mail, Loader2, Chrome, Send } from 'lucide-react'
-import { signInAction, signInWithGoogleAction, signInWithMagicLinkAction } from '@/lib/auth/client-actions'
+import { signInAction, signInWithGoogleAction, signInWithMagicLinkAction } from '@/src/lib/auth/client-actions'
 
 // Tipos locais para evitar importar auth.ts no client
 interface SignInCredentials {

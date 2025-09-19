@@ -1,7 +1,7 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton'
-import { LoginForm } from '@/components/auth/LoginForm'
-import { Separator } from '@/components/ui/separator'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { GoogleSignInButton } from '@/src/components/auth/GoogleSignInButton'
+import { LoginForm } from '@/src/components/auth/LoginForm'
+import { Separator } from '@/src/components/ui/separator'
 import Link from 'next/link'
 
 export default function LoginPage() {

@@ -4,19 +4,20 @@ import { useState, useEffect } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Checkbox } from '@/components/ui/checkbox'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/src/components/ui/dialog'
+import { Button } from '@/src/components/ui/button'
+import { Input } from '@/src/components/ui/input'
+import { Textarea } from '@/src/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/src/components/ui/form'
+import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Badge } from '@/src/components/ui/badge'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/src/components/ui/tabs'
+import { Checkbox } from '@/src/components/ui/checkbox'
 import { Plus, X, Search, Move, Target, Calendar } from 'lucide-react'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/src/hooks/use-toast'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
+import logger from '../../../lib/logger';
 
 const prescriptionExerciseSchema = z.object({
   exercise_id: z.string().uuid(),
@@ -131,7 +132,7 @@ export function CreatePrescriptionModal({ open, onOpenChange, onSuccess }: Creat
         setPatients(data.data)
       }
     } catch (error) {
-      console.error('Erro ao buscar pacientes:', error)
+      logger.error('Erro ao buscar pacientes:', error)
     } finally {
       setLoadingPatients(false)
     }
@@ -155,7 +156,7 @@ export function CreatePrescriptionModal({ open, onOpenChange, onSuccess }: Creat
         setExercises(data.data)
       }
     } catch (error) {
-      console.error('Erro ao buscar exercícios:', error)
+      logger.error('Erro ao buscar exercícios:', error)
     } finally {
       setLoadingExercises(false)
     }

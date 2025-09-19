@@ -3,7 +3,7 @@
  * Suporta balanças, medidores, smartwatches e outros dispositivos
  */
 
-import { logger } from '@/lib/logging/logger'
+import { logger } from '@/src/lib/logging/logger'
 
 export interface IoTDevice {
   id: string

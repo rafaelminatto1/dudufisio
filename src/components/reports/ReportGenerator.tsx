@@ -1,17 +1,18 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Badge } from '@/components/ui/badge'
-import { Calendar } from '@/components/ui/calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Label } from '@/components/ui/label'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Separator } from '@/components/ui/separator'
-import { 
+import { Button } from '@/src/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/src/components/ui/dialog'
+import { Badge } from '@/src/components/ui/badge'
+import { Calendar } from '@/src/components/ui/calendar'
+import { Popover, PopoverContent, PopoverTrigger } from '@/src/components/ui/popover'
+import { Label } from '@/src/components/ui/label'
+import { Checkbox } from '@/src/components/ui/checkbox'
+import { Separator } from '@/src/components/ui/separator'
+import logger from '../../../lib/logger';
+import {
   FileText, 
   Download, 
   Calendar as CalendarIcon, 
@@ -24,7 +25,7 @@ import {
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { toast } from 'sonner'
-import { ClinicalReportGenerator, type PatientReport, type ReportType } from '@/lib/reports/clinical-reports'
+import { ClinicalReportGenerator, type PatientReport, type ReportType } from '@/src/lib/reports/clinical-reports'
 
 interface ReportGeneratorProps {
   patientId: string
@@ -186,7 +187,7 @@ export function ReportGenerator({ patientId, patientName, onReportGenerated }: R
       setIsOpen(false)
 
     } catch (error) {
-      console.error('Erro ao gerar relatório:', error)
+      logger.error('Erro ao gerar relatório:', error)
       toast.error('Erro ao gerar relatório. Tente novamente.')
       onReportGenerated?.(selectedReportType, false)
     } finally {

@@ -5,7 +5,7 @@
  */
 
 import { Suspense } from 'react'
-import { getCurrentUser } from '@/lib/auth/auth'
+import { getCurrentUser } from '@/src/lib/auth/auth'
 import { redirect } from 'next/navigation'
 
 export default async function DashboardLayout({

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { iotDeviceManager } from '@/lib/iot/device-manager'
-import { logger } from '@/lib/logging/logger'
+import { iotDeviceManager } from '@/src/lib/iot/device-manager'
+import { logger } from '@/src/lib/logging/logger'
 
 export async function POST(
   request: NextRequest,

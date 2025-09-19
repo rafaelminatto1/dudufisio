@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
-import { NotificationTester } from '@/components/notifications/NotificationTester'
-import { OfflineTester } from '@/components/pwa/OnlineStatus'
+import { NotificationTester } from '@/src/components/notifications/NotificationTester'
+import { OfflineTester } from '@/src/components/pwa/OnlineStatus'
 
 export const metadata: Metadata = {
   title: 'Demo - Funcionalidades Avançadas | FisioFlow',
@@ -171,7 +171,7 @@ export default function DemoPage() {
               <strong>PWA:</strong> No Chrome/Edge, clique no ícone de instalação na barra de endereços
             </li>
             <li>
-              <strong>Notificações:</strong> Clique em "Permitir Notificações" acima e teste os exemplos
+              <strong>Notificações:</strong> Clique em &quot;Permitir Notificações&quot; acima e teste os exemplos
             </li>
             <li>
               <strong>Offline:</strong> Desconecte a internet e navegue pelo app

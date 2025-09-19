@@ -6,7 +6,8 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
-import type { Database, UserRole } from '@/lib/supabase/database.types'
+import type { Database, UserRole } from '@/src/lib/supabase/database.types'
+import logger from '../../../lib/logger';
 
 /**
  * Configuração de rotas protegidas
@@ -126,7 +127,7 @@ export async function authMiddleware(request: NextRequest) {
     if (sessionError || !session) {
       const { error: refreshError } = await supabase.auth.refreshSession()
       if (refreshError) {
-        console.warn('Falha ao renovar sessão:', refreshError.message)
+        logger.warn('Falha ao renovar sessão:', refreshError.message)
       }
     }
 
@@ -197,7 +198,7 @@ export async function authMiddleware(request: NextRequest) {
 
     return response
   } catch (error) {
-    console.error('Erro no middleware de autenticação:', error)
+    logger.error('Erro no middleware de autenticação:', error)
 
     // Log de auditoria para tentativa de acesso com erro
     try {
@@ -212,9 +213,9 @@ export async function authMiddleware(request: NextRequest) {
         timestamp: new Date().toISOString()
       }
       // TODO: Enviar para sistema de auditoria
-      console.info('Audit log:', auditLog)
+      logger.info('Audit log:', auditLog)
     } catch (auditError) {
-      console.error('Erro ao registrar log de auditoria:', auditError)
+      logger.error('Erro ao registrar log de auditoria:', auditError)
     }
 
     // Em caso de erro, redirecionar para login com mensagem em português
@@ -294,7 +295,7 @@ async function getCurrentUserWithRole(supabase: any, userId: string) {
       org: memberships.orgs
     }
   } catch (error) {
-    console.error('Erro ao obter papel do usuário:', error)
+    logger.error('Erro ao obter papel do usuário:', error)
     return null
   }
 }
@@ -327,7 +328,7 @@ async function checkPatientLgpdConsent(supabase: any, userId: string): Promise<b
 
     return patient.consent_lgpd && consentDate > twoYearsAgo
   } catch (error) {
-    console.error('Erro ao verificar consentimento LGPD:', error)
+    logger.error('Erro ao verificar consentimento LGPD:', error)
     return false
   }
 }
@@ -431,7 +432,7 @@ export async function apiAuthMiddleware(request: NextRequest) {
 
     return NextResponse.next()
   } catch (error) {
-    console.error('Erro na validação da API:', error)
+    logger.error('Erro na validação da API:', error)
     return NextResponse.json(
       { error: 'Internal Server Error', message: 'Erro interno do servidor' },
       { status: 500 }

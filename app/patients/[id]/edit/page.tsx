@@ -3,17 +3,18 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { ArrowLeft, Save, X } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Checkbox } from '@/components/ui/checkbox'
-import { useToast } from '@/hooks/use-toast'
+import { Button } from '@/src/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Input } from '@/src/components/ui/input'
+import { Label } from '@/src/components/ui/label'
+import { Textarea } from '@/src/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select'
+import { Checkbox } from '@/src/components/ui/checkbox'
+import { useToast } from '@/src/hooks/use-toast'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import logger from '../../../../lib/logger';
 
 const patientSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
@@ -129,7 +130,7 @@ export default function EditPatientPage() {
         })
 
       } catch (error) {
-        console.error('Erro ao carregar paciente:', error)
+        logger.error('Erro ao carregar paciente:', error)
         toast({
           title: 'Erro',
           description: error instanceof Error ? error.message : 'Erro ao carregar paciente',
@@ -184,7 +185,7 @@ export default function EditPatientPage() {
       router.push(`/patients/${patientId}`)
 
     } catch (error) {
-      console.error('Erro ao atualizar paciente:', error)
+      logger.error('Erro ao atualizar paciente:', error)
       toast({
         title: 'Erro',
         description: error instanceof Error ? error.message : 'Erro ao atualizar paciente',

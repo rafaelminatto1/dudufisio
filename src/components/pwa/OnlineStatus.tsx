@@ -79,8 +79,8 @@ export function OfflineTester() {
           <h4 className="font-medium text-blue-900 mb-2">🧪 Como testar offline:</h4>
           <ol className="text-sm text-blue-800 list-decimal list-inside space-y-1">
             <li>Abra as DevTools do navegador (F12)</li>
-            <li>Vá na aba "Network" ou "Rede"</li>
-            <li>Marque a opção "Offline" ou configure throttling</li>
+            <li>Vá na aba &quot;Network&quot; ou &quot;Rede&quot;</li>
+            <li>Marque a opção &quot;Offline&quot; ou configure throttling</li>
             <li>Navegue pelo app e veja que continua funcionando</li>
             <li>Reative a conexão e observe a sincronização</li>
           </ol>

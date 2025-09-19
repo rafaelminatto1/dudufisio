@@ -8,7 +8,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Heart, Mail, ArrowLeft, CheckCircle } from 'lucide-react'
-import { resetPasswordAction } from '@/lib/auth/client-actions'
+import { resetPasswordAction } from '@/src/lib/auth/client-actions'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')

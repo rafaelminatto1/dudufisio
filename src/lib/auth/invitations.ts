@@ -1,6 +1,7 @@
 'use server'
 
-import type { UserRole } from '@/lib/rbac'
+import type { UserRole } from '@/src/lib/rbac'
+import logger from '../../../lib/logger';
 
 export interface InviteUserData {
   email: string
@@ -43,7 +44,7 @@ export async function inviteUser(data: InviteUserData) {
       }
     }
   } catch (error: any) {
-    console.error('Erro no sistema de convites:', error)
+    logger.error('Erro no sistema de convites:', error)
     return {
       success: false,
       error: error.message || 'Erro interno do servidor'

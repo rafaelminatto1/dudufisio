@@ -1,11 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/src/components/ui/dialog'
+import { Button } from '@/src/components/ui/button'
+import { Badge } from '@/src/components/ui/badge'
+import { Separator } from '@/src/components/ui/separator'
+import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card'
+import logger from '../../../lib/logger';
 import {
   Clock,
   Target,
@@ -92,17 +93,17 @@ export function ExerciseDetailsModal({ exercise, open, onOpenChange, onUpdate }:
 
   const handlePrescribe = () => {
     // TODO: Open prescription modal
-    console.log('Prescrevendo exercício:', exercise.id)
+    logger.info('Prescrevendo exercício:', exercise.id)
   }
 
   const handleEdit = () => {
     // TODO: Open edit modal
-    console.log('Editando exercício:', exercise.id)
+    logger.info('Editando exercício:', exercise.id)
   }
 
   const handleDuplicate = () => {
     // TODO: Duplicate exercise
-    console.log('Duplicando exercício:', exercise.id)
+    logger.info('Duplicando exercício:', exercise.id)
   }
 
   const handleDelete = async () => {
@@ -111,9 +112,9 @@ export function ExerciseDetailsModal({ exercise, open, onOpenChange, onUpdate }:
     setLoading(true)
     try {
       // TODO: Implement delete API call
-      console.log('Excluindo exercício:', exercise.id)
+      logger.info('Excluindo exercício:', exercise.id)
     } catch (error) {
-      console.error('Erro ao excluir exercício:', error)
+      logger.error('Erro ao excluir exercício:', error)
     } finally {
       setLoading(false)
     }

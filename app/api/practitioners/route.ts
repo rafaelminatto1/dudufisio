@@ -7,8 +7,9 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { getCurrentUser, hasPermission } from '@/lib/auth/server'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { getCurrentUser, hasPermission } from '@/src/lib/auth/server'
+import logger from '../../../lib/logger';
 
 // Schema for practitioner search/filters
 const searchPractitionersSchema = z.object({
@@ -101,7 +102,7 @@ export async function GET(request: NextRequest) {
     const { data: practitioners, error, count } = await query
 
     if (error) {
-      console.error('Erro ao buscar profissionais:', error)
+      logger.error('Erro ao buscar profissionais:', error)
       return NextResponse.json(
         { error: 'Erro ao buscar profissionais' },
         { status: 500 }
@@ -155,7 +156,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Erro inesperado ao buscar profissionais:', error)
+    logger.error('Erro inesperado ao buscar profissionais:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }
@@ -208,7 +209,7 @@ export async function POST(
         )
       }
 
-      console.error('Erro ao verificar agendamento:', appointmentError)
+      logger.error('Erro ao verificar agendamento:', appointmentError)
       return NextResponse.json(
         { error: 'Erro ao verificar agendamento' },
         { status: 500 }
@@ -246,7 +247,7 @@ export async function POST(
       .single()
 
     if (createError) {
-      console.error('Erro ao criar nota:', createError)
+      logger.error('Erro ao criar nota:', createError)
       return NextResponse.json(
         { error: 'Erro ao criar nota' },
         { status: 500 }
@@ -274,7 +275,7 @@ export async function POST(
     }, { status: 201 })
 
   } catch (error) {
-    console.error('Erro inesperado ao criar nota:', error)
+    logger.error('Erro inesperado ao criar nota:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

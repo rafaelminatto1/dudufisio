@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { whatsappAPI } from '@/lib/integrations/whatsapp-api'
+import { whatsappAPI } from '@/src/lib/integrations/whatsapp-api'
 
 // Mock do fetch global
 global.fetch = vi.fn()

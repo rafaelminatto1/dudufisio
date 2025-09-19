@@ -2,14 +2,15 @@
 
 import { useState, useEffect } from 'react'
 import { Plus, Search, Filter, Heart } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { CreateExerciseModal } from '@/components/exercises/CreateExerciseModal'
-import { ExerciseDetailsModal } from '@/components/exercises/ExerciseDetailsModal'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Button } from '@/src/components/ui/button'
+import { Input } from '@/src/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select'
+import { Badge } from '@/src/components/ui/badge'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { CreateExerciseModal } from '@/src/components/exercises/CreateExerciseModal'
+import { ExerciseDetailsModal } from '@/src/components/exercises/ExerciseDetailsModal'
+import { Skeleton } from '@/src/components/ui/skeleton'
+import logger from '../../lib/logger';
 
 interface Exercise {
   id: string
@@ -105,7 +106,7 @@ export default function ExercisesPage() {
         setTotalPages(data.meta.total_pages)
       }
     } catch (error) {
-      console.error('Erro ao buscar exercícios:', error)
+      logger.error('Erro ao buscar exercícios:', error)
     } finally {
       setLoading(false)
     }

@@ -1,12 +1,13 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Separator } from '@/components/ui/separator'
-import { 
+import { Button } from '@/src/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Badge } from '@/src/components/ui/badge'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/src/components/ui/dialog'
+import { Separator } from '@/src/components/ui/separator'
+import logger from '../../../lib/logger';
+import {
   Video, 
   VideoOff, 
   Mic, 
@@ -88,7 +89,7 @@ export function VideoCallComponent({
       toast.success('Chamada iniciada com sucesso!')
     } catch (error) {
       toast.error('Erro ao iniciar chamada de vídeo')
-      console.error('Erro na inicialização:', error)
+      logger.error('Erro na inicialização:', error)
     }
   }
 
@@ -112,7 +113,7 @@ export function VideoCallComponent({
       
       return canvas.captureStream(30)
     } catch (error) {
-      console.error('Erro ao obter stream:', error)
+      logger.error('Erro ao obter stream:', error)
       throw error
     }
   }
@@ -154,7 +155,7 @@ export function VideoCallComponent({
       }
     } catch (error) {
       toast.error('Erro ao compartilhar tela')
-      console.error('Erro no compartilhamento:', error)
+      logger.error('Erro no compartilhamento:', error)
     }
   }
 
@@ -187,7 +188,7 @@ export function VideoCallComponent({
       onCallEnd?.()
     } catch (error) {
       toast.error('Erro ao finalizar chamada')
-      console.error('Erro ao finalizar:', error)
+      logger.error('Erro ao finalizar:', error)
     }
   }
 

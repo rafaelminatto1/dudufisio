@@ -38,10 +38,10 @@ const SECURITY_CONFIG = {
     // Permissions Policy (controle de recursos sensíveis)
     'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=()',
 
-    // Content Security Policy para dados de saúde
+    // Content Security Policy para dados de saúde (mais restritivo)
     'Content-Security-Policy': [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // Necessário para Next.js
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' data: https: blob:",
       "font-src 'self' https://fonts.gstatic.com",
@@ -260,43 +260,6 @@ function getProtectedRoute(pathname: string): { path: string; resource: string; 
   }) || null
 }
 
-/**
- * Verificar se rota requer autenticação (função auxiliar para compatibilidade)
- */
-function isProtectedRoute(pathname: string): boolean {
-  return getProtectedRoute(pathname) !== null
-}
-
-/**
- * Rate limiting básico para APIs sensíveis
- */
-const rateLimitMap = new Map<string, { count: number; timestamp: number }>()
-
-function checkRateLimit(request: NextRequest): boolean {
-  const clientIP = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
-  const now = Date.now()
-  const windowMs = 60000 // 1 minuto
-  const maxRequests = 100 // 100 requests por minuto
-
-  const clientData = rateLimitMap.get(clientIP)
-
-  if (!clientData) {
-    rateLimitMap.set(clientIP, { count: 1, timestamp: now })
-    return true
-  }
-
-  // Reset contador se janela expirou
-  if (now - clientData.timestamp > windowMs) {
-    rateLimitMap.set(clientIP, { count: 1, timestamp: now })
-    return true
-  }
-
-  // Incrementar contador
-  clientData.count++
-
-  // Verificar limite
-  return clientData.count <= maxRequests
-}
 
 /**
  * Configuração do matcher para otimização

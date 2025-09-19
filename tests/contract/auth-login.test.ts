@@ -6,7 +6,7 @@
 
 import { describe, test, expect, beforeAll, afterAll } from '@jest/testing-library/jest-dom'
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import type { Database } from '@/lib/supabase/database.types'
+import type { Database } from '@/src/lib/supabase/database.types'
 
 // Test data following Brazilian healthcare patterns
 const testUsers = {

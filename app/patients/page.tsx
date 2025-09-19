@@ -3,13 +3,14 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus, Search, Users, Filter, Download } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { CreatePatientDialog } from '@/components/patients/CreatePatientDialog'
-import { useToast } from '@/hooks/use-toast'
+import { Button } from '@/src/components/ui/button'
+import { Input } from '@/src/components/ui/input'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Badge } from '@/src/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select'
+import { CreatePatientDialog } from '@/src/components/patients/CreatePatientDialog'
+import { useToast } from '@/src/hooks/use-toast'
+import logger from '../../lib/logger';
 
 interface Patient {
   id: string
@@ -95,7 +96,7 @@ export default function PatientsPage() {
       })
 
     } catch (error) {
-      console.error('Erro ao carregar pacientes:', error)
+      logger.error('Erro ao carregar pacientes:', error)
       toast({
         title: 'Erro',
         description: error instanceof Error ? error.message : 'Erro ao carregar pacientes',
@@ -136,7 +137,7 @@ export default function PatientsPage() {
       loadPatients() // Recarregar lista
 
     } catch (error) {
-      console.error('Erro ao criar paciente:', error)
+      logger.error('Erro ao criar paciente:', error)
       toast({
         title: 'Erro',
         description: error instanceof Error ? error.message : 'Erro ao criar paciente',

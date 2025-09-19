@@ -1,17 +1,18 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Calendar } from '@/components/ui/calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Button } from '@/src/components/ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select'
+import { Badge } from '@/src/components/ui/badge'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/src/components/ui/tabs'
+import { Calendar } from '@/src/components/ui/calendar'
+import { Popover, PopoverContent, PopoverTrigger } from '@/src/components/ui/popover'
 import { CalendarIcon, Download, Filter, TrendingUp, TrendingDown, Users, Calendar as CalendarSchedule, Activity, DollarSign, Clock, Target } from 'lucide-react'
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart } from 'recharts'
 import { format } from 'date-fns'
 import { pt } from 'date-fns/locale'
+import logger from '../../../lib/logger';
 
 interface DashboardMetrics {
   totalPatients: number
@@ -152,7 +153,7 @@ export default function AdminDashboard() {
       setMetrics(mockMetrics)
       setChartData(mockChartData)
     } catch (error) {
-      console.error('Erro ao buscar dados do dashboard:', error)
+      logger.error('Erro ao buscar dados do dashboard:', error)
     } finally {
       setLoading(false)
     }

@@ -1,12 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Separator } from '@/components/ui/separator'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/src/components/ui/card'
+import { Button } from '@/src/components/ui/button'
+import { Badge } from '@/src/components/ui/badge'
+import { Progress } from '@/src/components/ui/progress'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/src/components/ui/tabs'
+import { Separator } from '@/src/components/ui/separator'
+import logger from '../../../lib/logger';
 import {
   Play,
   CheckCircle,
@@ -20,8 +21,8 @@ import {
   Activity,
   TrendingUp
 } from 'lucide-react'
-import { ExerciseExecutionModal } from '@/components/patient-portal/ExerciseExecutionModal'
-import { Skeleton } from '@/components/ui/skeleton'
+import { ExerciseExecutionModal } from '@/src/components/patient-portal/ExerciseExecutionModal'
+import { Skeleton } from '@/src/components/ui/skeleton'
 
 interface PatientPrescription {
   id: string
@@ -101,7 +102,7 @@ export default function PatientExercisesPage() {
         setPrescriptions(data.data.filter((p: PatientPrescription) => p.status === 'active'))
       }
     } catch (error) {
-      console.error('Erro ao buscar prescrições:', error)
+      logger.error('Erro ao buscar prescrições:', error)
     } finally {
       setLoading(false)
     }
@@ -117,7 +118,7 @@ export default function PatientExercisesPage() {
         setExerciseLogs(data.data)
       }
     } catch (error) {
-      console.error('Erro ao buscar logs de exercícios:', error)
+      logger.error('Erro ao buscar logs de exercícios:', error)
     }
   }
 
@@ -543,7 +544,7 @@ export default function PatientExercisesPage() {
           onOpenChange={(open) => !open && setSelectedExercise(null)}
           onComplete={(logData) => {
             // TODO: Save exercise log
-            console.log('Exercise completed:', logData)
+            logger.info('Exercise completed:', logData)
             setSelectedExercise(null)
             fetchExerciseLogs() // Refresh logs
           }}

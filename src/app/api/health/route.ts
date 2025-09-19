@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { whatsappAPI } from '@/lib/integrations/whatsapp-api'
+import { whatsappAPI } from '@/src/lib/integrations/whatsapp-api'
 
 export async function GET(request: NextRequest) {
   try {

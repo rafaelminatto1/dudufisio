@@ -8,9 +8,10 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { getCurrentUser, hasPermission } from '@/lib/auth/server'
-import { logAuditEvent } from '@/lib/audit/server'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { getCurrentUser, hasPermission } from '@/src/lib/auth/server'
+import { logAuditEvent } from '@/src/lib/audit/server'
+import logger from '../../../../lib/logger';
 
 // Schema for report generation request
 const generateReportSchema = z.object({
@@ -131,7 +132,7 @@ export async function POST(request: NextRequest) {
           })
 
         if (patientError) {
-          console.error('Erro ao gerar dados do relatório de paciente:', patientError)
+          logger.error('Erro ao gerar dados do relatório de paciente:', patientError)
           return NextResponse.json(
             { error: 'Erro ao gerar dados do relatório' },
             { status: 500 }
@@ -156,7 +157,7 @@ export async function POST(request: NextRequest) {
           })
 
         if (sessionError) {
-          console.error('Erro ao gerar dados do relatório de sessão:', sessionError)
+          logger.error('Erro ao gerar dados do relatório de sessão:', sessionError)
           return NextResponse.json(
             { error: 'Erro ao gerar dados do relatório' },
             { status: 500 }
@@ -183,7 +184,7 @@ export async function POST(request: NextRequest) {
           })
 
         if (progressError) {
-          console.error('Erro ao gerar dados do relatório de progresso:', progressError)
+          logger.error('Erro ao gerar dados do relatório de progresso:', progressError)
           return NextResponse.json(
             { error: 'Erro ao gerar dados do relatório' },
             { status: 500 }
@@ -220,7 +221,7 @@ export async function POST(request: NextRequest) {
         })
 
       if (uploadError) {
-        console.error('Erro ao fazer upload do relatório:', uploadError)
+        logger.error('Erro ao fazer upload do relatório:', uploadError)
         return NextResponse.json(
           { error: 'Erro ao salvar relatório' },
           { status: 500 }
@@ -253,7 +254,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (saveError) {
-      console.error('Erro ao salvar registro do relatório:', saveError)
+      logger.error('Erro ao salvar registro do relatório:', saveError)
       return NextResponse.json(
         { error: 'Erro ao salvar relatório' },
         { status: 500 }
@@ -292,7 +293,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Erro inesperado ao gerar relatório:', error)
+    logger.error('Erro inesperado ao gerar relatório:', error)
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(

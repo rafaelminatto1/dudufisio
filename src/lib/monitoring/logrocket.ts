@@ -1,3 +1,5 @@
+import logger from '../../../lib/logger';
+
 /**
  * Configuração do LogRocket para monitoramento de sessões e analytics
  */
@@ -91,10 +93,10 @@ export function initLogRocket() {
       }
     }
     
-    console.log('LogRocket initialized successfully')
+    logger.info('LogRocket initialized successfully')
     
   } catch (error) {
-    console.error('Failed to initialize LogRocket:', error)
+    logger.error('Failed to initialize LogRocket:', error)
   }
 }
 

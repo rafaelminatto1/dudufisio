@@ -5,9 +5,10 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { getCurrentUser, hasPermission } from '@/lib/auth/server'
-import { logAuditEvent } from '@/lib/audit/server'
+import { createServerClient } from '@/src/lib/supabase/server'
+import { getCurrentUser, hasPermission } from '@/src/lib/auth/server'
+import { logAuditEvent } from '@/src/lib/audit/server'
+import logger from '../../../../lib/logger';
 
 // Force Node.js runtime to avoid Edge Runtime issues with Supabase
 export const runtime = 'nodejs'
@@ -158,7 +159,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (updateError) {
-      console.error('Error updating appointment:', updateError)
+      logger.error('Error updating appointment:', updateError)
       return NextResponse.json(
         { error: 'Erro ao reagendar' },
         { status: 500 }
@@ -211,7 +212,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Unexpected error in rescheduling:', error)
+    logger.error('Unexpected error in rescheduling:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -416,7 +417,7 @@ async function sendRescheduleNotification(
 ): Promise<void> {
   // Implementation would depend on your notification service
   // This is a placeholder for the notification logic
-  console.log('Sending reschedule notification:', {
+  logger.info('Sending reschedule notification:', {
     patient: patient.name,
     original: `${originalAppointment.appointment_date} ${originalAppointment.start_time}`,
     new: `${newAppointment.appointment_date} ${newAppointment.start_time}`,
