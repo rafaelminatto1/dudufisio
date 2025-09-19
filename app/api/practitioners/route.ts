@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { logger } from '@/lib/logger'
-import { getCurrentUser } from '@/lib/auth/session'
-import { hasPermission } from '@/lib/rbac'
 
 // Schema for practitioner search parameters
 const searchPractitionersSchema = z.object({
