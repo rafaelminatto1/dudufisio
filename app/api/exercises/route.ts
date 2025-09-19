@@ -189,11 +189,7 @@ export async function GET(request: NextRequest) {
  * POST /api/exercises
  * Create new exercise
  */
-<<<<<<< Current (Your changes)
-export async function POST() {
-=======
 export async function POST(_request: NextRequest) {
->>>>>>> Incoming (Background Agent changes)
   // Temporariamente desabilitado até a tabela exercises ser criada
   return NextResponse.json(
     { error: 'Funcionalidade temporariamente desabilitada - tabela exercises não disponível' },

@@ -6,9 +6,6 @@
     "app/api/**/*.ts": {
       "maxDuration": 30
     }
-<<<<<<< Current (Your changes)
-  }
-=======
   },
   "rewrites": [
     {
@@ -40,5 +37,4 @@
     }
   ],
   "regions": ["gru1"]
->>>>>>> Incoming (Background Agent changes)
 }
