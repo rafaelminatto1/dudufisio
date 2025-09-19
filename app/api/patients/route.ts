@@ -318,6 +318,8 @@ export async function POST(request: NextRequest) {
     }
 
     // 7. Log consent history
+    // TODO: Re-enable after patient_consent_history table is created in database
+    /*
     if (validatedData.consent_lgpd) {
       await supabase
         .from('patient_consent_history')
@@ -331,6 +333,7 @@ export async function POST(request: NextRequest) {
           granted_by: currentUser.id
         })
     }
+    */
 
     // 8. Log audit event
     await logAuditEvent({
