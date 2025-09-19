@@ -132,7 +132,7 @@ class Logger {
     const formatted = this.format('debug', message, context);
     
     if (this.isDevelopment) {
-      logger.debug('🐛', message, context || '');
+      console.debug('🐛', message, context || '');
     }
     
     this.sendToLogService(formatted);
@@ -147,7 +147,7 @@ class Logger {
     const formatted = this.format('info', message, context);
     
     if (this.isDevelopment) {
-      logger.info('ℹ️', message, context || '');
+      console.info('ℹ️', message, context || '');
     }
     
     this.sendToLogService(formatted);
@@ -162,7 +162,7 @@ class Logger {
     const formatted = this.format('warn', message, context);
     
     if (this.isDevelopment) {
-      logger.warn('⚠️', message, context || '');
+      console.warn('⚠️', message, context || '');
     }
     
     this.sendToLogService(formatted);
@@ -178,7 +178,7 @@ class Logger {
     const formatted = this.format('error', message, context, errorObj);
     
     if (this.isDevelopment) {
-      logger.error('❌', message, errorObj, context || '');
+      console.error('❌', message, errorObj, context || '');
     }
     
     this.sendToLogService(formatted);
@@ -194,7 +194,7 @@ class Logger {
     const formatted = this.format('fatal', message, context, errorObj);
     
     // Sempre loga erros fatais no console
-    logger.error('💀 FATAL:', message, errorObj, context || '');
+    console.error('💀 FATAL:', message, errorObj, context || '');
     
     this.sendToLogService(formatted);
     
@@ -253,7 +253,7 @@ class Logger {
     const formatted = JSON.stringify(auditLog);
     
     if (this.isDevelopment) {
-      logger.info('📝 AUDIT:', auditLog);
+      console.info('📝 AUDIT:', auditLog);
     }
     
     // Em produção, salvar no banco de dados

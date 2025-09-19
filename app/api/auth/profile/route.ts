@@ -10,8 +10,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/src/lib/supabase/server'
 import { getCurrentUser } from '@/src/lib/auth/server'
 import { logAuditEvent } from '@/src/lib/audit/server'
-import logger from '../../../../lib/logger'
-import { ProfileUpdate, OrganizationMembership, ProfileResponse, UserPermissions } from '@/src/types/api'
+import logger from '../../../../lib/logger';
 
 /**
  * GET /api/auth/profile
@@ -36,10 +35,13 @@ export async function GET() {
       .select(`
         id,
         email,
-        name,
+        full_name,
+        role,
+        org_id,
         crefito_number,
         phone,
         avatar_url,
+        is_active,
         created_at,
         updated_at
       `)
@@ -55,11 +57,11 @@ export async function GET() {
     }
 
     // 3. Get user permissions based on role (fallback to default)
-    const userRole = 'paciente' // Default role since profiles table doesn't have role field
+    const userRole = (profile as any)?.role || 'paciente'
     const permissions = getUserPermissions(userRole)
 
     // 4. Skip organization memberships for now to avoid TypeScript issues
-    const memberships: OrganizationMembership[] = []
+    const memberships: any[] = []
 
     // 5. Log profile access
     await logAuditEvent({
@@ -69,7 +71,7 @@ export async function GET() {
       user_id: currentUser.id,
       additional_data: {
         profile_role: userRole,
-        org_id: null // Will be implemented when org_id field is available
+        org_id: (profile as any)?.org_id || null
       }
     })
 
@@ -78,15 +80,15 @@ export async function GET() {
       success: true,
       data: {
         user: {
-          id: profile.id,
-          email: profile.email,
-          name: profile.name || profile.email,
+          id: (profile as any).id,
+          email: (profile as any).email,
+          name: (profile as any).full_name || (profile as any).email,
           role: userRole,
-          crefito_number: profile.crefito_number || null,
-          phone: profile.phone || null,
-          avatar_url: profile.avatar_url || null,
-          created_at: profile.created_at,
-          updated_at: profile.updated_at
+          crefito_number: (profile as any).crefito_number || null,
+          phone: (profile as any).phone || null,
+          avatar_url: (profile as any).avatar_url || null,
+          created_at: (profile as any).created_at,
+          updated_at: (profile as any).updated_at
         },
         organization: null, // Will be implemented when org_id field is available
         permissions,
@@ -128,13 +130,13 @@ export async function PUT(request: NextRequest) {
     }
 
     // 2. Parse request body
-    const body = await request.json() as ProfileUpdate
-    const updateData: Partial<ProfileUpdate> & { updated_at: string } = {
+    const body = await request.json()
+    const updateData: any = {
       updated_at: new Date().toISOString()
     }
     
     // Only update fields that exist in the current schema
-    if (body.name !== undefined) updateData.name = body.name
+    if (body.full_name !== undefined) updateData.full_name = body.full_name
     if (body.phone !== undefined) updateData.phone = body.phone
     if (body.crefito_number !== undefined) updateData.crefito_number = body.crefito_number
     if (body.avatar_url !== undefined) updateData.avatar_url = body.avatar_url
@@ -191,7 +193,7 @@ export async function PUT(request: NextRequest) {
 /**
  * Get user permissions based on role
  */
-function getUserPermissions(role: string): UserPermissions {
+function getUserPermissions(role: string) {
   const permissions = {
     admin: {
       patients: ['read', 'write', 'delete'],

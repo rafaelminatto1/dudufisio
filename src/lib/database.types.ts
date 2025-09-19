@@ -94,6 +94,69 @@ export type Database = {
           },
         ]
       }
+      data_deletion_requests: {
+        Row: {
+          id: string
+          user_id: string | null
+          request_type: string
+          status: string
+          reason: string
+          data_types: Json | null
+          requested_at: string | null
+          processed_at: string | null
+          processed_by: string | null
+          confirmation_required: boolean | null
+          notes: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          request_type: string
+          status?: string
+          reason: string
+          data_types?: Json | null
+          requested_at?: string | null
+          processed_at?: string | null
+          processed_by?: string | null
+          confirmation_required?: boolean | null
+          notes?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          request_type?: string
+          status?: string
+          reason?: string
+          data_types?: Json | null
+          requested_at?: string | null
+          processed_at?: string | null
+          processed_by?: string | null
+          confirmation_required?: boolean | null
+          notes?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_deletion_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "data_deletion_requests_processed_by_fkey"
+            columns: ["processed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       org_memberships: {
         Row: {
           created_at: string | null

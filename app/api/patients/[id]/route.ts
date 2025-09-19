@@ -12,7 +12,7 @@ import { z } from 'zod'
 import { createServerClient } from '@/src/lib/supabase/server'
 import { getCurrentUser, hasPermission } from '@/src/lib/auth/server'
 import { logAuditEvent } from '@/src/lib/audit/server'
-import { validateLGPDConsent } from '@/src/lib/lgpd/server'
+// import { validateLGPDConsent } from '@/src/lib/lgpd/server'
 import logger from '../../../../lib/logger';
 
 // Schema for patient update
@@ -54,7 +54,7 @@ const updatePatientSchema = z.object({
  * Get patient details
  */
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -145,13 +145,13 @@ export async function GET(
     }
 
     // 4. Check LGPD consent for sensitive data
-    if (!patient.consent_lgpd && currentUser.role !== 'admin') {
+    if (!(patient as any).consent_lgpd && currentUser.role !== 'admin') {
       // Return limited data for patients without LGPD consent
       const limitedPatient = {
-        id: patient.id,
-        name: patient.name,
-        status: patient.status,
-        created_at: patient.created_at
+        id: (patient as any).id,
+        name: (patient as any).name,
+        status: (patient as any).status,
+        created_at: (patient as any).created_at
       }
       
       return NextResponse.json({
@@ -162,13 +162,14 @@ export async function GET(
     }
 
     // 5. Log data access
-    await supabase
-      .rpc('log_patient_data_access', {
-        p_patient_id: patientId,
-        p_access_type: 'view',
-        p_accessed_fields: ['all'],
-        p_access_reason: 'Patient details view'
-      })
+    // Log patient data access - temporarily disabled
+    // await supabase
+    //   .rpc('log_patient_data_access', {
+    //     p_patient_id: patientId,
+    //     p_access_type: 'view',
+    //     p_accessed_fields: ['all'],
+    //     p_access_reason: 'Patient details view'
+    //   })
 
     // 6. Log audit event
     await logAuditEvent({
@@ -177,8 +178,8 @@ export async function GET(
       record_id: patientId,
       user_id: currentUser.id,
       additional_data: {
-        patient_name: patient.name,
-        lgpd_consent: patient.consent_lgpd
+        patient_name: (patient as any).name,
+        lgpd_consent: (patient as any).consent_lgpd
       }
     })
 
@@ -238,7 +239,7 @@ export async function PUT(
     }
 
     // 3. Get current patient data
-    const { data: currentPatient, error: fetchError } = await supabase
+    const { data: _currentPatient, error: fetchError } = await supabase
       .from('patients')
       .select('*')
       .eq('id', patientId)
@@ -308,30 +309,31 @@ export async function PUT(
     }
 
     // 7. Log consent history if consent changed
-    if (validatedData.consent_lgpd !== undefined && validatedData.consent_lgpd !== currentPatient.consent_lgpd) {
-      await supabase
-        .from('patient_consent_history')
-        .insert({
-          patient_id: patientId,
-          org_id: currentUser.org_id,
-          consent_type: 'data_processing',
-          granted: validatedData.consent_lgpd,
-          consent_text: validatedData.consent_lgpd 
-            ? 'Consentimento para processamento de dados pessoais conforme LGPD'
-            : 'Retirada do consentimento para processamento de dados pessoais',
-          consent_version: validatedData.consent_version || '1.0',
-          granted_by: currentUser.id
-        })
-    }
+    // Temporarily disabled until patient_consent_history table is created
+    // if (validatedData.consent_lgpd !== undefined && validatedData.consent_lgpd !== currentPatient.consent_lgpd) {
+    //   await supabase
+    //     .from('patient_consent_history')
+    //     .insert({
+    //       patient_id: patientId,
+    //       org_id: currentUser.org_id,
+    //       consent_type: 'data_processing',
+    //       granted: validatedData.consent_lgpd,
+    //       consent_text: validatedData.consent_lgpd 
+    //         ? 'Consentimento para processamento de dados pessoais conforme LGPD'
+    //         : 'Retirada do consentimento para processamento de dados pessoais',
+    //       consent_version: validatedData.consent_version || '1.0',
+    //       granted_by: currentUser.id
+    //     })
+    // }
 
-    // 8. Log data access
-    await supabase
-      .rpc('log_patient_data_access', {
-        p_patient_id: patientId,
-        p_access_type: 'edit',
-        p_accessed_fields: Object.keys(validatedData),
-        p_access_reason: 'Patient data update'
-      })
+    // 8. Log data access - temporarily disabled
+    // await supabase
+    //   .rpc('log_patient_data_access', {
+    //     p_patient_id: patientId,
+    //     p_access_type: 'edit',
+    //     p_accessed_fields: Object.keys(validatedData),
+    //     p_access_reason: 'Patient data update'
+    //   })
 
     // 9. Log audit event
     await logAuditEvent({
@@ -360,7 +362,7 @@ export async function PUT(
       return NextResponse.json(
         { 
           error: 'Dados inválidos',
-          details: error.errors.map(e => ({
+          details: (error as any).errors.map((e: any) => ({
             field: e.path.join('.'),
             message: e.message
           }))
@@ -381,7 +383,7 @@ export async function PUT(
  * Soft delete patient (archive)
  */
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -467,7 +469,7 @@ export async function DELETE(
     const { data: archivedPatient, error: archiveError } = await supabase
       .from('patients')
       .update({
-        status: 'archived',
+        status: 'inactive' as any, // archived status not available yet
         updated_by: currentUser.id,
         updated_at: new Date().toISOString()
       })

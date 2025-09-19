@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const profile = profiles[0]
+    const profile = profiles[0] as any
 
     if (!profile) {
       logger.error('Perfil do usuário não encontrado')
@@ -121,43 +121,10 @@ export async function POST(request: NextRequest) {
     const activeMemberships = memberships
 
     // 4. Log successful login
-    if (false) { // Disabled user check for now
-      await logAuditEvent({
-        table_name: 'auth',
-        operation: 'LOGIN_DENIED_INACTIVE',
-        record_id: profile?.id || '',
-        user_id: profile?.id || '',
-        additional_data: {
-          email: validatedData.email,
-          reason: 'user_inactive'
-        }
-      })
-
-      return NextResponse.json(
-        { error: 'Usuário inativo. Entre em contato com o administrador.' },
-        { status: 403 }
-      )
-    }
+    // User activity check removed for now - can be re-enabled later if needed
 
     // 5. Skip org check for now
-    if (false) { // Org check disabled
-      await logAuditEvent({
-        table_name: 'auth',
-        operation: 'LOGIN_DENIED_ORG_INACTIVE',
-        record_id: profile?.id || '',
-        user_id: profile?.id || '',
-        additional_data: {
-          email: validatedData.email,
-          org_id: null,
-          org_status: null
-        }
-      })
-
-      return NextResponse.json(
-        { error: 'Organização inativa. Entre em contato com o administrador.' },
-        { status: 403 }
-      )
-    }
+    // Organization check removed for now - can be re-enabled later if needed
 
     // 6. Skip last login update for now
     // await supabase
