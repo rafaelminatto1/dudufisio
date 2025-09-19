@@ -1,16 +1,19 @@
 {
   "status": "commited",
-  "type": "frontend",
+  "type": "backend",
   "scope": "codebase",
   "localEndpoint": "http://localhost:3000",
+  "backendAuthType": "basic token",
+  "backendUsername": "admin@clinicafisio.com.br",
+  "backendPassword": "AdminTeste123!",
   "executionArgs": {
     "projectName": "activity",
     "projectPath": "/home/rafael/Documentos/projetos/activity",
     "testIds": [],
-    "additionalInstruction": "Execute comprehensive frontend tests for the FisioFlow physiotherapy management system, focusing on authentication, patient management, body mapping, appointment scheduling, and dashboard functionality. Test all user roles (Admin, Fisioterapeuta, Estagiário, Paciente) and ensure LGPD compliance features work correctly.",
+    "additionalInstruction": "Execute todos os testes gerados para validar a funcionalidade do sistema FisioFlow",
     "envs": {
       "API_KEY": "sk-user-a8gtX33nCfJJFVROyJfnjR_oA9et6uE_m35XXVKC6oWBoddZ9cnG4nxZC50vibGwcFOnhiv3HYau0Ce6ZiliGEUsD0qoviKHGvSk2YUMvbv0mSINfdMIUwXId8V5qRAZVNY"
     }
   },
-  "proxy": "http://2f07277e-1efe-458f-9c33-2e71126d3b4f:sYSKLQDSei8YnPOGJFzCaM1mMMSMHhKz@tun.testsprite.com:8080"
+  "proxy": "http://580cca71-ed8b-44f0-8bb4-afe5925b631c:kjOohl7BL8DeXWbQgONBhKqQTxVzhc6K@tun.testsprite.com:8080"
 }

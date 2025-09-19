@@ -2,15 +2,15 @@
  * Testes unitários para o sistema de notificações
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals'
 import { pushNotificationService, NotificationType } from '@/src/lib/notifications/push-service'
 
 // Mock do Service Worker
 Object.defineProperty(navigator, 'serviceWorker', {
   value: {
-    register: vi.fn().mockResolvedValue({
+    register: jest.fn().mockResolvedValue({
       pushManager: {
-        subscribe: vi.fn().mockResolvedValue({
+        subscribe: jest.fn().mockResolvedValue({
           endpoint: 'https://fcm.googleapis.com/fcm/send/test',
           keys: {
             p256dh: 'test-p256dh-key',
@@ -72,7 +72,7 @@ describe('Push Notification Service', () => {
     it('deve criar subscription push com sucesso', async () => {
       const mockRegistration = {
         pushManager: {
-          subscribe: vi.fn().mockResolvedValue({
+          subscribe: jest.fn().mockResolvedValue({
             endpoint: 'https://fcm.googleapis.com/fcm/send/test',
             keys: {
               p256dh: 'test-p256dh-key',

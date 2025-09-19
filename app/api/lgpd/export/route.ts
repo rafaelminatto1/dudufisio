@@ -138,7 +138,7 @@ export async function POST(request: NextRequest) {
  * GET /api/lgpd/export
  * List user's export requests
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const supabase = await createServerClient()
 

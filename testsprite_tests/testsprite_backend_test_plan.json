@@ -1,0 +1,52 @@
+[
+  {
+    "id": "TC001",
+    "title": "authentication api login endpoint",
+    "description": "Test the /api/auth/login POST endpoint for successful login with valid credentials, invalid credentials handling, and access denial scenarios."
+  },
+  {
+    "id": "TC002",
+    "title": "authentication api profile endpoint",
+    "description": "Verify the /api/auth/profile GET endpoint returns the authenticated user's profile and handles unauthenticated access properly."
+  },
+  {
+    "id": "TC003",
+    "title": "patients management api list patients endpoint",
+    "description": "Test the /api/patients GET endpoint to list patients with various filters, pagination, and ensure correct response structure."
+  },
+  {
+    "id": "TC004",
+    "title": "patients management api create patient endpoint",
+    "description": "Validate the /api/patients POST endpoint for creating a new patient with required fields, CPF validation, and duplicate prevention."
+  },
+  {
+    "id": "TC005",
+    "title": "patients management api get patient details endpoint",
+    "description": "Test the /api/patients/{id} GET endpoint to retrieve detailed information of a specific patient by ID."
+  },
+  {
+    "id": "TC006",
+    "title": "patients management api update patient endpoint",
+    "description": "Verify the /api/patients/{id} PUT endpoint updates patient information correctly and handles invalid data."
+  },
+  {
+    "id": "TC007",
+    "title": "patients management api archive patient endpoint",
+    "description": "Test the /api/patients/{id} DELETE endpoint to perform a soft delete (archive) of a patient and verify the patient is no longer active."
+  },
+  {
+    "id": "TC008",
+    "title": "appointments management api create appointment endpoint",
+    "description": "Validate the /api/appointments POST endpoint for creating new appointments, ensuring conflict prevention and required fields."
+  },
+  {
+    "id": "TC009",
+    "title": "body mapping api register pain point endpoint",
+    "description": "Test the /api/sessions/{session_id}/pain-points POST endpoint to register new pain points with required fields and valid intensity range."
+  },
+  {
+    "id": "TC010",
+    "title": "lgpd compliance api export data endpoint",
+    "description": "Verify the /api/lgpd/export POST endpoint exports personal data in requested formats and handles missing or invalid patient IDs."
+  }
+]

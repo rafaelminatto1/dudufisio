@@ -1,8 +1,10 @@
 import * as Sentry from '@sentry/nextjs';
 
-Sentry.init({
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  environment: process.env.NODE_ENV,
+// Só inicializa o Sentry se o DSN estiver configurado
+if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    environment: process.env.NODE_ENV,
   
   // Performance Monitoring
   tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
@@ -16,10 +18,8 @@ Sentry.init({
   
   // Integrations
   integrations: [
-    new Sentry.Replay({
-      maskAllText: true,
-      blockAllMedia: true,
-    }),
+    // Replay integration is not available in @sentry/nextjs
+    // Use @sentry/replay if needed
   ],
   
   // Before send hook to filter sensitive data
@@ -46,4 +46,5 @@ Sentry.init({
     }
     return event;
   },
-});
+  });
+}

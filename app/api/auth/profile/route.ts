@@ -16,7 +16,7 @@ import logger from '../../../../lib/logger';
  * GET /api/auth/profile
  * Get current user profile information
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const supabase = await createServerClient()
     

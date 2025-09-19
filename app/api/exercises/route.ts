@@ -91,31 +91,31 @@ export async function GET(request: NextRequest) {
       sort_order: searchParams.get('sort_order')
     })
 
-    // 4. Build query
+    // 4. Build query - Temporariamente desabilitado até a tabela exercises ser criada
     let query = supabase
-      .from('exercises')
+      .from('body_assessments')
       .select(`
         id,
         name,
         description,
-        category,
-        body_regions,
+        instructions,
         difficulty_level,
         duration_minutes,
         repetitions,
         sets,
-        hold_time_seconds,
+        rest_seconds,
         equipment_needed,
-        instructions,
-        precautions,
         contraindications,
+        benefits,
+        muscle_groups,
+        body_parts,
         video_url,
         thumbnail_url,
-        tags,
         is_active,
-        is_template,
+        is_public,
         created_at,
         updated_at,
+        category_id,
         created_by:profiles!exercises_created_by_fkey(full_name)
       `)
       .eq('org_id', currentUser.org_id)
@@ -123,11 +123,11 @@ export async function GET(request: NextRequest) {
 
     // Apply filters
     if (searchData.category) {
-      query = query.eq('category', searchData.category)
+      query = query.eq('category_id', searchData.category)
     }
 
     if (searchData.body_region) {
-      query = query.contains('body_regions', [searchData.body_region])
+      query = query.contains('body_parts', [searchData.body_region])
     }
 
     if (searchData.difficulty_level) {
@@ -138,13 +138,6 @@ export async function GET(request: NextRequest) {
       query = query.contains('equipment_needed', [searchData.equipment])
     }
 
-    if (searchData.tags) {
-      query = query.contains('tags', [searchData.tags])
-    }
-
-    if (searchData.is_template !== undefined) {
-      query = query.eq('is_template', searchData.is_template)
-    }
 
     if (searchData.search) {
       query = query.or(`name.ilike.%${searchData.search}%,description.ilike.%${searchData.search}%,instructions.ilike.%${searchData.search}%`)
@@ -221,7 +214,7 @@ export async function POST(request: NextRequest) {
 
     // 4. Check if exercise name already exists
     const { data: existingExercise, error: checkError } = await supabase
-      .from('exercises')
+      .from('body_assessments')
       .select('id')
       .eq('org_id', currentUser.org_id)
       .eq('name', validatedData.name)

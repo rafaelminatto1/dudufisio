@@ -2,7 +2,7 @@
  * Testes unitários para o sistema de logging
  */
 
-import logger from '@/src/lib/logger';
+import logger from '../../lib/logger';
 
 // Mock do console
 const mockConsole = {

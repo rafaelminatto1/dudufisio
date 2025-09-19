@@ -211,7 +211,7 @@ export async function PATCH(
           p_practitioner_id: currentAppointment.practitioner_id,
           p_appointment_date: newDate,
           p_start_time: newTime,
-          p_end_time: `${parseInt(newTime.split(':')[0]) + 1}:${newTime.split(':')[1]}:00`,
+          p_end_time: newTime ? `${parseInt(newTime.split(':')[0] || '0') + 1}:${newTime.split(':')[1] || '00'}:00` : '00:00:00',
           p_exclude_appointment_id: appointmentId
         })
 

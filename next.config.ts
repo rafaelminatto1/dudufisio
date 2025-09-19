@@ -1,5 +1,4 @@
 import type { NextConfig } from "next";
-import { withSentryConfig } from '@sentry/nextjs';
 
 const nextConfig: NextConfig = {
   // Configurações de produção mais rigorosas
@@ -9,7 +8,7 @@ const nextConfig: NextConfig = {
   },
   typescript: {
     // Em produção, falhar build em caso de erros
-    ignoreBuildErrors: process.env.NODE_ENV === 'development',
+    ignoreBuildErrors: false,
   },
   
   // Otimizações de performance
@@ -67,7 +66,11 @@ const nextConfig: NextConfig = {
   compress: true,
 };
 
-// Sentry configuration
+// Sentry configuration - Temporariamente desabilitado para resolver problema de DNS
+// Para reabilitar, descomente as linhas abaixo e configure as variáveis de ambiente
+/*
+import { withSentryConfig } from '@sentry/nextjs';
+
 const sentryWebpackPluginOptions = {
   // Additional config options for the Sentry webpack plugin
   silent: true, // Suppresses source map uploading logs during build
@@ -81,3 +84,6 @@ const sentryWebpackPluginOptions = {
 };
 
 export default withSentryConfig(nextConfig, sentryWebpackPluginOptions);
+*/
+
+export default nextConfig;

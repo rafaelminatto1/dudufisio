@@ -36,7 +36,7 @@ export async function PUT(
     const body = await request.json()
     const validatedData = updateNotesSchema.parse(body)
 
-    const { data: existingAppointment, error: fetchError } = await supabase
+    const { error: fetchError } = await supabase
       .from('appointments')
       .select('id, org_id')
       .eq('id', appointmentId)

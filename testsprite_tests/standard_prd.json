@@ -1,238 +1,995 @@
 {
   "meta": {
-    "project": "Sistema FisioFlow - Gestão Completa de Clínicas de Fisioterapia",
+    "project": "FisioFlow - Gestão Completa de Clínicas de Fisioterapia",
     "date": "2025-09-13",
-    "prepared_by": "Software Development Manager"
+    "prepared_by": "Equipe de Desenvolvimento FisioFlow"
   },
-  "product_overview": "FisioFlow é uma plataforma digital abrangente para gestão de clínicas de fisioterapia, oferecendo funcionalidades robustas para atendimento de pacientes, agendamento de consultas, mapeamento corporal interativo, prescrição de exercícios e geração de relatórios clínicos, tudo em conformidade com a LGPD e regulamentações médicas brasileiras.",
+  "product_overview": "FisioFlow é uma plataforma digital abrangente para a gestão de clínicas de fisioterapia, oferecendo funcionalidades integradas para controle de pacientes, agendamento, mapeamento corporal, documentação clínica, prescrição de exercícios, gestão financeira, relatórios e conformidade com LGPD e regulamentações brasileiras.",
   "core_goals": [
-    "Digitalizar e otimizar a gestão de clínicas de fisioterapia para maior eficiência e organização.",
-    "Melhorar a experiência do paciente com acompanhamento detalhado e prescrição personalizada.",
-    "Garantir conformidade plena com LGPD e normas regulatórias do Conselho Federal de Medicina (CFM).",
-    "Fornecer dashboards personalizados de acordo com o papel do usuário para facilitar o acesso às funcionalidades.",
-    "Implementar um sistema seguro de autenticação e controle de acesso baseado em papéis (RBAC)."
+    "Digitalizar e otimizar a gestão de clínicas de fisioterapia com funcionalidades específicas para o setor.",
+    "Melhorar a experiência do paciente e a eficiência do profissional através de interfaces intuitivas e fluxos de trabalho padronizados.",
+    "Garantir a conformidade total com a Lei Geral de Proteção de Dados (LGPD) e regulamentações do Conselho Federal de Medicina (CFM) para dados médicos.",
+    "Fornecer relatórios analíticos e dashboards para apoio à decisão clínica e administrativa.",
+    "Implementar segurança robusta, controle de acesso baseado em funções e trilhas de auditoria abrangentes."
   ],
   "key_features": [
-    "Sistema de autenticação completo com suporte a múltiplos métodos (email/senha, Google OAuth, Magic Link) e controle de acesso baseado em papéis (Admin, Fisioterapeuta, Estagiário, Paciente).",
-    "Gestão de pacientes com CRUD, validação de CPF, upload seguro de fotos, histórico médico eletrônico e conformidade com LGPD.",
-    "Sistema interativo de mapeamento corporal em SVG para registro de pontos de dor com escala graduada e timeline de evolução.",
-    "Agendamento de consultas com calendário integrado, prevenção de conflitos, lista de espera e notificações automáticas.",
-    "Documentação detalhada das sessões de fisioterapia incluindo níveis de dor, procedimentos e prescrição de exercícios.",
-    "Biblioteca completa de exercícios categorizada por região corporal e tipo, com vídeos demonstrativos e níveis de dificuldade.",
-    "Prescrição personalizada de exercícios com acompanhamento pelo portal do paciente e relatório de aderência.",
-    "Dashboards específicos para cada papel de usuário com indicadores chave de desempenho e métricas analíticas.",
-    "Relatórios clínicos e financeiros personalizáveis com exportação em PDF e formatos profissionais.",
-    "Sistema robusto de segurança de dados, criptografia, trilhas de auditoria e backup automatizado.",
-    "Componentes UI acessíveis e otimizados para o mercado brasileiro usando Radix UI e Tailwind CSS."
+    "Sistema de autenticação seguro com controle de acesso baseado em funções (RBAC).",
+    "Gestão completa de pacientes com cadastro validado e upload seguro de fotos.",
+    "Mapeamento corporal interativo com registro detalhado de pontos de dor e evolução visual.",
+    "Sistema avançado de agendamento com calendário interativo, prevenção de conflitos, lista de espera e notificações automáticas.",
+    "Documentação detalhada de sessões clínicas com avaliações de dor e planos de tratamento.",
+    "Biblioteca de exercícios fisioterapêuticos categorizada com vídeos, níveis de dificuldade e prescrição personalizada.",
+    "Relatórios clínicos, administrativos e financeiros com templates personalizáveis e exportação em múltiplos formatos.",
+    "Compliance total com LGPD incluindo exportação e exclusão de dados pessoais.",
+    "Dashboard analítico mostrando indicadores-chave de performance e métricas de pacientes e fisioterapeutas.",
+    "Gestão financeira integrada com rastreamento de pagamentos e relatórios de receita."
   ],
   "user_flow_summary": [
-    "Usuário realiza login via email, Google OAuth ou Magic Link e é direcionado ao dashboard correspondente ao seu papel.",
-    "Administrador gerencia convites, permissões e visualiza relatórios gerais do sistema.",
-    "Fisioterapeuta acessa lista de pacientes, cria/edita prontuários, registra pontos de dor no mapa corporal e documenta sessões.",
-    "Estagiário acessa funcionalidades limitadas para documentação e acompanhamento sob supervisão.",
-    "Paciente acessa portal para visualizar planos de tratamento, exercícios prescritos e fornece feedback sobre a execução.",
-    "Usuário agenda consultas via calendário, evita conflitos e recebe lembretes automáticos.",
-    "Fisioterapeuta prescreve exercícios personalizados e acompanha evolução por meio de relatórios e timeline de dor.",
-    "Sistema gera relatórios clinicos e financeiros para administração e tomada de decisão."
+    "O usuário acessa o sistema e realiza login através do módulo de autenticação com RBAC, sendo redirecionado ao dashboard correspondente ao seu perfil.",
+    "O administrador cadastra e gerencia pacientes, utilizando funcionalidade de busca avançada e upload de fotos.",
+    "Fisioterapeutas registram sessões clínicas, avaliam dores, utilizam o mapeamento corporal interativo para anotar pontos de dor e prescrevem exercícios da biblioteca personalizada.",
+    "Usuário agenda, altera ou cancela consultas via calendário, visualizando disponibilidade em tempo real; lista de espera é utilizada para horários bloqueados.",
+    "Relatórios são gerados a partir de dados clínicos, financeiros e administrativos, podendo ser exportados em formatos PDF, Excel ou CSV.",
+    "Pacientes acessam portal para visualizar prescrições de exercícios, acompanhar evolução e enviar feedbacks.",
+    "O sistema mantém conformidade com LGPD permitindo exportação e exclusão segura de dados pessoais mediante solicitação."
   ],
   "validation_criteria": [
-    "Autenticação de usuários funcionando com todos os métodos suportados e controle de acesso RBAC validado.",
-    "Criação, edição, busca e exclusão lógica de prontuários com validação de CPF e upload seguro de fotos.",
-    "Interação com o mapa corporal SVG, registro de pontos de dor com escala correta e timeline exibida.",
-    "Agendamento funcionando sem conflitos, envio de notificações e suporte a lista de espera.",
-    "Registro completo das sessões com níveis de dor, exercícios prescritos e opções de agendamento de retorno.",
-    "Funcionalidades da biblioteca de exercícios acessíveis com busca, filtros e criação de novos exercícios.",
-    "Dashboards exibindo dados corretos conforme o papel do usuário.",
-    "Relatórios gerados e exportados corretamente em formato PDF com informações precisas.",
-    "Sistema em conformidade com LGPD e criptografia dos dados sensíveis implementada.",
-    "Testes unitários, integração e end-to-end com cobertura abrangente e sem falhas críticas."
+    "Autenticação com múltiplas funções e redirecionamento seguro implementados com testes unitários e integrais.",
+    "Cadastro de pacientes valida CPF, evita duplicação e permite upload seguro de imagens com armazenamento no Supabase.",
+    "Mapeamento corporal registra pontos de dor com escalas e anotações, exibindo timeline de evolução corretamente.",
+    "Agendamento previne conflitos, permite lista de espera e envia notificações automáticas, validado por testes end-to-end.",
+    "Sessões clínicas documentam corretamente avaliações de dor e vinculam exercícios e planos de tratamento.",
+    "Biblioteca de exercícios suporta filtros, criação e prescrição personalizada com interface intuitiva.",
+    "Relatórios geram dados precisos conforme critérios, exportando em formatos definidos, testados via automação.",
+    "Funcionalidades LGPD permitem exportação e exclusão de dados, com logs de auditoria de conformidade.",
+    "Dashboard analítico apresenta métricas corretas e atualizadas em tempo real, conferidas via testes de performance.",
+    "Segurança de dados garantida com criptografia, logs imutáveis e backups automatizados conforme políticas definidas."
   ],
   "code_summary": {
     "tech_stack": [
       "TypeScript",
       "Next.js 15.5.3",
       "React 19.1.0",
-      "Tailwind CSS",
       "Supabase",
       "PostgreSQL",
+      "Tailwind CSS",
+      "Radix UI",
       "Zod",
       "React Hook Form",
-      "Radix UI",
-      "Lucide React",
-      "Playwright",
-      "Jest"
+      "Jest",
+      "Playwright"
     ],
     "features": [
       {
-        "name": "Authentication System",
-        "description": "Sistema completo de autenticação com múltiplos métodos (email/senha, Google OAuth, Magic Link) e controle de acesso baseado em papéis (RBAC)",
+        "name": "Authentication API",
+        "description": "Sistema de autenticação com login seguro, perfis de usuário e controle de acesso baseado em funções (RBAC)",
         "files": [
-          "src/lib/auth/auth.ts",
-          "src/lib/auth/client-actions.ts",
-          "src/lib/auth/middleware.ts",
-          "src/lib/auth/rbac.ts",
+          "app/api/auth/login/route.ts",
+          "app/api/auth/profile/route.ts",
           "src/lib/auth/server.ts",
-          "src/lib/auth/types.ts",
-          "src/app/(auth)/login/page.tsx",
-          "src/app/(auth)/register/page.tsx",
-          "src/app/auth/callback/route.ts"
-        ]
+          "src/lib/rbac.ts",
+          "middleware.ts"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "info": {
+            "title": "Authentication API",
+            "version": "1.0.0",
+            "description": "API para autenticação e gerenciamento de usuários"
+          },
+          "paths": {
+            "/api/auth/login": {
+              "post": {
+                "summary": "Login de usuário",
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "email": {
+                            "type": "string",
+                            "format": "email"
+                          },
+                          "password": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "email",
+                          "password"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Login realizado com sucesso"
+                  },
+                  "401": {
+                    "description": "Credenciais inválidas"
+                  },
+                  "403": {
+                    "description": "Acesso negado"
+                  }
+                }
+              }
+            },
+            "/api/auth/profile": {
+              "get": {
+                "summary": "Obter perfil do usuário autenticado",
+                "responses": {
+                  "200": {
+                    "description": "Perfil do usuário"
+                  },
+                  "401": {
+                    "description": "Não autenticado"
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       {
-        "name": "Dashboard System",
-        "description": "Sistema de dashboards específicos por papel de usuário (Admin, Fisioterapeuta, Estagiário, Paciente) com roteamento dinâmico",
+        "name": "Patients Management API",
+        "description": "Gestão completa de pacientes com cadastro, busca avançada, upload de fotos e prontuários médicos eletrônicos",
         "files": [
-          "src/app/dashboard/page.tsx",
-          "src/app/dashboard/layout.tsx",
-          "src/app/dashboard/admin/page.tsx",
-          "src/app/dashboard/fisioterapeuta/page.tsx",
-          "src/app/dashboard/estagiario/page.tsx",
-          "src/app/dashboard/paciente/page.tsx"
-        ]
+          "app/api/patients/route.ts",
+          "app/api/patients/[id]/route.ts",
+          "src/components/patients/PatientForm.tsx",
+          "src/components/patients/PatientList.tsx",
+          "app/patients/page.tsx",
+          "app/patients/new/page.tsx",
+          "app/patients/[id]/page.tsx"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "info": {
+            "title": "Patients Management API",
+            "version": "1.0.0",
+            "description": "API para gestão de pacientes"
+          },
+          "paths": {
+            "/api/patients": {
+              "get": {
+                "summary": "Listar pacientes com filtros",
+                "parameters": [
+                  {
+                    "name": "search",
+                    "in": "query",
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "page",
+                    "in": "query",
+                    "schema": {
+                      "type": "integer"
+                    }
+                  },
+                  {
+                    "name": "limit",
+                    "in": "query",
+                    "schema": {
+                      "type": "integer"
+                    }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "Lista de pacientes"
+                  }
+                }
+              },
+              "post": {
+                "summary": "Criar novo paciente",
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "cpf": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
+                          },
+                          "birth_date": {
+                            "type": "string",
+                            "format": "date"
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "cpf",
+                          "email",
+                          "phone"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "201": {
+                    "description": "Paciente criado com sucesso"
+                  }
+                }
+              }
+            },
+            "/api/patients/{id}": {
+              "get": {
+                "summary": "Obter detalhes do paciente",
+                "parameters": [
+                  {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "Detalhes do paciente"
+                  }
+                }
+              },
+              "put": {
+                "summary": "Atualizar paciente",
+                "parameters": [
+                  {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "Paciente atualizado"
+                  }
+                }
+              },
+              "delete": {
+                "summary": "Arquivar paciente (soft delete)",
+                "parameters": [
+                  {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "Paciente arquivado"
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       {
-        "name": "Patient Management",
-        "description": "Sistema completo de gestão de pacientes com CRUD, validação de CPF, fotos, histórico médico e compliance LGPD",
+        "name": "Appointments Management API",
+        "description": "Sistema de agendamento com calendário interativo, prevenção de conflitos e lista de espera",
         "files": [
-          "src/app/patients/[id]/page.tsx",
-          "src/lib/validation/patient-schemas.ts",
-          "src/lib/lgpd/server.ts"
-        ]
+          "app/api/appointments/route.ts",
+          "app/api/appointments/[id]/route.ts",
+          "app/api/appointments/reschedule/route.ts",
+          "components/appointments/DragDropCalendar.tsx",
+          "components/appointments/WaitingListModal.tsx",
+          "app/appointments/page.tsx",
+          "app/appointments/new/page.tsx"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "info": {
+            "title": "Appointments Management API",
+            "version": "1.0.0",
+            "description": "API para gestão de agendamentos"
+          },
+          "paths": {
+            "/api/appointments": {
+              "get": {
+                "summary": "Listar agendamentos",
+                "parameters": [
+                  {
+                    "name": "date_from",
+                    "in": "query",
+                    "schema": {
+                      "type": "string",
+                      "format": "date"
+                    }
+                  },
+                  {
+                    "name": "date_to",
+                    "in": "query",
+                    "schema": {
+                      "type": "string",
+                      "format": "date"
+                    }
+                  },
+                  {
+                    "name": "status",
+                    "in": "query",
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "Lista de agendamentos"
+                  }
+                }
+              },
+              "post": {
+                "summary": "Criar novo agendamento",
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "patient_id": {
+                            "type": "string"
+                          },
+                          "appointment_date": {
+                            "type": "string",
+                            "format": "datetime"
+                          },
+                          "duration_minutes": {
+                            "type": "integer"
+                          },
+                          "notes": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "patient_id",
+                          "appointment_date"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "201": {
+                    "description": "Agendamento criado"
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       {
-        "name": "Body Mapping System",
-        "description": "Sistema interativo de mapeamento corporal para rastreamento de dor com escala 0-10 e timeline de evolução",
+        "name": "Body Mapping API",
+        "description": "Sistema de mapeamento corporal interativo com registro de pontos de dor, escala de intensidade e timeline de evolução",
         "files": [
+          "app/api/sessions/[id]/pain-points/route.ts",
           "src/components/bodymap/BodyMapSVG.tsx",
-          "src/components/bodymap/PainPointModal.tsx",
-          "src/components/bodymap/PainTimeline.tsx",
-          "components/bodymap/BodyMapSVG.tsx",
-          "components/bodymap/PainPointModal.tsx",
-          "components/bodymap/PainTimeline.tsx"
-        ]
+          "src/components/bodymap/PainPointForm.tsx",
+          "app/bodymap/page.tsx"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "info": {
+            "title": "Body Mapping API",
+            "version": "1.0.0",
+            "description": "API para mapeamento corporal e pontos de dor"
+          },
+          "paths": {
+            "/api/sessions/{session_id}/pain-points": {
+              "get": {
+                "summary": "Obter pontos de dor da sessão",
+                "parameters": [
+                  {
+                    "name": "session_id",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "Lista de pontos de dor"
+                  }
+                }
+              },
+              "post": {
+                "summary": "Registrar novo ponto de dor",
+                "parameters": [
+                  {
+                    "name": "session_id",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "body_region": {
+                            "type": "string"
+                          },
+                          "pain_intensity": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 10
+                          },
+                          "coordinates": {
+                            "type": "object"
+                          },
+                          "notes": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "body_region",
+                          "pain_intensity"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "201": {
+                    "description": "Ponto de dor registrado"
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       {
-        "name": "Appointment Scheduling",
-        "description": "Sistema de agendamento com prevenção de conflitos, calendário integrado e lembretes automáticos",
+        "name": "Sessions Management API",
+        "description": "Gestão de sessões clínicas com documentação completa, avaliações de dor e planos de tratamento",
         "files": [
-          "src/app/api/sessions/[id]/pain-points/route.ts"
-        ]
+          "app/api/sessions/route.ts",
+          "app/api/sessions/[id]/route.ts",
+          "src/components/sessions/SessionForm.tsx",
+          "src/components/sessions/SessionTimeline.tsx"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "info": {
+            "title": "Sessions Management API",
+            "version": "1.0.0",
+            "description": "API para gestão de sessões clínicas"
+          },
+          "paths": {
+            "/api/sessions": {
+              "get": {
+                "summary": "Listar sessões",
+                "parameters": [
+                  {
+                    "name": "patient_id",
+                    "in": "query",
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "date_from",
+                    "in": "query",
+                    "schema": {
+                      "type": "string",
+                      "format": "date"
+                    }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "Lista de sessões"
+                  }
+                }
+              },
+              "post": {
+                "summary": "Criar nova sessão clínica",
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "patient_id": {
+                            "type": "string"
+                          },
+                          "session_type": {
+                            "type": "string",
+                            "enum": [
+                              "avaliacao",
+                              "evolucao",
+                              "alta",
+                              "retorno"
+                            ]
+                          },
+                          "session_date": {
+                            "type": "string",
+                            "format": "datetime"
+                          },
+                          "duration_minutes": {
+                            "type": "integer"
+                          },
+                          "pain_assessment_before": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 10
+                          },
+                          "pain_assessment_after": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 10
+                          },
+                          "clinical_notes": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "patient_id",
+                          "session_type",
+                          "session_date"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "201": {
+                    "description": "Sessão criada"
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       {
-        "name": "UI Component Library",
-        "description": "Biblioteca completa de componentes UI acessíveis baseados em Radix UI e Tailwind CSS, otimizados para o mercado brasileiro",
+        "name": "Exercises Library API",
+        "description": "Biblioteca de exercícios fisioterapêuticos com categorização, níveis de dificuldade e prescrição personalizada",
         "files": [
-          "src/components/ui/accessible-components.tsx",
-          "src/components/ui/alert.tsx",
-          "src/components/ui/avatar.tsx",
-          "src/components/ui/badge.tsx",
-          "src/components/ui/brazilian-forms.tsx",
-          "src/components/ui/button.tsx",
-          "src/components/ui/calendar.tsx",
-          "src/components/ui/card.tsx",
-          "src/components/ui/currency-input.tsx",
-          "src/components/ui/dialog.tsx",
-          "src/components/ui/dropdown-menu.tsx",
-          "src/components/ui/form.tsx",
-          "src/components/ui/input.tsx",
-          "src/components/ui/label.tsx",
-          "src/components/ui/loading.tsx",
-          "src/components/ui/mobile-layout.tsx",
-          "src/components/ui/popover.tsx",
-          "src/components/ui/responsive.tsx",
-          "src/components/ui/select.tsx",
-          "src/components/ui/separator.tsx",
-          "src/components/ui/sheet.tsx",
-          "src/components/ui/skeleton.tsx",
-          "src/components/ui/slider.tsx",
-          "src/components/ui/sonner.tsx",
-          "src/components/ui/table.tsx",
-          "src/components/ui/tabs.tsx",
-          "src/components/ui/textarea.tsx",
-          "src/components/ui/toast.tsx",
-          "src/components/ui/tooltip.tsx"
-        ]
+          "app/api/exercises/route.ts",
+          "src/components/exercises/ExerciseLibrary.tsx",
+          "src/components/exercises/ExerciseCard.tsx",
+          "app/exercises/page.tsx"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "info": {
+            "title": "Exercises Library API",
+            "version": "1.0.0",
+            "description": "API para biblioteca de exercícios"
+          },
+          "paths": {
+            "/api/exercises": {
+              "get": {
+                "summary": "Listar exercícios",
+                "parameters": [
+                  {
+                    "name": "category",
+                    "in": "query",
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "difficulty_level",
+                    "in": "query",
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "body_regions",
+                    "in": "query",
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "Lista de exercícios"
+                  }
+                }
+              },
+              "post": {
+                "summary": "Criar novo exercício",
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "category": {
+                            "type": "string"
+                          },
+                          "difficulty_level": {
+                            "type": "string",
+                            "enum": [
+                              "iniciante",
+                              "intermediario",
+                              "avancado"
+                            ]
+                          },
+                          "body_regions": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "instructions": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "description",
+                          "category",
+                          "body_regions",
+                          "instructions"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "201": {
+                    "description": "Exercício criado"
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       {
-        "name": "Admin Features",
-        "description": "Funcionalidades administrativas incluindo convites de usuários e gestão de permissões",
+        "name": "Procedures Management API",
+        "description": "Gestão de procedimentos médicos e códigos de cobrança para fisioterapia",
         "files": [
-          "src/components/admin/UserInvitations.tsx",
-          "src/lib/auth/invitations.ts.disabled"
-        ]
+          "app/api/procedures/route.ts"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "info": {
+            "title": "Procedures Management API",
+            "version": "1.0.0",
+            "description": "API para gestão de procedimentos médicos"
+          },
+          "paths": {
+            "/api/procedures": {
+              "get": {
+                "summary": "Listar procedimentos",
+                "parameters": [
+                  {
+                    "name": "category",
+                    "in": "query",
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "search",
+                    "in": "query",
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "Lista de procedimentos"
+                  }
+                }
+              },
+              "post": {
+                "summary": "Criar novo procedimento",
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "category": {
+                            "type": "string"
+                          },
+                          "base_price": {
+                            "type": "number"
+                          },
+                          "duration_minutes": {
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "name",
+                          "category",
+                          "base_price"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "201": {
+                    "description": "Procedimento criado"
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       {
-        "name": "Database Integration",
-        "description": "Integração completa com Supabase incluindo RLS (Row Level Security), tipos TypeScript e migrações",
+        "name": "Reports Generation API",
+        "description": "Sistema de geração de relatórios clínicos, administrativos e financeiros com templates personalizáveis",
         "files": [
-          "src/lib/supabase/client.ts",
-          "src/lib/supabase/server.ts",
-          "src/lib/supabase/middleware.ts",
-          "src/lib/supabase/database.types.ts",
-          "lib/db/rls-enforcer.ts",
-          "supabase/migrations/20250914_001_core_entities.sql",
-          "supabase/migrations/20250914_002_patients.sql",
-          "supabase/migrations/20250914_003_appointments_sessions.sql",
-          "supabase/migrations/20250914_004_body_mapping.sql",
-          "supabase/migrations/20250914_005_rls_policies.sql",
-          "supabase/migrations/20250914_006_storage_buckets.sql"
-        ]
+          "app/api/reports/route.ts",
+          "app/api/reports/generate/route.ts",
+          "app/api/reports/download/[id]/route.ts",
+          "src/components/reports/ReportGenerator.tsx"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "info": {
+            "title": "Reports Generation API",
+            "version": "1.0.0",
+            "description": "API para geração de relatórios"
+          },
+          "paths": {
+            "/api/reports": {
+              "get": {
+                "summary": "Listar relatórios disponíveis",
+                "responses": {
+                  "200": {
+                    "description": "Lista de relatórios"
+                  }
+                }
+              },
+              "post": {
+                "summary": "Gerar novo relatório",
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "template_id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "format": {
+                            "type": "string",
+                            "enum": [
+                              "pdf",
+                              "excel",
+                              "csv"
+                            ]
+                          },
+                          "date_from": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "date_to": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "filters": {
+                            "type": "object"
+                          }
+                        },
+                        "required": [
+                          "template_id",
+                          "name"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "201": {
+                    "description": "Relatório gerado"
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       {
-        "name": "Validation System",
-        "description": "Sistema de validação robusto usando Zod para formulários e dados brasileiros",
+        "name": "LGPD Compliance API",
+        "description": "Sistema de conformidade com LGPD para exportação e exclusão de dados pessoais",
         "files": [
-          "src/lib/validation/patient-schemas.ts",
-          "src/lib/validation/appointment-schemas.ts"
-        ]
+          "app/api/lgpd/export/route.ts",
+          "app/api/lgpd/deletion/route.ts",
+          "src/components/lgpd/DataExport.tsx",
+          "app/portal-paciente/lgpd/page.tsx"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "info": {
+            "title": "LGPD Compliance API",
+            "version": "1.0.0",
+            "description": "API para conformidade com LGPD"
+          },
+          "paths": {
+            "/api/lgpd/export": {
+              "post": {
+                "summary": "Exportar dados pessoais",
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "patient_id": {
+                            "type": "string"
+                          },
+                          "format": {
+                            "type": "string",
+                            "enum": [
+                              "json",
+                              "csv",
+                              "pdf"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "patient_id"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Dados exportados"
+                  }
+                }
+              }
+            },
+            "/api/lgpd/deletion": {
+              "post": {
+                "summary": "Solicitar exclusão de dados",
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "patient_id": {
+                            "type": "string"
+                          },
+                          "reason": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "patient_id",
+                          "reason"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Solicitação de exclusão processada"
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       {
-        "name": "Brazilian Formatting",
-        "description": "Utilitários específicos para formatação brasileira incluindo moeda, CPF e outros formatos",
+        "name": "File Storage API",
+        "description": "Sistema de upload seguro de arquivos com controle de acesso e armazenamento no Supabase Storage",
         "files": [
-          "src/lib/utils/brazilian-currency.ts",
-          "src/lib/utils/brazilian-formatting.ts",
-          "src/lib/accessibility/portuguese-labels.ts"
-        ]
-      },
-      {
-        "name": "Error Handling",
-        "description": "Sistema centralizado de tratamento de erros e auditoria",
-        "files": [
-          "src/lib/errors/error-handler.ts",
-          "src/lib/audit/audit-logger.ts",
-          "src/lib/audit/server.ts"
-        ]
-      },
-      {
-        "name": "Testing Infrastructure",
-        "description": "Infraestrutura completa de testes incluindo unitários, integração, contrato e E2E",
-        "files": [
-          "tests/contract/appointments-create.test.ts",
-          "tests/contract/appointments-list.test.ts",
-          "tests/contract/auth-login.test.ts",
-          "tests/contract/auth-profile.test.ts",
-          "tests/contract/pain-points-create.test.ts",
-          "tests/contract/pain-timeline.test.ts",
-          "tests/contract/patients-create.test.ts",
-          "tests/contract/patients-get.test.ts",
-          "tests/contract/patients-list.test.ts",
-          "tests/contract/patients-update.test.ts",
-          "tests/integration/admin-workflow.test.ts",
-          "tests/integration/appointment-scheduling.test.ts",
-          "tests/integration/body-mapping.test.ts",
-          "tests/integration/patient-management.test.ts",
-          "tests/integration/rbac-enforcement.test.ts",
-          "jest.config.js",
-          "playwright.config.ts"
-        ]
-      },
-      {
-        "name": "Landing Page",
-        "description": "Página inicial moderna com apresentação das funcionalidades e call-to-actions",
-        "files": [
-          "src/app/page.tsx"
-        ]
+          "app/api/storage/upload/route.ts",
+          "src/components/patients/PatientPhotoUpload.tsx"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "info": {
+            "title": "File Storage API",
+            "version": "1.0.0",
+            "description": "API para upload e gestão de arquivos"
+          },
+          "paths": {
+            "/api/storage/upload": {
+              "post": {
+                "summary": "Upload de arquivo",
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "multipart/form-data": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "file": {
+                            "type": "string",
+                            "format": "binary"
+                          },
+                          "bucket": {
+                            "type": "string"
+                          },
+                          "path": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "file",
+                          "bucket"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Arquivo enviado com sucesso"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     ]
   }

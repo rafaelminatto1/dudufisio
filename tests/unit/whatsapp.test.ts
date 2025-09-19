@@ -2,15 +2,15 @@
  * Testes unitários para a integração WhatsApp Business API
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals'
 import { whatsappAPI } from '@/src/lib/integrations/whatsapp-api'
 
 // Mock do fetch global
-global.fetch = vi.fn()
+global.fetch = jest.fn()
 
 describe('WhatsApp Business API', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
     // Configurar variáveis de ambiente para teste
     process.env.WHATSAPP_API_URL = 'https://graph.facebook.com/v18.0'
     process.env.WHATSAPP_ACCESS_TOKEN = 'test-token'
@@ -18,7 +18,7 @@ describe('WhatsApp Business API', () => {
   })
 
   afterEach(() => {
-    vi.restoreAllMocks()
+    jest.restoreAllMocks()
   })
 
   describe('Envio de Mensagens', () => {

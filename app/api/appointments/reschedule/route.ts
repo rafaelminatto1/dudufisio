@@ -125,13 +125,23 @@ export async function POST(request: NextRequest) {
     // 5. Select best slot (highest score)
     const bestSlot = availableSlots[0]
 
+    if (!bestSlot) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Nenhum horário disponível encontrado'
+        },
+        { status: 400 }
+      )
+    }
+
     // 6. Update appointment
     const { data: updatedAppointment, error: updateError } = await supabase
       .from('appointments')
       .update({
-        appointment_date: bestSlot.date,
-        start_time: bestSlot.time,
-        practitioner_id: bestSlot.practitioner_id,
+        appointment_date: bestSlot?.date,
+        start_time: bestSlot?.time,
+        practitioner_id: bestSlot?.practitioner_id,
         status: 'agendado', // Reset to scheduled
         updated_by: currentUser.id,
         updated_at: new Date().toISOString(),
@@ -275,8 +285,7 @@ async function findAvailableSlots(
             date,
             time,
             practitioner.id,
-            originalAppointment,
-            preferences
+            originalAppointment
           )
 
           availableSlots.push({
@@ -327,8 +336,7 @@ function calculateCompatibilityScore(
   date: string,
   time: string,
   practitionerId: string,
-  originalAppointment: any,
-  preferences: RescheduleRequest
+  originalAppointment: any
 ): number {
   let score = 50 // Base score
 
@@ -379,7 +387,7 @@ async function getSuggestedAlternatives(
   for (let i = 1; i <= 14; i++) {
     const checkDate = new Date(today)
     checkDate.setDate(today.getDate() + i)
-    const dateStr = checkDate.toISOString().split('T')[0]
+    const dateStr = checkDate.toISOString().split('T')[0] || ''
 
     for (const time of ['08:00', '09:00', '10:00', '14:00', '15:00', '16:00']) {
       const slots = await findAvailableSlots(
@@ -388,7 +396,7 @@ async function getSuggestedAlternatives(
         originalAppointment,
         {
           ...preferences,
-          preferred_dates: [dateStr],
+          preferred_dates: [dateStr || ''],
           preferred_times: [time]
         }
       )

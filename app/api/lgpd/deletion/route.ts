@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
  * GET /api/lgpd/deletion
  * List user's deletion requests
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const supabase = await createServerClient()
 
