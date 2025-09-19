@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * GET /api/practitioners
  * List practitioners/professionals in organization
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   // TODO: Re-enable after profiles table schema is updated in production database
   return NextResponse.json(
     {
