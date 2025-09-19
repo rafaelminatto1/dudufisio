@@ -8,6 +8,8 @@ const envSchema = z.object({
 
   // App
   NEXT_PUBLIC_APP_URL: z.string().url(),
+  // Alguns módulos usam esta variável equivalente
+  NEXT_PUBLIC_SITE_URL: z.string().url().default('http://localhost:3000'),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 
   // Optional for MVP
