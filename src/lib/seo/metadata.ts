@@ -12,7 +12,7 @@ export const BASE_SEO = {
   siteName: 'FisioFlow',
   locale: 'pt_BR',
   type: 'website',
-  domain: process.env.NEXT_PUBLIC_DOMAIN || 'localhost:3000',
+  domain: process.env.NEXT_PUBLIC_DOMAIN || process.env.NEXT_PUBLIC_APP_URL?.replace('https://', '').replace('http://', '') || 'fisioflow.vercel.app',
   author: 'FisioFlow Team',
   keywords: [
     'fisioterapia',

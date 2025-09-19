@@ -57,7 +57,7 @@ export async function GET() {
     }
 
     // 3. Get user permissions based on role (fallback to default)
-    const userRole = profile.role || 'paciente'
+    const userRole = (profile as any)?.role || 'paciente'
     const permissions = getUserPermissions(userRole)
 
     // 4. Skip organization memberships for now to avoid TypeScript issues
@@ -71,7 +71,7 @@ export async function GET() {
       user_id: currentUser.id,
       additional_data: {
         profile_role: userRole,
-        org_id: profile.org_id || null
+        org_id: (profile as any)?.org_id || null
       }
     })
 
@@ -80,15 +80,15 @@ export async function GET() {
       success: true,
       data: {
         user: {
-          id: profile.id,
-          email: profile.email,
-          name: profile.full_name || profile.email,
+          id: (profile as any).id,
+          email: (profile as any).email,
+          name: (profile as any).full_name || (profile as any).email,
           role: userRole,
-          crefito_number: profile.crefito_number || null,
-          phone: profile.phone || null,
-          avatar_url: profile.avatar_url || null,
-          created_at: profile.created_at,
-          updated_at: profile.updated_at
+          crefito_number: (profile as any).crefito_number || null,
+          phone: (profile as any).phone || null,
+          avatar_url: (profile as any).avatar_url || null,
+          created_at: (profile as any).created_at,
+          updated_at: (profile as any).updated_at
         },
         organization: null, // Will be implemented when org_id field is available
         permissions,

@@ -16,7 +16,7 @@ import logger from '../../../../../lib/logger';
  * Download a generated report
  */
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
